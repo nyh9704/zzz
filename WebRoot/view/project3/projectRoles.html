@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>  
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="../../css/themes/default/easyui.css" />
+<link rel="stylesheet" type="text/css" href="../../css/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/common/main.css" />
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="js/projectRoles.js"></script>
+<script src="../../js/easyui-lang-zh_CN.js"></script>
+</head>
+
+<style>
+	#form_d{
+        border: 1px solid black;
+        border-radius: 20px;
+        width: 140px;
+        position: relative; 
+        align:center;
+        margin-left: 50px;
+     }
+     
+     label{
+     	display: inline-block;
+     	height:20px;
+     	width: 55px;
+     	margin-right: 5px;
+     	text-align: right;
+     } 
+     
+     #lab{
+     	 display: inline-block;
+            position: absolute;
+            top: -11.5px;
+            left: 50%;
+            margin-left: -70px;
+            font-size: 12px;
+            background: #fff;
+            padding: 0 20px;
+     }
+     
+     
+     #form_a{
+        border: 1px solid black;
+        border-radius: 20px;
+        width: 200px;
+        position: relative;
+      
+     }
+     
+     label{
+     	display: inline-block;
+     	height:20px;
+     	width: 55px;
+     	margin-right: 5px;
+     	text-align: right;
+     } 
+     
+     #labe{
+     	 display: inline-block;
+            position: absolute;
+            top: -11.5px;
+            left: 50%;
+            margin-left: -70px;
+            font-size: 12px;
+            background: #fff;
+            padding: 0 20px;
+     }
+     
+
+</style>
+
+<body>
+	<table class="btbHead">
+			<tr>
+				<td style='width: 25%;'>
+					<img src='../../images/common/title.gif' align='absmiddle'/>数据列表
+				</td>
+				<td style="text-align: right;">
+					<a id="addBtn" class="easyui-linkbutton" iconCls="icon-add">&nbsp;新&nbsp;&nbsp;增&nbsp;</a>
+					<a id="cutBtn" class="easyui-linkbutton" iconCls="icon-edit">&nbsp;修&nbsp;&nbsp;改&nbsp;</a>
+					<a id="removeBtn" class="easyui-linkbutton" iconCls="icon-remove">&nbsp;删&nbsp;&nbsp;除&nbsp;</a>
+				</td>
+			</tr>
+		</table>
+		
+		<div style="margin:5px;"></div>
+	
+	
+	<!-- 数据展现 -->
+	
+	<table id="tt" data-options="pagination:true,singleSelect:true">
+	
+	</table>
+	
+	<!-- 增加用户面板 -->
+	<div id="operation_div" class="easyui-dialog" title="增加用户面板" style="width:300px;height:300px"
+	data-options="buttons:'#ok_div'"><br>
+		<form action="post" id="addForm" data-options="novalidate:true" enctype="multipart/form-data">
+			<label>编号</label>
+			<input class="easyui-textbox" name="roleCode" id="role_Code"><br><br>
+			<label>项目角色</label><input class="easyui-textbox" name="roleName" id="role_Name"><br><br>					
+				<div id="form_d" align="center">
+					<label id="lab">缺陷状态</label><br><br>
+			       	<div id="form_tab" align="center">      					 
+			    	</div>			    	
+				</div>
+		</form>   
+		<div id="ok_div">
+			<a id="okBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save',width:'80px'">保存</a>
+		</div>	        		
+	</div>
+	    
+<!-- 用于提交删除功能的参数表单 -->
+	<form action="" id="removeProjectRole"></form>
+
+<!-- 修改项目角色面板 --> 
+	<div id="cut_div" class="easyui-window" title="My Window" style="width:300px;height:300px">   
+	    <div class="easyui-layout" data-options="fit:true">   
+	        <div data-options="region:'center',split:true" style="height:170px">
+	        	<div align="center"><br><br>
+	        			<form action="" id="cutForm" data-options="novalidate:true" enctype="multipart/form-data">
+							<label>编号</label><input class="easyui-textbox" data-options="disabled:true" name="roleCode" id="roleCodes"><br><br>
+							<label>项目角色</label><input class="easyui-textbox" name="roleName" id="roleNames"><br><br>					
+							<div id="form_a" align="center">
+								<label id="labe">缺陷状态</label><br><br>
+			       				<div id="form_taba" border="1" align="center">      					 
+			       					
+			    				</div>
+							</div>
+						</form>
+	        		</div>        	
+	        	</div>   
+	        <div data-options="region:'south'" style="height:30px">
+	        	<div align="right">
+	        		<a id="okCutBtn" class="easyui-linkbutton" data-options="iconCls:'icon-save',width:'80px'">保存</a>
+	        	</div>              
+	        </div>   
+	    </div>   
+	</div>    
+	
+</body>
+</html>

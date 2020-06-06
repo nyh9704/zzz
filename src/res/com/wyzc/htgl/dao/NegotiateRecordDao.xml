@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyzc.htgl.dao.NegotiateRecordDao">
+
+    <!-- 查询当前登录用户的姓名 -->
+    <select id="searchUserName" resultType="String">
+        select user_name userName from wyzc_user_info where user_tel = #{userId}
+    </select>
+
+    <!-- 分页查询 -->
+    <select id="searchnegotiateRecord" resultType="com.wyzc.htgl.bo.ClientInfoBo">
+        SELECT
+        t.c_id cId,
+        t.c_name cName,
+        t.c_tel cTel,
+        t.c_counselor cCounselor,
+        t.c_leader cLeader,
+        t.c_part cPart,
+        t.c_decider cDecider,
+        t.c_address cAddress,
+        t.c_date cDate,
+        t.c_time cTime,
+        t.c_condition cCondition,
+        t.c_frequency cFrequency,
+        t.c_result cResult,
+        t.c_depart cDepart,
+        t.c_isonline cIsonline
+        FROM
+        (
+        SELECT
+        c_id,
+        c_name,
+        c_tel,
+        c_counselor,
+        c_leader,
+        c_part,
+        c_decider,
+        c_address,
+        c_date,
+        c_time,
+        c_condition,
+        c_frequency,
+        c_result,
+        c_depart,
+        c_isonline
+        FROM
+        wyzc_clientinfo
+        WHERE
+        c_decider = #{params.bo.userName}
+        ) t
+        <where>
+            <if test="params.bo.startTime!=null and params.bo.startTime!=''">
+                and c_date &gt;= #{params.bo.startTime}
+            </if>
+            <if test=" params.bo.endTime!=null and params.bo.endTime!=''">
+                and c_date &lt;=#{params.bo.endTime}
+            </if>
+
+            <!-- 今日 -->
+            <if test=" params.bo.todayVisit!=null and params.bo.todayVisit!=''">
+                and c_date =#{params.bo.todayVisit}
+            </if>
+
+            <!-- 昨日 -->
+            <if test=" params.bo.yestodayVisit!=null and params.bo.yestodayVisit!=''">
+                and c_date =#{params.bo.yestodayVisit}
+            </if>
+
+            <!-- 三日内 -->
+            <if test="params.bo.threeDaysVisit!=null and params.bo.threeDaysVisit!=''">
+                and c_date &gt;= #{params.bo.threeDaysVisit}
+            </if>
+            <if test=" params.bo.nowDate!=null and params.bo.nowDate!=''">
+                and c_date &lt;=#{params.bo.nowDate}
+            </if>
+
+            <!-- 一周内 -->
+            <if test="params.bo.oneWeekVisit!=null and params.bo.oneWeekVisit!=''">
+                and c_date &gt;= #{params.bo.oneWeekVisit}
+            </if>
+            <if test=" params.bo.nowDate!=null and params.bo.nowDate!=''">
+                and c_date &lt;=#{params.bo.nowDate}
+            </if>
+
+            <!-- 一月内 -->
+            <if test="params.bo.oneMonthVisit!=null and params.bo.oneMonthVisit!=''">
+                and c_date &gt;= #{params.bo.oneMonthVisit}
+            </if>
+            <if test=" params.bo.nowDate!=null and params.bo.nowDate!=''">
+                and c_date &lt;=#{params.bo.nowDate}
+            </if>
+        </where>
+        <if test="params.bo.sort!=null and params.bo.sort!=''and params.bo.order!=null and params.bo.order!=''">
+            order by ${params.bo.sort} ${params.bo.order}
+        </if>
+    </select>
+
+
+</mapper>

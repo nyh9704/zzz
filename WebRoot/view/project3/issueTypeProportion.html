@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+
+<link rel="stylesheet" type="text/css" href="../../css/themes/default/easyui.css" />
+<link rel="stylesheet" type="text/css" href="../../css/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/common/main.css" />
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="js/issueTypeProportion.js"></script>
+<script src="../../js/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="js/highcharts.js"></script>
+<script type="text/javascript" src="js/offline-exporting.js"></script>
+<script type="text/javascript" src="js/export-data.js"></script>
+<script type="text/javascript" src="js/exporting.js"></script>
+<script type="text/javascript" src="js/export-csv.js"></script>
+</head>
+<body>
+<!--  -->
+	<table class="btbHead">
+		<tr>
+			<td style='width: 25%;'>
+				<img src='../../images/common/title.gif' align='absmiddle'/>用户管理 
+			</td>
+			<td style="text-align: right;">
+				<a id="searchBtn" class="easyui-linkbutton" iconCls="icon-search">&nbsp;查&nbsp;&nbsp;询&nbsp;</a>
+			</td>
+		</tr>
+	</table>
+	<form id="serchForm">
+		<table class="btbForm">
+			<tr>
+				<td>
+					登记时间<input name="startTime" class= "easyui-datebox" data-options="editable:false" id="startTime">~
+					<input name="endTime" class= "easyui-datebox" data-options="editable:false" id="endTime">
+					项目<input name="projectId" class= "easyui-combotree" id="cc" data-options="editable:false"/>					
+				</td>
+			</tr>
+		</table>
+	</form>
+		
+	<div style="margin:5px;"></div>
+
+<!-- 数据展现 -->
+
+	<div id="issueTypeData" style="min-width:400px;height:400px"></div>
+
+</html>

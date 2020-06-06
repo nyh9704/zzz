@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyzc.htgl.dao.ContractDao">
+    <!-- 展现和模糊查询 -->
+
+
+    <!-- 展现1 -->
+    <select id="showContract1"
+            resultType="com.wyzc.htgl.bo.WyzcPersonnelBo">
+        select
+        a.user_tel userTel,
+        a.file_number fileNumber,
+        a.user_name userName,
+        a.user_id_card identityCard,
+        a.wp_id wpId,
+        b.wp_Name wpName,
+        a.wd_id wdId,
+        c.wd_name wdName,
+        a.post_name postName,
+        a.user_sex userSex,
+        a.practice_start practiceStart,
+        a.practice_number practiceNumber,
+        a.practice_end practiceEnd,
+        a.is_postpone isPostpone,
+        a.postpone_number postponeNumber,
+        a.start_work_time startWorkTime,
+        a.turn_official_time turnOfficialTime,
+        a.dimission_time dimissionTime,
+        a.work_age workAge,
+        a.bir_date birDate,
+        a.bir_year birYear,
+        a.bir_mounth birMounth,
+        a.age age,
+        a.nation nation,
+        a.registered registered,
+        a.education education,
+        a.contact_tel contactTel,
+        a.is_official isOfficial,
+        a.remark remark,
+        a.postpone_time postPoneTime,
+        a.user_id_card_address userIdCardAddress,
+        a.contract_type contractType,
+        a.contract_time contractTime,
+        a.contract_deadline contractDedline,
+        a.contract_end_time contractEndTime,
+        a.sign sign
+        from wyzc_user_info a
+        left JOIN wyzc_part b on b.wp_id=a.wp_id
+        left JOIN wyzc_duty c on c.wd_id = a.wd_id
+        where
+        a.post_name like CONCAT('%','${searchMo}','%')
+        or
+        a.user_tel like CONCAT('%','${searchMo}','%')
+        or a.user_name like CONCAT('%','${searchMo}','%')
+        or a.user_sex like CONCAT('%','${searchMo}','%')
+        or a.user_id_card like CONCAT('%','${searchMo}','%')
+        or a.start_work_time like CONCAT('%','${searchMo}','%')
+        or a.work_age like CONCAT('%','${searchMo}','%')
+        or a.age like CONCAT('%','${searchMo}','%')
+        or a.nation like CONCAT('%','${searchMo}','%')
+        or a.registered like CONCAT('%','${searchMo}','%')
+        or a.education like CONCAT('%','${searchMo}','%')
+        or a.contact_tel like CONCAT('%','${searchMo}','%')
+        or a.is_official like CONCAT('%','${searchMo}','%')
+        or a.postpone_time like CONCAT('%','${searchMo}','%')
+        or a.contract_type like CONCAT('%','${searchMo}','%')
+        or a.user_id_card_address like CONCAT('%','${searchMo}','%')
+        or a.remark like CONCAT('%','${searchMo}','%')
+        or a.contract_type like CONCAT('%','${searchMo}','%')
+        or a.contract_time like CONCAT('%','${searchMo}','%')
+        or a.contract_deadline like CONCAT('%','${searchMo}','%')
+        or a.contract_end_time like CONCAT('%','${searchMo}','%')
+        group by a.user_tel
+        having a.sign = '1' or a.sign = '2'
+        <if test="sort!=null and sort!=''">
+            order by
+            (${sort}+0)
+            ${order}
+        </if>
+    </select>
+
+    <!-- 删除 -->
+    <delete id="deleteShowContract">
+        delete from wyzc_user_info_copy where
+        user_id=#{userId} and sign='1' or sign='2'
+    </delete>
+
+
+    <!-- 查 -->
+    <select id="searchContract"
+            resultType="com.wyzc.htgl.bo.WyzcPersonnelBo2">
+        select
+        a.user_tel userTel,
+        a.file_number fileNumber,
+        a.user_name userName,
+        a.user_id_card identityCard,
+        a.wp_id wpId,
+        b.wp_Name wpName,
+        a.wd_id wdId,
+        c.wd_name wdName,
+        a.post_name postName,
+        a.user_sex userSex,
+        a.practice_start practiceStart,
+        a.practice_number practiceNumber,
+        a.practice_end practiceEnd,
+        a.is_postpone isPostpone,
+        a.postpone_number postponeNumber,
+        a.start_work_time startWorkTime,
+        a.turn_official_time turnOfficialTime,
+        a.dimission_time dimissionTime,
+        a.work_age workAge,
+        a.bir_date birDate,
+        a.bir_year birYear,
+        a.bir_mounth birMounth,
+        a.age age,
+        a.sign sign,
+        a.nation nation,
+        a.registered registered,
+        a.education education,
+        a.contact_tel contactTel,
+        a.is_official isOfficial,
+        a.remark remark,
+        a.postpone_time postPoneTime,
+        a.user_id_card_address userIdCardAddress,
+        a.contract_type contractType,
+        a.contract_time contractTime,
+        a.contract_deadline contractDedline,
+        a.contract_end_time contractEndTime
+        from wyzc_user_info_copy a
+        left JOIN wyzc_part b on b.wp_id=a.wp_id
+        left JOIN wyzc_duty c on c.wd_id = a.wd_id
+
+        <where>
+
+            a.user_id = #{userId}
+            <if test="nation1!=null and nation1!=''">
+                and a.nation like CONCAT('%','${nation1}','%')
+            </if>
+            <if
+                    test="registered1!=null and registered1!='' ">
+                and a.registered like CONCAT('%','${registered1}','%')
+            </if>
+            <if
+                    test="education1!=null and education1!=''">
+                and a.education like CONCAT('%','${education1}','%')
+            </if>
+            <if test="userName1!=null and userName1!=''">
+                and a.user_name like CONCAT('%','${userName1}','%')
+            </if>
+            <if test="userName1!=null and userName1!=''">
+                and a.user_name like CONCAT('%','${userName1}','%')
+            </if>
+            <if test="wpName1!=null and wpName1!='' ">
+                and b.wp_id like CONCAT('${wpName1}')
+            </if>
+            <if test=" postName1!=null and postName1!=''">
+                and a.post_name like CONCAT('%','${postName1}','%')
+            </if>
+            <if test=" wdName1!=null and wdName1!=''">
+                and c.wd_id like CONCAT('%','${wdName1}','%')
+            </if>
+
+            <if test="startWorkTime1!=null and startWorkTime1!=''">
+                and a.start_work_time &gt;= ${startWorkTime1}
+            </if>
+            <if test=" startWorkTime2!=null and startWorkTime2!=''">
+                and a.start_work_time &lt;=${startWorkTime2}
+            </if>
+            <if test="turnOfficialTime1!=null and turnOfficialTime1!=''">
+                and a.turn_official_time &gt;= ${turnOfficialTime1}
+            </if>
+            <if test=" turnOfficialTime2!=null and turnOfficialTime2!=''">
+                and a.turn_official_time &lt;=${turnOfficialTime2}
+            </if>
+            <if test="contractTime1!=null and contractTime1!=''">
+                and a.contract_time &gt;= ${contractTime1}
+            </if>
+            <if test="contractTime2!=null and contractTime2!=''">
+                and a.contract_time &lt;=${contractTime1}
+            </if>
+            <if test="contractEndTime1!=null and contractEndTime1!=''">
+                and a.contract_end_time &gt;= ${contractEndTime1}
+            </if>
+            <if test="contractEndTime2!=null and contractEndTime2!=''">
+                and a.contract_end_time &lt;=${contractEndTime2}
+            </if>
+            <if test="workAge1!=null and workAge1!=''">
+                and a.work_age &gt;= ${workAge1}
+            </if>
+            <if test=" workAge2!=null and workAge2!=''">
+                and a.work_age &lt;=${workAge2}
+            </if>
+            <if test=" isOfficial1!=null and isOfficial1!=''">
+                and a.is_official like CONCAT('%','${isOfficial1}','%')
+            </if>
+            <if test=" contractType1!=null and contractType1!=''">
+                and a.contract_type like CONCAT('%','${contractType1}','%')
+            </if>
+
+            <if test="age1!=null and age1!=''">
+                and a.age &gt;= ${age1}
+            </if>
+            <if test=" age2!=null and age2!=''">
+                and a.age &lt;= ${age2}
+            </if>
+        </where>
+        group by a.user_id_card
+        having sign != '3'
+        <if test="sort!=null and sort!=''">
+            order by
+            (${sort}+0)
+            ${order}
+        </if>
+    </select>
+
+
+    <!-- 添加房源 -->
+    <insert id="addContract">
+        insert into
+        wyzc_user_info_copy(
+        user_id,user_tel,file_number,user_name,user_id_card,wp_id,wd_id,post_name,user_sex,practice_start,
+        practice_number,practice_end,is_postpone,postpone_number,start_work_time,turn_official_time,dimission_time,
+        work_age,bir_date,bir_year,bir_mounth,age,nation,registered,education,contact_tel,is_official,contract_type,
+        remark,sign,user_id_card_address,contract_time,contract_deadline,contract_end_time
+        )
+        values(
+        #{userId},#{userTel},#{fileNumber},#{userName},#{identityCard},#{wpId},#{wdId},#{postName},#{userSex},#{practiceStart},#{practiceEnd},
+        #{practiceNumber},#{isPostpone},#{postponeNumber},#{startWorkTime},#{turnOfficialTime},#{dimissionTime},#{workAge},#{birDate},
+        #{birYear},#{birMounth},#{age},#{nation},#{registered},#{education},#{contactTel},#{isOfficial},#{contractType},#{remark},#{sign},#{userIdCardAddress},
+        #{contractTime},#{contractDedline},#{contractEndTime})
+    </insert>
+
+    <!-- 修改房源 -->
+    <update id="modifyContract">
+        update wyzc_user_info set
+        is_official=#{isOfficial},
+        contract_type=#{contractType},
+        contract_time=#{contractTime},
+        contract_end_time=#{contractEndTime},
+        file_number=#{fileNumber},
+        remark=#{remark}
+        where user_id_card=#{identityCard}
+    </update>
+
+
+    <!-- 去你妈的权限 -->
+    <select id="searchContractQx" resultType="com.wyzc.htgl.bo.WyzcPersonnelBo">
+        select wd_id wdId,wp_id wpId from wyzc_user_info where user_tel=#{userId}
+    </select>
+</mapper>

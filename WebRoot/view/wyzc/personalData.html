@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="../../css/themes/default/easyui.css" />
+<link rel="stylesheet" type="text/css" href="../../css/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/common/main.css" />
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="js/personalData.js"></script>
+<script src="../../js/easyui-lang-zh_CN.js"></script>
+<style type="text/css">
+	.sp{
+		display:inline-block;
+		text-align: right;
+		width:110px;
+	}
+</style>
+</head>
+<body>
+	<!-- 页头 -->
+
+	<table class="btbHead">
+		<tr>
+			<td style='width: 25%;'>
+				<img src='../../images/common/title.gif' align='absmiddle'/>个人资料 
+			</td>
+			<td style="text-align: right;">
+				<a id="searchBtn" class="easyui-linkbutton" iconCls="icon-search">&nbsp;查&nbsp;&nbsp;询&nbsp;</a>
+				<a id="addBtn" class="easyui-linkbutton" iconCls="icon-add">&nbsp;新&nbsp;&nbsp;增&nbsp;</a>
+				<a href="javascript:doModify()" id="modifyBtn"
+				class="easyui-linkbutton" iconCls="icon-edit">&nbsp;修&nbsp;&nbsp;改&nbsp;</a>
+				<a id="removeBtn" class="easyui-linkbutton" iconCls="icon-remove">&nbsp;删&nbsp;&nbsp;除&nbsp;</a>
+				<a href="javascript:clearForm()"
+						 class="easyui-linkbutton" iconCls="icon-search">&nbsp;重&nbsp;&nbsp;置&nbsp;</a>
+				<a id="sss" data-options="disable:true" class="easyui-linkbutton" iconCls="icon-remove">sss</a>
+			</td>
+		</tr>
+	</table>
+	<form id="serchForm">
+		<table class="btbForm">
+			<tr>
+				<td>
+					<input name="keyWorld" class="easyui-searchbox" data-options="prompt:'请输入想要查询的房源',searcher:searchKeyWorld" style="width:300px;" />					
+				</td>
+			</tr>
+		</table>
+	</form>
+		
+	<div style="margin:5px;"></div>
+
+<!-- 数据展现 -->
+
+	<table id="tt" data-options="pagination:true,singleSelect:true">
+		
+	</table>
+	
+<!-- 信息录入 -->
+
+	<div id="personalData_div" class="easyui-dialog" style="height:420px;width:400px;" 
+	data-options="buttons:'#personalData_btn',closed:true,modal:true">
+		<form action="post" id="personalData_form" enctype="multipart/form-data">
+			<input type="hidden" id="hidId" name="hidId"> 
+			<table id="personnal_tab">
+				<tr>
+					<td>
+						<span class="sp">地区</span>
+					</td>
+					<td>
+						<input name="hidArea" id="hidArea"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">小区名称</span>
+					</td>
+					<td>
+						<input data-options="width:200" class="easyui-textbox" name="hidName" id="hidName"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">具体地址</span>
+					</td>
+					<td>
+						<input data-options="width:200" class="easyui-textbox" name="hidAddress" id="hidAddress"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">标题</span>
+					</td>
+					<td>
+						<input data-options="width:200" class="easyui-textbox" name="hidTitle" id="hidTitle"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">户型</span>
+					</td>
+					<td>
+						<input data-options="width:36" class="easyui-textbox" name="hidRoom"/>室
+						<input data-options="width:36" class="easyui-textbox" name="hidHall"/>厅
+						<input data-options="width:36" class="easyui-textbox" name="hidKitchen"/>厨
+						<input data-options="width:36" class="easyui-textbox" name="hidToilet"/>卫
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">附带品</span>
+					</td>
+					<td>
+						<input data-options="width:200,multiple:true" name="hidAttach" id="hidAttach"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">面积</span>
+					</td>
+					<td>
+						<input data-options="width:200" class="easyui-numberbox" name="hidSpace" id="hidSpace"/>平方米
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">价格</span>
+					</td>
+					<td>
+						<input data-options="width:200" class="easyui-numberbox" name="hidPrice" id="hidPrice"/>万元
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">朝向</span>
+					</td>
+					<td>
+						<input name="hidOrientation" id="hidOrientation"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">房屋楼层</span>
+					</td>
+					<td>
+						<input data-options="width:53" class="easyui-numberbox" name="hidFloorNow"/>当前房屋楼层
+						<input data-options="width:53" class="easyui-numberbox" name="hidFloorAll"/>总楼层
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">装修</span>
+					</td>
+					<td>
+						<input name="hidFinish" id="hidFinish"/>
+						
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">房屋年龄</span>
+					</td>
+					<td>
+						<input data-options="width:200"  class="easyui-numberbox" name="hidHouseAge" id="hidHouseAge"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">首图类型</span>
+					</td>
+					<td>
+						<input name="hidFirstPicType" id="hidFirstPicType"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">首图</span>
+					</td>
+					<td>
+						<input id="hidFirstPic" type='text' name="fileImg"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">发布时间</span>
+					</td>
+					<td>
+						<input data-options="width:200,editable:false" class="easyui-datebox" name="hidIssueDate" id="hidIssueDate"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">日点击量</span>
+					</td>
+					<td>
+						<input data-options="width:200" class="easyui-numberbox" name="hidClickRateDay" id="hidClickRateDay"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">当日咨询客户非中介</span>
+					</td>
+					<td>
+						<input data-options="width:200" class="easyui-numberbox" name="hidConsultClientDay" id="hidConsultClientDay"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">咨询</span>
+					</td>
+					<td>
+						<input data-options="width:200" class="easyui-numberbox" name="hidConsult" id="hidConsult"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">C类客户</span>
+					</td>
+					<td>
+						<input data-options="width:200" class="easyui-numberbox" name="hidCClient" id="hidCClient"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">B类客户</span>
+					</td>
+					<td>
+						<input data-options="width:200" class="easyui-numberbox" name="hidBClient" id="hidBClient"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">A类客户</span>
+					</td>
+					<td>
+						<input data-options="width:200" class="easyui-numberbox" name="hidAClient" id="hidAClient"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">签单客户</span>
+					</td>
+					<td>
+						<input data-options="width:200" class="easyui-numberbox" name="hidSuccessClient" id="hidSuccessClient"/>
+					</td>
+				</tr>
+			</table>
+		</form>		
+		<div id="personalData_btn">
+			<a id="submitBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">提交</a>
+			<a id="closeBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no'">关闭</a>    
+		</div>
+	</div>
+	
+<!-- 显示图片大图窗口 -->
+	<!-- <div id = "picture_win" class="easyui-dialog" data-options="closed:true,modal:true">
+		<img id="img">
+	</div> -->
+	<!-- <img src="img\1564120428590香水.png" id="ppp"/> -->
+	<div id="xxx"></div>
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<link rel="stylesheet" type="text/css" href="../../css/themes/default/easyui.css" />
+<link rel="stylesheet" type="text/css" href="../../css/themes/icon.css"/>
+<link rel="stylesheet" type="text/css" href="../../css/common/main.css" />
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="js/defectTreatment.js"></script>
+<script src="../../js/easyui-lang-zh_CN.js"></script>
+<style type="text/css">
+	.sp{
+		display: inline-block;
+		width: 60px;
+		height: 25px;
+	}
+</style>
+<body>
+	<!-- 页头 -->
+	<table class="btbHead">
+		<tr>
+			<td style='width: 25%;'>
+				<img src='../../images/common/title.gif' align='absmiddle'/>缺陷处理
+			</td>
+			<td style="text-align: right;">
+				<a id="searchBtn" class="easyui-linkbutton" iconCls="icon-search">&nbsp;查&nbsp;&nbsp;询&nbsp;</a>
+			</td>
+		</tr>
+	</table>
+	<form id="serchForm">
+		<table class="btbForm">
+			<tr>
+				<td>
+					登记时间<input name="startTime" class= "easyui-datebox" data-options="editable:false" id="startTime">~
+					<input name="endTime" class= "easyui-datebox" data-options="editable:false" id="endTime">
+					项目<input name="projectId" class= "easyui-textbox" id="projectName" value="全部" 
+					data-options="editable:false"/>					
+				</td>
+			</tr>
+		</table>
+	</form>
+		
+	<div style="margin:5px;"></div>
+
+<!-- 数据展现 -->
+
+	<table id="tt" data-options="pagination:true,singleSelect:true">
+		
+	</table>
+
+<!-- 处理面板 -->
+	<div id="allocation_win" 
+	data-options="iconCls:'icon-save',closable:true,buttons:'#amend_div'"
+	class="easyui-dialog" title="处理面板" style="width:500px;height:420px;background:white;">
+	
+		<form id="allocation_form">
+			<input type="hidden" name = "issueId"/>
+			<input type="hidden" name = "projectId"/>
+			<input type="hidden" name = "parentId"/>
+			<table id="particulars_tab" align="center">
+				<tr>
+					<td><span class="sp">项目名称：</span><input name="projectName" style="border: none;" readonly="readonly"></td>
+										
+				</tr>
+				<tr>
+					<td><span class="sp">上级缺陷：</span><input name="parentName" style="border: none;" readonly="readonly" id="parentId"></td>
+				</tr>
+				<tr>					
+					<td>
+						<span class="sp">缺陷名称：</span>
+						<span id="issueName"></span>
+					</td>
+					
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">完成率：</span>
+						<span id="doneRatio"></span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+					<span class="sp">缺陷描述：</span>
+					<span id="issueDescHide" style="width:300px"></span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<span class="sp">缺陷要求：</span>
+						<p id="doneConditionHide" style="width:300px"></p>
+					</td>
+				</tr>
+				<tr>
+					<td><span class="sp">缺陷分类：</span><input style="width:100px;border: none" name="typeDesc" readonly="readonly" value="请选择"></td>
+					
+				</tr>
+				<tr>
+					<td><span class="sp">严重程度：</span><input style="width:100px;border: none" name="severityDesc" readonly="readonly" value="请选择"></td>
+				</tr>
+				<tr>
+					<td><span class="sp">优先级：</span><input style="width:100px;border: none;" name="priorityDesc" 
+					readonly="readonly" value="请选择"></td>
+									
+				</tr>
+				<tr>
+					<td><span class="sp">缺陷状态：</span><input style="width:100px;border: none;" name="stateDesc" 
+					readonly="readonly" value="请选择" ></td>
+				</tr>
+				<tr>
+					<td><span>预计工时：</span><input style="width:100px;border: none;" name="planWorkHours" readonly="readonly"></td>					
+				</tr>
+				<tr>	
+					<td><span class="sp">实际工时：</span><input style="width:100px;border: none;" name="actWorkHours" readonly="readonly"></td>	
+				</tr>
+				<tr>
+					<td><span class="sp">计划开始：</span><input name="planStartTime"  
+	        			data-options="required:false,showSeconds:false" style="width:100px;border: none;"
+	        			readonly="readonly"></td>
+				</tr>
+				<tr>
+	        		<td><span class="sp">计划完成：</span><input name="planEndTime"     
+	        			data-options="required:false,showSeconds:false" style="width:100px;border: none;"
+	        			readonly="readonly">
+					</td>
+				</tr>
+				<tr>
+	        		<td>
+	        		<span class="sp">实际开始：</span>
+	        		<input name="actStartTime"     
+	        			data-options="required:false,showSeconds:false" style="width:100px;border: none;"
+	        			readonly="readonly">
+					</td>
+				</tr>
+				<tr>
+	        		<td>
+	        		<span class="sp">实际完成：</span>
+	        		<input name="actEndTime"     
+	        			data-options="required:false,showSeconds:false" style="width:100px;border: none;"
+	        			readonly="readonly">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" rowspan="3">
+						<div align="center" id = "comment_div">
+							<table id='commentTab' style="width: 350px">
+							</table>				
+						</div>
+					</td>
+				</tr>
+				<tr><td></td></tr>
+				<tr><td></td></tr>
+				<tr>
+					<td>状态：</td>
+					<td>完成率：</td>
+				</tr>
+				<tr>
+					<td><input id="issueState" class="easyui-textbox" style="width:100px" name="issueState" data-options="required:true"></td>
+					<td><input id="doneRatio" class="easyui-numberbox" data-options="suffix:'%',required:true,max:100,min:0" 
+						style="width:100px" name="doneRatio"></td>
+				</tr>
+				<tr>
+						
+					<td>耗时：</td>
+					<td>登记日期：</td>
+				</tr>
+				<tr>
+					<td>
+						<input class="easyui-numberbox" name="elapsedTime" id="actWorkHours" data-options="required:true">  
+					</td>
+					<td>
+						<input name="recordDate" class= "easyui-datebox" data-options="editable:false,required:true">
+					</td>
+				</tr>
+			</table>
+			
+			<div style="width:376px" align="center">
+				<table style="width: 100%;height: 100%" align="center">
+					
+				</table>
+			</div>			
+		</form>	
+		<div id="amend_div">
+			<a id="amendBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">提交</a>
+		</div>
+	</div>
+</body>
+</html>

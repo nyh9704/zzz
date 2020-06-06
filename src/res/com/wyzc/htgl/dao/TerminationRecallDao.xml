@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyzc.htgl.dao.TerminationRecallDao">
+
+    <!-- 分页查询 -->
+    <select id="showTerminationRecall" resultType="com.wyzc.htgl.bo.houseTableBo">
+
+        SELECT
+        t.shi_land_type shiTudi,
+        t.shi_area shiArea,
+        t.shi_name shiName,
+        t.shi_house_number shiHouseNumber,
+        t.shi_space shiSpace,
+        t.shi_finish shiFinish,
+        t.shi_construction shiConstruction,
+        t.shi_start_price shiStartPrice,
+        t.shi_price shiPrice,
+        t.shi_guarantee_price shiGuaranteePrice,
+        t.shi_is_elevactor shiIsElevactor,
+        t.shi_add_price shiAddPrice,
+        t.shi_auction_date shiAuctionDate,
+        t.shi_bulid_date shiBulidDate,
+        t.shi_location shiLocation,
+        t.shi_url shiUrl,
+        t.shi_lc shiLc,
+        t.shi_code shiCode,
+        t.shi_upload_date shiUploadDate,
+        t.shi_end_date shiEndDate,
+        t.shi_recall_date shiRecallDate,
+        t.shi_sign shiSign,
+        t.shi_appendix shiAppendix
+        FROM
+        (
+        SELECT
+        shi_land_type,
+        shi_area,
+        shi_name,
+        shi_house_number,
+        shi_space,
+        shi_finish,
+        shi_construction,
+        shi_start_price,
+        shi_price,
+        shi_guarantee_price,
+        shi_is_elevactor,
+        shi_add_price,
+        shi_auction_date,
+        shi_bulid_date,
+        shi_location,
+        shi_url,
+        shi_lc,
+        shi_code,
+        shi_upload_date,
+        shi_end_date,
+        shi_recall_date,
+        shi_sign,
+        shi_appendix
+        FROM
+        show_house_info
+        WHERE
+        shi_sign = '3'
+        ) t
+        <where>
+            <if test="params.bo.searchMo!=null and params.bo.searchMo!='' ">
+                and t.shi_area like CONCAT('%','${params.bo.searchMo}','%')
+                or t.shi_name like CONCAT('%','${params.bo.searchMo}','%')
+                or t.shi_house_number like CONCAT('%','${params.bo.searchMo}','%')
+                or t.shi_space like CONCAT('%','${params.bo.searchMo}','%')
+                or t.shi_finish like CONCAT('%','${params.bo.searchMo}','%')
+                or t.shi_construction like CONCAT('%','${params.bo.searchMo}','%')
+                or t.shi_start_price like CONCAT('%','${params.bo.searchMo}','%')
+                or t.shi_price like CONCAT('%','${params.bo.searchMo}','%')
+                or t.shi_guarantee_price like CONCAT('%','${params.bo.searchMo}','%')
+                or t.shi_is_elevactor like CONCAT('%','${params.bo.searchMo}','%')
+                or t.shi_add_price like CONCAT('%','${params.bo.searchMo}','%')
+                or t.shi_bulid_date like CONCAT('%','${params.bo.searchMo}','%')
+                or t.shi_location like CONCAT('%','${params.bo.searchMo}','%')
+                or t.shi_lc like CONCAT('%','${params.bo.searchMo}','%')
+                or t.shi_land_type like CONCAT('%','${params.bo.searchMo}','%')
+                or t.shi_url like CONCAT('%','${params.bo.searchMo}','%')
+                or t.shi_recall_date like CONCAT('%','${params.bo.searchMo}','%')
+            </if>
+        </where>
+        GROUP BY
+        t.shi_url
+        <trim prefix="having" suffixOverrides="and">
+            <if test="params.bo.shiArea!=null and params.bo.shiArea!='' and params.bo.shiArea!='请选择区域'">
+                shi_area like CONCAT('%','${params.bo.shiArea}','%') and
+            </if>
+            <if test="params.bo.shiFinish!=null and params.bo.shiFinish!='' and params.bo.shiFinish!='装修程度'">
+                shi_finish like CONCAT('%','${params.bo.shiFinish}','%') and
+            </if>
+            <if test="params.bo.shiIsElevactor!=null and params.bo.shiIsElevactor!='' and params.bo.shiIsElevactor!='电梯类型'">
+                shi_is_elevactor like CONCAT('%','${params.bo.shiIsElevactor}','%') and
+            </if>
+            <if test="params.bo.shiBulidDate!=null and params.bo.shiBulidDate!=''">
+                shi_bulid_date >= ${params.bo.shiBulidDate} and
+            </if>
+            <if test="params.bo.shiSpace1!=null and params.bo.shiSpace1!='' ">
+                shi_space &gt;= ${params.bo.shiSpace1} and
+            </if>
+
+            <if test="params.bo.shiSpace2!=null and params.bo.shiSpace2!=''">
+                shi_space &lt;=${params.bo.shiSpace2} and
+            </if>
+            <if test="params.bo.shiStartPrice1!=null and params.bo.shiStartPrice1!='' ">
+                shi_start_price &gt;= ${params.bo.shiStartPrice1} and
+            </if>
+            <if test="params.bo.shiStartPrice2!=null and params.bo.shiStartPrice2!=''">
+                shi_start_price &lt;=${params.bo.shiStartPrice2} and
+            </if>
+
+            <if test="params.bo.nowTerminationDate!=null and params.bo.nowTerminationDate!=''">
+                shi_recall_date = #{params.bo.nowTerminationDate}
+            </if>
+        </trim>
+        <if test="params.bo.sort!=null and params.bo.sort!=''">
+            order by
+            (${params.bo.sort}+0)
+            ${params.bo.order}
+        </if>
+    </select>
+
+
+    <!-- 修改房源信息 -->
+    <!-- 修改房源信息 -->
+    <update id="modifyAuctionEnd" parameterType="com.wyzc.htgl.bo.houseTableBo">
+        update show_house_info set
+        shi_land_type=#{shiTudi},
+        shi_area=#{shiArea},
+        shi_name=#{shiName},
+        shi_house_number=#{shiHouseNumber},
+        shi_space=#{shiSpace},
+        shi_finish=#{shiFinish},
+        shi_construction=#{shiConstruction},
+        shi_start_price=#{shiStartPrice},
+        shi_price=#{shiPrice},
+        shi_guarantee_price=#{shiGuaranteePrice},
+        shi_is_elevactor=#{shiIsElevactor},
+        shi_add_price=#{shiAddPrice},
+        shi_auction_date=#{shiAuctionDate},
+        shi_bulid_date=#{shiBulidDate},
+        shi_location=#{shiLocation},
+        shi_url=#{shiUrl},
+        shi_lc=#{shiLc},
+        shi_appendix=#{shiAppendix},
+        shi_sign = '1',
+        shi_end_date = null,
+        shi_recall_date = null,
+        shi_upload_date = NOW()
+        where shi_code = #{shiCode}
+    </update>
+
+
+    <!-- 权限 -->
+    <select id="gameOfThrones" parameterType="com.wyzc.htgl.bo.WyzcUserBo" resultType="String">
+        select b.wp_id wpId,a.USER_NAME userName from wyzc_user_info b
+        left join sys_user a on a.user_id = b.user_tel
+        where a.user_id=#{userId}
+    </select>
+
+</mapper>

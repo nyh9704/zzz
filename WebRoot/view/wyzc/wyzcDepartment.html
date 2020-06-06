@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="../../css/themes/default/easyui.css" />
+<link rel="stylesheet" type="text/css" href="../../css/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/common/main.css" />
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/common/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="js/wyzcDepartment.js"></script>
+
+</head>
+<body>
+
+	<form name="searchForm" id="searchForm">
+    		<!-- 查询表头部 -->
+    		<table class='btbHead'>
+    			<tr>
+    				<td style="width:25%;">
+    					<img src="../../images/common/title.gif" align="absmiddle">数据列表
+    				</td>
+    				<td style="text-align:right;">
+  						<a href="#" id="queryBtn" class="easyui-linkbutton" onclick="addRootMenu()" iconCls="icon-add">增加一级部门</a>
+  						<a href="#" id="queryBtn" class="easyui-linkbutton" onclick="addNextMenu()" iconCls="icon-add">增加下级部门</a>
+  						<a href="#" id="queryBtn" class="easyui-linkbutton" onclick="modifyMenu()" iconCls="icon-edit">&nbsp;修&nbsp;&nbsp;改&nbsp;</a>
+  					</td>
+    			</tr>
+    		</table>
+    </form>
+
+
+	<!-- 数据展现 -->
+	<table id="menuTreeGrid" class="easyui-treegrid" style="width:100%;">
+		<thead>
+			<tr>
+				<th data-options="field:'wpId',halign:'center',align:'left'" width="29%">部门编号</th>
+				<th data-options="field:'wpName',halign:'center',align:'left'" width="30%">部门名称</th>	
+			</tr>
+		</thead>
+	</table>
+	
+	
+	<!-- 增加第一级弹窗 -->
+	<div id="addRootMenu" class="easyui-dialog" data-options="closed:true,width:'390',height:'200',title:'增加第一级菜单',iconCls:'icon-add',buttons:'#sc_add'">
+		<form id="addRootMenuForm" method="post">
+			<table style="width: 98%;border-collapse: separate;border-spacing:10px;">
+				<tr>
+					<td style="width: 90px;text-align: right;">部门编号
+						<span id="addRootMenuForm_pMenuId" style="display: none;"></span>
+					</td>
+					<td>
+
+					<input id="pnum" name="wpId" class="easyui-validatebox" data-options="required:true" style="width:230px"/> 
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 90px;text-align: right;">部门名称</td>
+					<td>
+					<input id="pname" name="wpName" class="easyui-validatebox" data-options="required:true" style="width:230px"/> 
+					</td>
+				</tr>
+				
+			</table>
+		</form>
+	</div>
+	
+	<!-- 增加下级弹窗 -->
+	<div id="addNextMenu" class="easyui-dialog" data-options="closed:true,width:'390',height:'200',title:'增加下级菜单',iconCls:'icon-add',buttons:'#sc_add1'">
+		<form id="addNextMenuForm">
+			<input type="hidden" name="pMenuId">
+			<table style="width: 98%;border-collapse: separate;border-spacing:10px;">
+				<tr>
+					<td style="width: 90px;text-align: right;">部门编号
+					</td>
+					<td>
+					<span id="upProjectid"></span>
+					<input id="nextPnum" name="wpId" class="easyui-validatebox" data-options="required:true" style="width:180px;"/> 
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 90px;text-align: right;">部门名称</td>
+					<td>
+					<input id="nextPname" name="wpName" class="easyui-validatebox" data-options="required:true" style="width:230px"/> 
+					</td>
+				</tr>
+				
+			</table>
+		</form>
+	</div>
+	
+	<!-- 修改菜单 -->
+	<div id="modifyMenu" class="easyui-dialog" data-options="closed:true,width:'390',height:'200',title:'修改菜单',iconCls:'icon-edit',buttons:'#sc_modif'">
+		<form id="modifyMenuForm">
+			<table style="width: 98%;border-collapse: separate;border-spacing:10px;">
+				<tr>
+					<td style="width: 90px;text-align: right;">部门编号</td>
+					<td><span id="wpId"></span></td>
+				</tr>
+				<tr>
+					<td style="width: 90px;text-align: right;">部门名称</td>
+					<td>
+					<input id="mPname" name="wpName" class="easyui-validatebox" data-options="required:true" style="width:230px"/> 
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	
+	<!-- 新增dialog对应按钮 -->
+	<div id="sc_add" style="text-align:right;">
+		<a id="save_button" class="easyui-linkbutton" onclick="addProject()"
+		 data-options="iconCls:'icon-save'">保存</a>
+		<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="$('#addRootMenu').dialog('close');">关闭</a>
+	</div>
+	
+	<!-- 新增下级dialog对应按钮 -->
+	<div id="sc_add1" style="text-align:right;">
+		<a id="save_button" class="easyui-linkbutton" onclick="addNextProject()"
+		 data-options="iconCls:'icon-save'">保存</a>
+		<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="$('#addNextMenu').dialog('close');">关闭</a>
+	</div>
+	
+	<!-- 修改dialog对应按钮 -->
+	<div id="sc_modif" style="text-align:right;">
+		<a id="save_button" class="easyui-linkbutton" onclick="modifyProject()"
+		 data-options="iconCls:'icon-save'">保存</a>
+		<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="$('#modifyMenu').dialog('close');">关闭</a>
+	</div>
+	
+	
+	
+</body>
+	
+	
+</html>

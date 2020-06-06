@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyzc.htgl.dao.NegotiateCaseStatisticsDao">
+
+    <!-- 分页查询 -->
+    <select id="searchNegotiateCaseStatistics" resultType="com.wyzc.htgl.bo.ClientInfoBo">
+        SELECT
+        c_id cId,
+        c_name cName,
+        c_tel cTel,
+        c_counselor cCounselor,
+        c_leader cLeader,
+        c_part cPart,
+        c_decider cDecider,
+        c_address cAddress,
+        c_date cDate,
+        c_time cTime,
+        c_condition cCondition,
+        c_frequency cFrequency,
+        c_result cResult,
+        c_depart cDepart,
+        c_isonline cIsonline
+        FROM
+        wyzc_clientinfo
+        <where>
+            <if test="params.bo.keyWorld!=null and params.bo.keyWorld!=''">
+                and c_name like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_tel like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_counselor like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_leader like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_part like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_decider like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_address like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_date like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_condition like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_frequency like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_result like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_depart like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_isonline like CONCAT('%','${params.bo.keyWorld}','%')
+            </if>
+            <if test="params.bo.cDecider!=null and params.bo.cDecider!=''">
+                and c_decider like CONCAT('%','${params.bo.cDecider}','%')
+            </if>
+            <if test="params.bo.cDepart!=null and params.bo.cDepart!=''">
+                and c_depart = #{params.bo.cDepart}
+            </if>
+            <if test="params.bo.cResult!=null and params.bo.cResult!=''">
+                and c_result like CONCAT('%','${params.bo.cResult}','%')
+            </if>
+            <if test="params.bo.cIsonline!=null and params.bo.cIsonline!=''">
+                and c_isonline like CONCAT('%','${params.bo.cResult}','%')
+            </if>
+            <if test="params.bo.startTime!=null and params.bo.startTime!=''">
+                and c_date <![CDATA[>=]]> #{params.bo.startTime}
+            </if>
+            <if test="params.bo.endTime!=null and params.bo.endTime!=''">
+                and c_date <![CDATA[<=]]> #{params.bo.endTime}
+            </if>
+
+            <!-- 今日 -->
+            <if test=" params.bo.todayVisit!=null and params.bo.todayVisit!=''">
+                and c_date =#{params.bo.todayVisit}
+            </if>
+
+            <!-- 昨日 -->
+            <if test=" params.bo.yestodayVisit!=null and params.bo.yestodayVisit!=''">
+                and c_date =#{params.bo.yestodayVisit}
+            </if>
+
+            <!-- 三日内 -->
+            <if test="params.bo.threeDaysVisit!=null and params.bo.threeDaysVisit!=''">
+                and c_date &gt;= #{params.bo.threeDaysVisit}
+            </if>
+            <if test=" params.bo.nowDate!=null and params.bo.nowDate!=''">
+                and c_date &lt;=#{params.bo.nowDate}
+            </if>
+
+            <!-- 一周内 -->
+            <if test="params.bo.oneWeekVisit!=null and params.bo.oneWeekVisit!=''">
+                and c_date &gt;= #{params.bo.oneWeekVisit}
+            </if>
+            <if test=" params.bo.nowDate!=null and params.bo.nowDate!=''">
+                and c_date &lt;=#{params.bo.nowDate}
+            </if>
+
+            <!-- 一月内 -->
+            <if test="params.bo.oneMonthVisit!=null and params.bo.oneMonthVisit!=''">
+                and c_date &gt;= #{params.bo.oneMonthVisit}
+            </if>
+            <if test=" params.bo.nowDate!=null and params.bo.nowDate!=''">
+                and c_date &lt;=#{params.bo.nowDate}
+            </if>
+        </where>
+        <if test="params.bo.sort!=null and params.bo.sort!=''and params.bo.order!=null and params.bo.order!=''">
+            order by ${params.bo.sort} ${params.bo.order}
+        </if>
+    </select>
+
+    <!-- 根据编号查询信息 -->
+    <select id="searchNegotiateCaseStatisticsById" resultType="com.wyzc.htgl.bo.ClientInfoBo">
+        SELECT
+        c_id cId,
+        c_name cName,
+        c_tel cTel,
+        c_counselor cCounselor,
+        c_leader cLeader,
+        c_part cPart,
+        c_decider cDecider,
+        c_address cAddress,
+        c_date cDate,
+        c_time cTime,
+        c_condition cCondition,
+        c_frequency cFrequency,
+        c_result cResult,
+        c_depart cDepart,
+        c_isonline cIsonline
+        FROM
+        wyzc_clientinfo
+        WHERE
+        c_id = #{cId}
+    </select>
+
+
+    <!--修改  -->
+    <update id="modifyNegotiateCaseStatisticsById">
+        UPDATE wyzc_clientinfo
+        SET c_decider = #{cDecider},c_address = #{cAddress},
+        c_date = #{cDate},c_time = #{cTime} where c_id = #{cId}
+    </update>
+
+    <!-- 查询所填谈单人的所属部门 -->
+    <select id="searchDepartOfDecider" resultType="String">
+        select wp_name from wyzc_part where wp_id = (select wp_id from wyzc_user_info where user_name = #{cDecider})
+    </select>
+
+    <!-- 删除 -->
+    <delete id="deletenegotiateCaseStatistics">
+        delete from wyzc_clientinfo where c_id = #{cId}
+    </delete>
+
+    <!-- 权利的游戏之行政部门 -->
+    <select id="administrativeGameOfThrones" resultType="String">
+        select wd_id from wyzc_user_info where user_tel = #{userId}
+    </select>
+
+
+</mapper>
+
+
+
+
+
+
+
+
+
+

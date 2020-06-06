@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyzc.htgl.dao.PersonalDataDao">
+
+    <!-- 分页查询 -->
+    <select id="searchPersonalData" resultType="com.wyzc.htgl.bo.PersonalDataBo">
+        SELECT
+        hid_id hidId,
+        hid_area hidArea,
+        hid_name hidName,
+        hid_address hidAddress,
+        hid_title hidTitle,
+        hid_room hidRoom,
+        hid_hall hidHall,
+        hid_kitchen hidKitchen,
+        hid_toilet hidToilet,
+        hid_attach hidAttach,
+        hid_space hidSpace,
+        hid_price hidPrice,
+        hid_orientation hidOrientation,
+        hid_floor_now hidFloorNow,
+        hid_floor_all hidFloorAll,
+        hid_finish hidFinish,
+        hid_house_age hidHouseAge,
+        hid_first_pic_type hidFirstPicType,
+        hid_first_pic hidFirstPic,
+        hid_issue_date hidIssueDate,
+        hid_click_rate_day hidClickRateDay,
+        hid_consult_client_day hidConsultClientDay,
+        hid_consult hidConsult,
+        hid_c_client hidCClient,
+        hid_b_client hidBClient,
+        hid_a_client hidAClient,
+        hid_success_client hidSuccessClient
+        FROM
+        houses_issue_condition
+        WHERE
+        USER_ID = #{params.bo.userId}
+        <if test="params.bo.keyWorld!=null and params.bo.keyWorld!=''">
+            and hid_area like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_name like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_address like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_title like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_room like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_hall like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_kitchen like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_toilet like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_attach like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_space like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_orientation like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_floor_now like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_floor_all like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_finish like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_house_age like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_first_pic_type like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_issue_date like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_click_rate_day like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_consult_client_day like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_c_client like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_consult like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_b_client like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_a_client like CONCAT('%','${params.bo.keyWorld}','%')
+            or hid_success_client like CONCAT('%','${params.bo.keyWorld}','%')
+        </if>
+        <if test="params.bo.sort!=null and params.bo.sort!=''
+		and params.bo.order!=null and params.bo.order!=''">
+            order by ${params.bo.sort}+0 ${params.bo.order}
+        </if>
+        <!-- GROUP BY
+            hid_id
+        ORDER BY
+            cast(hid_id AS UNSIGNED INTEGER) ASC -->
+    </select>
+
+    <!-- 录入房源 -->
+    <insert id="enteringHouseData">
+        INSERT INTO houses_issue_condition (
+        hid_area,
+        hid_name,
+        hid_address,
+        hid_title,
+        hid_room,
+        hid_hall,
+        hid_kitchen,
+        hid_toilet,
+        hid_attach,
+        hid_space,
+        hid_price,
+        hid_orientation,
+        hid_floor_now,
+        hid_floor_all,
+        hid_finish,
+        hid_house_age,
+        hid_first_pic_type,
+        hid_first_pic,
+        hid_issue_date,
+        hid_click_rate_day,
+        hid_consult_client_day,
+        hid_consult,
+        hid_c_client,
+        hid_b_client,
+        hid_a_client,
+        hid_success_client,
+        USER_ID
+        )
+        VALUES
+        (
+        #{hidArea},#{hidName},#{hidAddress},#{hidTitle},#{hidRoom},#{hidHall},
+        #{hidKitchen},#{hidToilet},#{hidAttach},#{hidSpace},#{hidPrice},#{hidOrientation},#{hidFloorNow},#{hidFloorAll},
+        #{hidFinish},#{hidHouseAge},#{hidFirstPicType},#{hidFirstPic},#{hidIssueDate},#{hidClickRateDay},#{hidConsultClientDay},#{hidConsult},
+        #{hidCClient},#{hidBClient},#{hidAClient},#{hidSuccessClient},#{userId})
+    </insert>
+
+    <!-- 将数据增加进备份表中 -->
+    <insert id="enteringHouseDataToBackup">
+        INSERT INTO backups_houses_issue_condition (
+        hid_area,
+        hid_name,
+        hid_address,
+        hid_title,
+        hid_room,
+        hid_hall,
+        hid_kitchen,
+        hid_toilet,
+        hid_attach,
+        hid_space,
+        hid_price,
+        hid_orientation,
+        hid_floor_now,
+        hid_floor_all,
+        hid_finish,
+        hid_house_age,
+        hid_first_pic_type,
+        hid_first_pic,
+        hid_issue_date,
+        hid_click_rate_day,
+        hid_consult_client_day,
+        hid_consult,
+        hid_c_client,
+        hid_b_client,
+        hid_a_client,
+        hid_success_client,
+        USER_ID
+        )
+        VALUES
+        (
+        #{hidArea},#{hidName},#{hidAddress},#{hidTitle},#{hidRoom},#{hidHall},
+        #{hidKitchen},#{hidToilet},#{hidAttach},#{hidSpace},#{hidPrice},#{hidOrientation},#{hidFloorNow},#{hidFloorAll},
+        #{hidFinish},#{hidHouseAge},#{hidFirstPicType},#{hidFirstPic},#{hidIssueDate},#{hidClickRateDay},#{hidConsultClientDay},#{hidConsult},
+        #{hidCClient},#{hidBClient},#{hidAClient},#{hidSuccessClient},#{userId})
+    </insert>
+
+
+    <!-- 获取图片地址 -->
+    <select id="getImgUrl" resultType="String">
+        select hid_first_pic hidFirstPic from houses_issue_condition where hid_id = #{hidId}
+    </select>
+
+    <!-- 修改回显 -->
+    <select id="searchModifyPersonal" resultType="com.wyzc.htgl.bo.PersonalDataBo">
+        SELECT
+        hid_id hidId,
+        hid_area hidArea,
+        hid_name hidName,
+        hid_address hidAddress,
+        hid_title hidTitle,
+        hid_room hidRoom,
+        hid_hall hidHall,
+        hid_kitchen hidKitchen,
+        hid_toilet hidToilet,
+        hid_attach hidAttach,
+        hid_space hidSpace,
+        hid_price hidPrice,
+        hid_orientation hidOrientation,
+        hid_floor_now hidFloorNow,
+        hid_floor_all hidFloorAll,
+        hid_finish hidFinish,
+        hid_house_age hidHouseAge,
+        hid_first_pic_type hidFirstPicType,
+        hid_first_pic hidFirstPic,
+        hid_issue_date hidIssueDate,
+        hid_click_rate_day hidClickRateDay,
+        hid_consult_client_day hidConsultClientDay,
+        hid_consult hidConsult,
+        hid_c_client hidCClient,
+        hid_b_client hidBClient,
+        hid_a_client hidAClient,
+        hid_success_client hidSuccessClient
+        FROM
+        houses_issue_condition
+        WHERE
+        hid_id = #{hidId}
+
+    </select>
+
+
+    <!-- 修改 -->
+    <update id="modifyPersonal" parameterType="com.wyzc.htgl.bo.PersonalDataBo">
+        update houses_issue_condition set
+        hid_area=#{hidArea} ,
+        hid_name=#{hidName} ,
+        hid_address=#{hidAddress} ,
+        hid_title=#{hidTitle} ,
+        hid_room=#{hidRoom} ,
+        hid_hall=#{hidHall} ,
+        hid_kitchen=#{hidKitchen} ,
+        hid_toilet=#{hidToilet} ,
+        hid_attach=#{hidAttach} ,
+        hid_space=#{hidSpace} ,
+        hid_price=#{hidPrice} ,
+        hid_orientation=#{hidOrientation} ,
+        hid_floor_now=#{hidFloorNow} ,
+        hid_floor_all=#{hidFloorAll} ,
+        hid_finish=#{hidFinish} ,
+        hid_house_age=#{hidHouseAge} ,
+        hid_first_pic_type=#{hidFirstPicType} ,
+        hid_first_pic=#{hidFirstPic} ,
+        hid_issue_date=#{hidIssueDate} ,
+        hid_click_rate_day=#{hidClickRateDay} ,
+        hid_consult_client_day=#{hidConsultClientDay} ,
+        hid_consult=#{hidConsult} ,
+        hid_c_client=#{hidCClient},
+        hid_b_client=#{hidBClient},
+        hid_a_client=#{hidAClient},
+        hid_success_client=#{hidSuccessClient}
+        WHERE
+        hid_id = #{hidId}
+
+    </update>
+
+    <!-- 删除信息 -->
+    <delete id="deletePersonalData">
+        delete from houses_issue_condition where hid_id = #{hidId}
+    </delete>
+
+</mapper>

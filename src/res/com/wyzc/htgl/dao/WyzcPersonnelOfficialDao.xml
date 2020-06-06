@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyzc.htgl.dao.WyzcPersonnelOfficialDao">
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+    <!-- 查询所有部门 -->
+    <select id="searchAllPart" resultType="com.wyzc.htgl.bo.WyzcPersonnelTestBo">
+        select wp_id wpId,wp_name wpName from wyzc_part
+    </select>
+
+    <!-- 查询所有岗位等级 -->
+    <select id="searchAllDuty" resultType="com.wyzc.htgl.bo.WyzcPersonnelTestBo">
+        select wd_id wdId,wd_name wdName from wyzc_duty
+    </select>
+
+    <!-- 分页查询 -->
+    <select id="searchPersonnelTestData" resultType="com.wyzc.htgl.bo.WyzcPersonnelTestBo" flushCache="true">
+        SELECT
+        d.fileNumber,
+        d.userId,
+        d.userName,
+        d.identityCard,
+        d.wdId,
+        d.wpId,
+        d.postName,
+        d.userSex,
+        d.practiceStart,
+        d.practiceNumber,
+        d.practiceEnd,
+        d.isPostpone,
+        d.postponeTo,
+        d.postponeNumber,
+        d.postponeTime,
+        d.startWorkTime,
+        d.dimissionTime,
+        d.turnOfficialTime,
+        d.birDate,
+        d.birYear,
+        d.birMounth,
+        d.age,
+        d.nation,
+        d.registered,
+        d.education,
+        d.contactTel,
+        d.isOfficial,
+        d.contractType,
+        d.remark,
+        d.sign,
+        d.workAge,
+        d.userIdCardAddress,
+        d.contractTime,
+        d.contractEndTime,
+        d.contractDeadline,
+        d.wpName,
+        d.wdName
+        FROM
+        (
+        SELECT
+        a.file_number fileNumber,
+        a.user_tel userId,
+        a.user_name userName,
+        a.user_id_card identityCard,
+        a.wd_id wdId,
+        a.wp_id wpId,
+        a.post_name postName,
+        a.user_sex userSex,
+        a.practice_start practiceStart,
+        a.practice_number practiceNumber,
+        a.practice_end practiceEnd,
+        a.is_postpone isPostpone,
+        a.postpone_to postponeTo,
+        a.postpone_number postponeNumber,
+        a.postpone_time postponeTime,
+        a.start_work_time startWorkTime,
+        a.dimission_time dimissionTime,
+        a.turn_official_time turnOfficialTime,
+        a.bir_date birDate,
+        a.bir_year birYear,
+        a.bir_mounth birMounth,
+        a.age age,
+        a.nation nation,
+        a.registered registered,
+        a.education education,
+        a.contact_tel contactTel,
+        a.is_official isOfficial,
+        a.contract_type contractType,
+        a.remark remark,
+        a.sign sign,
+        a.work_age workAge,
+        a.user_id_card_address userIdCardAddress,
+        a.contract_time contractTime,
+        a.contract_end_Time contractEndTime,
+        a.contract_deadline contractDeadline,
+        b.wp_name wpName,
+        c.wd_name wdName
+        FROM
+        wyzc_user_info a,
+        wyzc_part b,
+        wyzc_duty c
+        WHERE
+        a.wp_id = b.wp_id
+        AND c.wd_id = a.wd_id
+        GROUP BY
+        a.user_tel
+        HAVING
+        a.sign = '2'
+        ) d
+        <where>
+            <if test="params.bo.keyWorld!=null and params.bo.keyWorld!=''">
+                d.fileNumber LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.userId LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.userName LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.identityCard LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.wdId LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.wpId LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.postName LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.userSex LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.practiceStart LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.practiceNumber LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.practiceEnd LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.isPostpone LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.postponeTo LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.postponeNumber LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.postponeTime LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.startWorkTime LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.dimissionTime LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.turnOfficialTime LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.birDate LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.birYear LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.birMounth LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.age LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.nation LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.registered LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.education LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.contactTel LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.isOfficial LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.contractType LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.remark LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.sign LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.workAge LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.userIdCardAddress LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.contractTime LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.contractEndTime LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.contractDeadline LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.wpName LIKE CONCAT('%','${params.bo.keyWorld}','%')
+                OR d.wdName LIKE CONCAT('%','${params.bo.keyWorld}','%')
+            </if>
+        </where>
+        GROUP BY
+        d.userId
+        <trim prefix="having" suffixOverrides="and">
+            <if test="params.bo.nation!=null and params.bo.nation!=''">
+                d.nation like CONCAT('%','${params.bo.nation}','%') and
+            </if>
+            <if test="params.bo.registered!=null and params.bo.registered!=''">
+                d.registered like CONCAT('%','${params.bo.registered}','%') and
+            </if>
+            <if test="params.bo.education!=null and params.bo.education!=''">
+                d.education like CONCAT('%','${params.bo.education}','%') and
+            </if>
+            <if test="params.bo.userName!=null and params.bo.userName!=''">
+                d.userName like CONCAT('%','${params.bo.userName}','%') and
+            </if>
+            <if test="params.bo.wpId!=null and params.bo.wpId!=''">
+                d.wpId = #{params.bo.wpId} and
+            </if>
+            <if test="params.bo.postName!=null and params.bo.postName!=''">
+                d.postName like CONCAT('%','${params.bo.postName}','%') and
+            </if>
+            <if test="params.bo.wdId!=null and params.bo.wdId!=''">
+                d.wdId = #{params.bo.wdId} and
+            </if>
+            <if test="params.bo.isOfficial!=null and params.bo.isOfficial!=''">
+                d.isOfficial = #{params.bo.isOfficial} and
+            </if>
+            <if test="params.bo.startWorkTimeSmall!=null and params.bo.startWorkTimeSmall!=''">
+                d.startWorkTime <![CDATA[>=]]> #{params.bo.startWorkTimeSmall} and
+            </if>
+            <if test="params.bo.startWorkTimeBig!=null and params.bo.startWorkTimeBig!=''">
+                d.startWorkTime <![CDATA[<=]]> #{params.bo.startWorkTimeBig} and
+            </if>
+            <if test="params.bo.turnOfficialTimeSmall!=null and params.bo.turnOfficialTimeSmall!=''">
+                d.turnOfficialTime <![CDATA[>=]]> #{params.bo.turnOfficialTimeSmall} and
+            </if>
+            <if test="params.bo.turnOfficialTimeBig!=null and params.bo.turnOfficialTimeBig!=''">
+                d.turnOfficialTime <![CDATA[<=]]> #{params.bo.turnOfficialTimeBig} and
+            </if>
+            <if test="params.bo.startMounth!=null and params.bo.startMounth!=''">
+                d.birMounth <![CDATA[>=]]> #{params.bo.startMounth}+0 and
+            </if>
+            <if test="params.bo.endMounth!=null and params.bo.endMounth!=''">
+                d.birMounth <![CDATA[<=]]> #{params.bo.endMounth}+0 and
+            </if>
+
+            <if test="params.bo.startYear!=null and params.bo.startYear!=''">
+                d.birYear <![CDATA[>=]]> #{params.bo.startYear}+0 and
+            </if>
+            <if test="params.bo.endYear!=null and params.bo.endYear!=''">
+                d.birYear <![CDATA[<=]]> #{params.bo.endYear}+0 and
+            </if>
+
+            <if test="params.bo.startAge!=null and params.bo.startAge!=''">
+                d.age <![CDATA[>=]]> #{params.bo.startAge} and
+            </if>
+            <if test="params.bo.endAge!=null and params.bo.endAge!=''">
+                d.age <![CDATA[<=]]> #{params.bo.endAge} and
+            </if>
+            <if test="params.bo.workAgeSmall!=null and params.bo.workAgeSmall!=''">
+                d.workAge <![CDATA[>=]]> #{params.bo.workAgeSmall} and
+            </if>
+            <if test="params.bo.workAgeBig!=null and params.bo.workAgeBig!=''">
+                d.workAge <![CDATA[<=]]> #{params.bo.workAgeBig} and
+            </if>
+        </trim>
+        <if test="params.bo.sort!=null and params.bo.sort!=''
+		and params.bo.order!=null and params.bo.order!=''">
+            order by ${params.bo.sort}+0 ${params.bo.order}
+        </if>
+    </select>
+
+    <!--  根据员工编号查询员工信息 -->
+    <select id="searchPersonnelByUserId" resultType="com.wyzc.htgl.bo.WyzcPersonnelTestBo">
+        SELECT
+        a.file_number fileNumber,
+        a.user_tel userId,
+        a.user_name userName,
+        a.user_id_card identityCard,
+        a.wd_id wdId,
+        a.wp_id wpId,
+        a.post_name postName,
+        a.user_sex userSex,
+        a.practice_start practiceStart,
+        a.practice_number practiceNumber,
+        a.practice_end practiceEnd,
+        a.is_postpone isPostpone,
+        a.postpone_to postponeTo,
+        a.postpone_number postponeNumber,
+        a.postpone_time postponeTime,
+        a.start_work_time startWorkTime,
+        a.dimission_time dimissionTime,
+        a.turn_official_time turnOfficialTime,
+        a.bir_date birDate,
+        a.bir_year birYear,
+        a.bir_mounth birMounth,
+        a.age age,
+        a.nation nation,
+        a.registered registered,
+        a.education education,
+        a.contact_tel contactTel,
+        a.is_official isOfficial,
+        a.contract_type contractType,
+        a.remark remark,
+        a.sign sign,
+        a.work_age workAge,
+        a.user_id_card_address userIdCardAddress,
+        a.contract_time contractTime,
+        a.contract_end_Time contractEndTime,
+        a.contract_deadline contractDeadline,
+        b.wp_name wpName,
+        c.wd_name wdName
+        FROM
+        wyzc_user_info a,
+        wyzc_part b,
+        wyzc_duty c
+        WHERE
+        a.wp_id = b.wp_id
+        AND c.wd_id = a.wd_id
+        AND a.user_tel = #{userId}
+    </select>
+
+
+    <!-- 导出全部信息 -->
+    <select id="exportAll" resultType="com.wyzc.htgl.bo.WyzcPersonnelTestBo">
+        SELECT
+        a.file_number fileNumber,
+        a.user_tel userId,
+        a.user_name userName,
+        a.user_id_card identityCard,
+        a.wd_id wdId,
+        a.wp_id wpId,
+        a.post_name postName,
+        a.user_sex userSex,
+        a.practice_start practiceStart,
+        a.practice_number practiceNumber,
+        a.practice_end practiceEnd,
+        a.is_postpone isPostpone,
+        a.postpone_to postponeTo,
+        a.postpone_number postponeNumber,
+        a.postpone_time postponeTime,
+        a.start_work_time startWorkTime,
+        a.dimission_time dimissionTime,
+        a.turn_official_time turnOfficialTime,
+        a.bir_date birDate,
+        a.bir_year birYear,
+        a.bir_mounth birMounth,
+        a.age age,
+        a.nation nation,
+        a.registered registered,
+        a.education education,
+        a.contact_tel contactTel,
+        a.is_official isOfficial,
+        a.contract_type contractType,
+        a.remark remark,
+        a.sign sign,
+        a.work_age workAge,
+        a.user_id_card_address userIdCardAddress,
+        a.contract_time contractTime,
+        a.contract_end_Time contractEndTime,
+        a.contract_deadline contractDeadline,
+        b.wp_name wpName,
+        c.wd_name wdName
+        FROM
+        wyzc_user_info a,
+        wyzc_part b,
+        wyzc_duty c
+        WHERE
+        a.wp_id = b.wp_id
+        AND c.wd_id = a.wd_id
+        GROUP BY
+        a.user_tel
+        HAVING
+        a.sign = '2'
+    </select>
+
+
+    <!-- 增加员工信息 -->
+    <insert id="savePersonnelOfficialInfo">
+        INSERT INTO wyzc_user_info (
+        file_number,
+        user_tel,
+        user_name,
+        user_id_card,
+        wd_id,
+        wp_id,
+        post_name,
+        user_sex,
+        practice_start,
+        practice_number,
+        practice_end,
+        is_postpone,
+        postpone_to,
+        postpone_number,
+        postpone_time,
+        start_work_time,
+        turn_official_time,
+        bir_date,
+        bir_year,
+        bir_mounth,
+        age,
+        nation,
+        registered,
+        education,
+        contact_tel,
+        is_official,
+        contract_type,
+        remark,
+        sign,
+        work_age,
+        user_id_card_address,
+        contract_time,
+        contract_end_Time,
+        contract_deadline
+        )
+        VALUES
+        (
+        #{fileNumber},
+        #{contactTel},
+        #{userName},
+        #{identityCard},
+        #{wdId},
+        #{wpId},
+        #{postName},
+        #{userSex},
+        #{practiceStart},
+        #{practiceNumber},
+        #{practiceEnd},
+        #{isPostpone},
+        #{postponeTo},
+        #{postponeNumber},
+        #{postponeTime},
+        #{startWorkTime},
+        #{turnOfficialTime},
+        #{birDate},
+        #{birYear},
+        #{birMounth},
+        #{age},
+        #{nation},#{registered},
+        #{education},
+        #{contactTel},
+        #{isOfficial},
+        #{contractType},
+        #{remark},
+        2,
+        #{workAge},
+        #{userIdCardAddress},
+        #{contractTime},
+        #{contractEndTime},
+        #{contractDeadline}
+        )
+    </insert>
+
+    <!-- 保存 员工修改的信息 -->
+    <update id="saveModifyTestPersonnel">
+        UPDATE wyzc_user_info
+        <set>
+            file_number = #{fileNumber},
+            user_name = #{userName},
+            user_id_card = #{identityCard},
+            wd_id = #{wdId},
+            wp_id = #{wpId},
+            post_name = #{postName},
+            user_sex = #{userSex},
+            practice_start = #{practiceStart},
+            practice_number = #{practiceNumber},
+            practice_end = #{practiceEnd},
+            is_postpone = #{isPostpone},
+            postpone_to = #{postponeTo},
+            postpone_number = #{postponeNumber},
+            postpone_time = #{postponeTime},
+            start_work_time = #{startWorkTime},
+            <if test="turnOfficialTime != null and turnOfficialTime == ''">
+                turn_official_time = NULL,
+            </if>
+            <if test="turnOfficialTime != null and turnOfficialTime != ''">
+                turn_official_time = #{turnOfficialTime},
+            </if>
+            bir_date = #{birDate},
+            bir_year = #{birYear},
+            bir_mounth = #{birMounth},
+            age = #{age},
+            nation = #{nation},
+            registered = #{registered},
+            education = #{education},
+            contact_tel = #{contactTel},
+            is_official = #{isOfficial},
+            contract_type = #{contractType},
+            remark = #{remark},
+            sign = #{sign},
+            work_age = #{workAge},
+            user_id_card_address = #{userIdCardAddress},
+            contract_time = #{contractTime},
+            contract_end_time = #{contractEndTime},
+            contract_deadline = #{contractDeadline}
+        </set>
+        WHERE user_tel = #{userId}
+    </update>
+
+    <!-- 离职修改信息保存 -->
+    <update id="saveModifyLeavePersonnel">
+        UPDATE wyzc_user_info SET dimission_time = #{dimissionTime},sign = #{sign} WHERE user_tel = #{userId}
+    </update>
+
+    <!-- 从sys_user表中删除该数据 -->
+    <delete id="deletePersonnelByUserId">
+        delete from sys_user where USER_ID = #{userId}
+    </delete>
+
+    <!-- 删除员工信息 -->
+    <delete id="removePersonnelByUerId">
+        delete from wyzc_user_info where user_tel = #{userId}
+    </delete>
+
+    <!-- 查询当前登录用户的所属部门和岗位等级 -->
+    <select id="userJurisdiction" resultType="com.wyzc.htgl.bo.WyzcPersonnelTestBo">
+        SELECT
+        a.file_number fileNumber,
+        a.user_tel userId,
+        a.user_name userName,
+        a.user_id_card identityCard,
+        a.wd_id wdId,
+        a.wp_id wpId,
+        a.post_name postName,
+        a.user_sex userSex,
+        a.practice_start practiceStart,
+        a.practice_number practiceNumber,
+        a.practice_end practiceEnd,
+        a.is_postpone isPostpone,
+        a.postpone_to postponeTo,
+        a.postpone_number postponeNumber,
+        a.postpone_time postponeTime,
+        a.start_work_time startWorkTime,
+        a.dimission_time dimissionTime,
+        a.turn_official_time turnOfficialTime,
+        a.bir_date birDate,
+        a.bir_year birYear,
+        a.bir_mounth birMounth,
+        a.age age,
+        a.nation nation,
+        a.registered registered,
+        a.education education,
+        a.contact_tel contactTel,
+        a.is_official isOfficial,
+        a.contract_type contractType,
+        a.remark remark,
+        a.sign sign,
+        a.work_age workAge,
+        a.user_id_card_address userIdCardAddress,
+        a.contract_time contractTime,
+        a.contract_end_Time contractEndTime,
+        a.contract_deadline contractDeadline,
+        b.wp_name wpName,
+        c.wd_name wdName
+        FROM
+        wyzc_user_info a,
+        wyzc_part b,
+        wyzc_duty c
+        WHERE
+        a.wp_id = b.wp_id
+        AND c.wd_id = a.wd_id
+        AND a.user_tel = #{userId}
+    </select>
+
+
+</mapper>

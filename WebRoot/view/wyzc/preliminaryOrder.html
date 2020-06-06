@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>预审订单</title>
+<link rel="stylesheet" type="text/css" href="../../css/themes/default/easyui.css" />
+<link rel="stylesheet" type="text/css" href="../../css/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/common/main.css" />
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/common/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="js/preliminaryOrder.js"></script>
+<script src="../../js/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+	<!-- 功能区 -->
+	<table class="btbHead">
+		<tr>
+			<td style='width: 25%;'>
+				<img src='../../images/common/title.gif' align='absmiddle'/>预审订单处理 
+			</td>
+		</tr>
+		<tr>
+			<td style="text-align: right;">	
+				<span id="span">
+					<a href="javascript:acceptingOrder()" id="acceptingOrder"
+						class="easyui-linkbutton" iconCls="icon-edit">接受订单</a>
+					<a href="javascript:confirmOrder()" id="confirmOrder" 
+						class="easyui-linkbutton" iconCls="icon-remove">确认订单已完成</a>
+					<a href="javascript:agreedCancelOrder()" id="agreedCancelOrder" 
+						class="easyui-linkbutton" iconCls="icon-remove">处理取消请求</a>
+						<a href="javascript:addRemark()" 
+						class="easyui-linkbutton" iconCls="icon-edit">添加备注</a>
+					<a href="javascript:pendingOrder()" id="pendingOrder"
+						class="easyui-linkbutton" iconCls="icon-search">待处理</a>
+					<a href="javascript:underwayOrder()" id="underwayOrder"
+						class="easyui-linkbutton" iconCls="icon-search">进行中</a>
+					<a href="javascript:rejectOrder()" id="rejectOrder"
+						class="easyui-linkbutton" iconCls="icon-search">已驳回</a>
+					<a href="javascript:accomplishOrder()" id="accomplishOrder"
+						class="easyui-linkbutton" iconCls="icon-search">已完成</a>
+					<a href="javascript:cancelOrder()" id="cancelOrder"
+						class="easyui-linkbutton" iconCls="icon-search">被取消订单</a>
+					<a href="javascript:applyCancelOrder()" id="applyCancelOrder"
+						class="easyui-linkbutton" iconCls="icon-search">取消申请中</a>
+					
+					<a href="javascript:searchAllOrderr()" 
+						class="easyui-linkbutton" iconCls="icon-search">返回</a>
+				</span>			
+			</td>
+		</tr>
+	</table>
+
+	<div style="margin:5px;"></div>
+
+<!-- 数据展现 -->
+
+	<table id="tt" data-options="pagination:true,singleSelect:true">
+		
+	</table>
+
+
+<!-- 接受订单页面 -->
+	<div id="due_div" class="easyui-dialog" style="height:100px;width:300px;" 
+	data-options="buttons:'#due_btn',closed:true,modal:true" title="接受订单">
+		订单状态：<span class = 'userPost'></span>
+		<div id="due_btn">
+			<a id="submitDueBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">确认接受</a>
+			<a id="cancelDueBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">驳回</a>
+			<a id="closeDueBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no'">关闭</a>    
+		</div>
+	</div>
+	
+<!-- 确认订单已完成页面 -->
+	<div id="due_sure_div" class="easyui-dialog" style="height:100px;width:300px;" 
+	data-options="buttons:'#due_sure_btn',closed:true,modal:true" title="接受订单">
+		订单状态：<span class = 'userPost'></span>
+		<div id="due_sure_btn">
+			<a id="submitSureBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">确认接受</a>
+			<a id="closeSureBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no'">关闭</a>    
+		</div>
+	</div>
+
+<!-- 处理取消订单页面 -->
+	<div id="due_cancel_div" class="easyui-dialog" style="height:100px;width:300px;" 
+	data-options="buttons:'#due_cancel_btn',closed:true,modal:true" title="处理取消订单消息">
+		用户是否申请取消状态：<span class = 'userPost'></span><br>
+		<div id="due_cancel_btn">
+			<a id="submitCancelBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">确认接受</a>
+			<a id="rejectCancelBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">驳回</a>
+			<a id="closeCancelBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no'">关闭</a>    
+		</div>
+	</div>
+
+<!-- 添加备注页面 -->
+	<div id="due_ps_div" class="easyui-dialog" style="height:100px;width:300px;" 
+	data-options="buttons:'#due_ps_btn',closed:true,modal:true" title="添加备注">
+		<span id="sp">备注</span>：<input id="userPs" data-options="width:200" class="easyui-textbox"/>
+		<div id="due_ps_btn">
+			<a id="submitPsBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">确认</a>
+			<a id="closePsBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no'">关闭</a>    
+		</div>
+	</div>
+
+
+<!-- 房屋详情 -->
+	<div id="particulars_win"
+		data-options="iconCls:'icon-save',closed:true,buttons:'#particularsCloseBtn'"
+		class="easyui-dialog" title="房屋详情"
+		style="width: 500px; height: 420px; background: white;">
+
+		<form id="particulars_form">
+			<table id="particulars_tab" align="center">
+				<tr>
+					<td style="text-align: right;"><span class="sp">区域：</span></td>
+					<td><span name="shiArea" id="shiArea"></span></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">楼盘名称：</span></td>
+					<td><span name="shiName" id="shiName"></span></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">房号：</span></td>
+					<td><span name="shiHouseNumber" id="shiHouseNumber"></span></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">装修：</span></td>
+					<td><span id="shiFinish" name="shiFinish" style="width: 300px"></span>
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">室内结构：</span></td>
+					<td><span id="shiConstruction" name="shiConstruction"></span>
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">面积㎡：</span></td>
+					<td><span id="shiSpace" name="shiSpace"></span></td>
+				</tr>
+
+
+				<tr>
+					<td style="text-align: right;"><span class="sp">有无电梯：</span></td>
+					<td><span name="shiIsElevactor"></span></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">楼层：</span></td>
+					<td><span name="shiLc"></span></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">起拍价：</span></td>
+					<td><span name="shiStartPrice"></span></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">市场价：</span></td>
+					<td><span name="shiPrice"> </span></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">保证金：</span></td>
+					<td><span name="shiGuaranteePrice"></span></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">加价幅度：</span></td>
+					<td><span id="shiAddPrice" name="shiAddPrice"></span></td>
+
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">竞拍日期：</span></td>
+					<td><span id="shiAuctionDate" name="shiAuctionDate"></span></td>
+
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">土地类型：</span></td>
+					<td><span name="shiTudi"></span></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">建成时间：</span></td>
+					<td><span name="shiBulidDate"></span></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">位置：</span></td>
+					<td><span name="shiLocation"></span></td>
+				</tr>
+
+				<tr>
+					<td style="text-align: right;"><span class="sp">网址：</span></td>
+					<td><span name="shiUrl"><a href="#"></a></span></td>
+				</tr>
+
+			</table>
+		</form>
+		<div id="prticulars_div">
+			<a id="particularsCloseBtn" href="javascript:closePartichlarsWin()"
+				class="easyui-linkbutton" data-options="iconCls:'icon-no'">关闭</a>
+		</div>
+	</div>
+</body>
+</html>

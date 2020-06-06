@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyzc.htgl.dao.WyzcDepartmentDao">
+
+    <!-- 根据条件查询所有一级目录-->
+    <select id="ProjectMangementUrl" resultType="com.wyzc.htgl.bo.WyzcDepartmentBo">
+        select
+        wp_id wpId,
+        wp_name wpName
+        from
+        wyzc_part
+        <where>
+            <if test="parentId!='' and parentId!=null">
+                parent_id = #{parentId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 根据条件查询所子级目录-->
+    <select id="ProjectMangementUrlDown" resultType="com.wyzc.htgl.bo.WyzcDepartmentBo">
+        select
+        wp_id wpId,
+        wp_name wpName
+        from
+        wyzc_part
+        <where>
+            <if test="wpId!=null and wpId!=''">
+                and parent_id=#{wpId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询父级编号是否重复 -->
+    <select id="checkedOnlyOne" resultType="java.lang.Integer">
+        select
+        count(wp_name)
+        from
+        wyzc_part
+        where
+        wp_id = #{wpId}
+    </select>
+
+    <!-- 新增一条一级部门信息 -->
+    <insert id="addProjectonr">
+        insert
+        into
+        wyzc_part(wp_id,wp_name,parent_id)
+        values(
+        #{wpId},
+        #{wpName},
+        #{parentId}
+        )
+    </insert>
+
+    <!-- 新增一条下级部门信息 -->
+    <insert id="addNextProjectonr">
+        insert
+        into
+        wyzc_part(wp_id,wp_name,parent_id)
+        values(
+        #{wpId},
+        #{wpName},
+        #{parentId}
+        )
+    </insert>
+
+    <!-- 查询某个项目 -->
+    <select id="findOnwProjrct" resultType="com.wyzc.htgl.bo.WyzcDepartmentBo">
+        select
+        wp_id wpId,
+        wp_name wpName
+        from
+        wyzc_part
+        where
+        wp_id = #{wpId}
+    </select>
+
+    <!-- 修改某个部门 -->
+    <update id="modifyProjrct">
+        update
+        info_issue_project
+        set
+        wp_id = #{wpId},
+        wp_name = #{wpName}
+        where
+        wp_id = #{wpId}
+    </update>
+
+    <!-- 查询该项目下所属人员 -->
+    <select id="listCrowd" resultType="com.wyzc.htgl.bo.WyzcDepartmentBo">
+        select user_name userName,wp_id userWpId from wyzc_user_info where wp_id = #{wpId} and sign != '3'
+    </select>
+
+    <!-- 查询该项目人员有无重复 -->
+    <select id="checkRepetition" resultType="int">
+        select count(*) from wyzc_part where wp_name = #{userName}
+    </select>
+
+    <!-- 没有则将该人员加入进去 -->
+    <select id="insertIntoDepart">
+        insert
+        into
+        wyzc_part(wp_id,wp_name,parent_id)
+        values(
+        #{id},
+        #{userName},
+        #{userWpId}
+        )
+    </select>
+
+    <!-- 查最大的编号 -->
+    <select id="getMaxWpId" resultType="String">
+        select count(*) from wyzc_part
+    </select>
+
+</mapper>

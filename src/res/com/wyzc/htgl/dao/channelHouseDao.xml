@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyzc.htgl.dao.ChannelHouseDao">
+    <!-- 展现和模糊查询 -->
+    <select id="showChannelHouse"
+            resultType="com.wyzc.htgl.po.ChannelHousePo">
+        SELECT
+        channel_code channelCode,
+        channel_nature channelNature,
+        channel_area channelArea,
+        channel_position channelPosition,
+        channel_buildname channelBuilName,
+        channel_coverarea channelCoverArea,
+        channel_buildarea channelBuildArea,
+        channel_interior channelInterior,
+        channel_purchasing channelPurchasing,
+        channel_introduce
+        channelIntroduce,
+        channel_price channelPrice,
+        channel_deposit
+        channelDeposit,
+        channel_decoration channelDecoration,
+        channel_mortgage
+        channelMortaga,
+        channel_tax channelTax,
+        channel_floor channelFloor,
+        channel_buildage channelBuildAge,
+        channel_housekeeping
+        channelHouseKeeping,
+        channel_housekeepingps channelHouseKeepingPs,
+        channel_room channelRoom,
+        channel_hall channelHall,
+        channel_kitchen
+        channelKitchen,
+        channel_toilet channelToilet
+        from
+        channel_house
+        <where>
+            <if test="params.bo.searchMo!=null and params.bo.searchMo!='' ">
+                and channel_nature like
+                CONCAT('%','${params.bo.searchMo}','%')
+                or
+                channel_area like
+                CONCAT('%','${params.bo.searchMo}','%')
+                or channel_position
+                like
+                CONCAT('%','${params.bo.searchMo}','%')
+                or channel_buildname like
+                CONCAT('%','${params.bo.searchMo}','%')
+                or channel_coverarea like
+                CONCAT('%','${params.bo.searchMo}','%')
+                or channel_buildarea like
+                CONCAT('%','${params.bo.searchMo}','%')
+                or channel_interior like
+                CONCAT('%','${params.bo.searchMo}','%')
+                or channel_introduce like
+                CONCAT('%','${params.bo.searchMo}','%')
+                or channel_purchasing like
+                CONCAT('%','${params.bo.searchMo}','%')
+                or channel_introduce like
+                CONCAT('%','${params.bo.searchMo}','%')
+                or channel_price like
+                CONCAT('%','${params.bo.searchMo}','%')
+                or channel_deposit like
+                CONCAT('%','${params.bo.searchMo}','%')
+                or channel_decoration like
+                CONCAT('%','${params.bo.searchMo}','%')
+                or channel_mortgage like
+                CONCAT('%','${params.bo.searchMo}','%')
+                or channel_tax like
+                CONCAT('%','${params.bo.searchMo}','%')
+                or channel_floor like
+                CONCAT('%','${params.bo.searchMo}','%')
+                or channel_buildage like
+                CONCAT('%','${params.bo.searchMo}','%')
+                or channel_housekeeping like
+                CONCAT('%','${params.bo.searchMo}','%')
+                or channel_housekeepingps
+                like
+                CONCAT('%','${params.bo.searchMo}','%')
+            </if>
+        </where>
+        group by channel_code
+        <if test="params.bo.sort!=null and params.bo.sort!=''">
+            order by
+            (${params.bo.sort}+0)
+            ${params.bo.order}
+        </if>
+    </select>
+
+
+    <select id="showChannelHouse1"
+            resultType="com.wyzc.htgl.po.ChannelHousePo">
+        SELECT
+        channel_code channelCode,
+        channel_nature channelNature,
+        channel_area channelArea,
+        channel_position channelPosition,
+        channel_buildname channelBuildName,
+        channel_coverarea channelCoverArea,
+        channel_buildarea channelBuildArea,
+        channel_interior channelInterior,
+        channel_purchasing channelPurchasing,
+        channel_introduce
+        channelIntroduce,
+        channel_price channelPrice,
+        channel_deposit
+        channelDeposit,
+        channel_decoration channelDecoration,
+        channel_mortgage
+        channelMortgage,
+        channel_tax channelTax,
+        channel_floor channelFloor,
+        channel_buildage channelBuildAge,
+        channel_housekeeping
+        channelHouseKeeping,
+        channel_housekeepingps channelHouseKeepingPs,
+        channel_room channelRoom,
+        channel_hall channelHall,
+        channel_kitchen
+        channelKitchen,
+        channel_toilet channelToilet
+        from
+        channel_house
+        <where>
+            <if test="searchMo!=null and searchMo!='' ">
+                and channel_nature like CONCAT('%','${searchMo}','%')
+                or
+                channel_area like CONCAT('%','${searchMo}','%')
+                or channel_position
+                like CONCAT('%','${searchMo}','%')
+                or channel_buildname like
+                CONCAT('%','${searchMo}','%')
+                or channel_coverarea like
+                CONCAT('%','${searchMo}','%')
+                or channel_buildarea like
+                CONCAT('%','${searchMo}','%')
+                or channel_interior like
+                CONCAT('%','${searchMo}','%')
+                or channel_introduce like
+                CONCAT('%','${searchMo}','%')
+                or channel_purchasing like
+                CONCAT('%','${searchMo}','%')
+                or channel_introduce like
+                CONCAT('%','${searchMo}','%')
+                or channel_price like
+                CONCAT('%','${searchMo}','%')
+                or channel_deposit like
+                CONCAT('%','${searchMo}','%')
+                or channel_decoration like
+                CONCAT('%','${searchMo}','%')
+                or channel_mortgage like
+                CONCAT('%','${searchMo}','%')
+                or channel_tax like
+                CONCAT('%','$searchMo}','%')
+                or channel_floor like
+                CONCAT('%','${searchMo}','%')
+                or channel_buildage like
+                CONCAT('%','${searchMo}','%')
+                or channel_housekeeping like
+                CONCAT('%','${searchMo}','%')
+                or channel_housekeepingps like
+                CONCAT('%','${searchMo}','%')
+            </if>
+        </where>
+        group by channel_code
+        <if test="sort!=null and sort!=''">
+            order by
+            (${sort}+0)
+            ${order}
+        </if>
+    </select>
+
+    <!-- 删除 -->
+    <delete id="deleteChannelHouseSearch">
+        delete from channel_house_copy where
+        user_id=#{userId}
+    </delete>
+
+    <!-- 修改回显 -->
+    <select id="searchModifyChannelXq"
+            resultType="com.wyzc.htgl.po.ChannelHousePo">
+        SELECT
+        channel_code channelCode,
+        channel_nature
+        channelNature,
+        channel_area channelArea,
+        channel_position
+        channelPosition,
+        channel_buildname channelBuildName,
+        channel_coverarea
+        channelCoverArea,
+        channel_buildarea channelBuildArea,
+        channel_interior
+        channelInterior,
+        channel_purchasing channelPurchasing,
+        channel_introduce channelIntroduce,
+        channel_price channelPrice,
+        channel_deposit channelDeposit,
+        channel_decoration channelDecoration,
+        channel_mortgage channelMortgage,
+        channel_tax channelTax,
+        channel_floor
+        channelFloor,
+        channel_buildage channelBuildAge,
+        channel_housekeeping
+        channelHouseKeeping,
+        channel_housekeepingps channelHouseKeepingPs,
+        channel_room channelRoom,
+        channel_hall channelHall,
+        channel_kitchen
+        channelKitchen,
+        channel_toilet channelToilet
+        from
+        channel_house_copy
+        where
+        channel_code=#{channelCode}
+    </select>
+
+
+    <!-- 查 -->
+    <select id="searchChannelHouseFj"
+            resultType="com.wyzc.htgl.po.ChannelHousePo2">
+        select channel_code channelCode,
+        channel_nature channelNature,
+        channel_area channelArea,
+        channel_position channelPosition,
+        channel_buildname channelBuildName,
+        channel_coverarea channelCoverArea,
+        channel_buildarea channelBuildArea,
+        channel_interior channelInterior,
+        channel_purchasing channelPurchasing,
+        channel_introduce
+        channelIntroduce,
+        channel_price channelPrice,
+        channel_deposit
+        channelDeposit,
+        channel_decoration channelDecoration,
+        channel_mortgage
+        channelMortgage,
+        channel_tax channelTax,
+        channel_floor channelFloor,
+        channel_buildage channelBuildAge,
+        channel_housekeeping
+        channelHouseKeeping,
+        channel_housekeepingps channelHouseKeepingPs
+        from
+        channel_house_copy
+        where user_id=#{params.bo.userId}
+        <if
+                test="params.bo.channelArea1!=null and params.bo.channelArea1!='' and params.bo.channelArea1!='请选择区域'">
+            and channel_area like
+            CONCAT('%','${params.bo.channelArea1}','%')
+        </if>
+        <if
+                test="params.bo.channelDecoration1!=null and params.bo.channelDecoration1!='' and params.bo.channelDecoration1!='装修程度'">
+            and channel_decoration like
+            CONCAT('%','${params.bo.channelDecoration1}','%')
+        </if>
+        <if
+                test="params.bo.channelNature1!=null and params.bo.channelNature1!='' and params.bo.channelNature1!='性质'">
+            and channel_nature like
+            CONCAT('%','${params.bo.channelNature1}','%')
+        </if>
+        <if
+                test="params.bo.channelBuildAge1!=null and params.bo.channelBuildAge1!=''">
+            and channel_buildage &gt;= ${params.bo.channelBuildAge1}
+        </if>
+        <if
+                test="params.bo.channelPrice1!=null and params.bo.channelPrice1!='' ">
+            and channel_price &gt;= ${params.bo.channelPrice1}
+        </if>
+        <if
+                test=" params.bo.channelPrice2!=null and params.bo.channelPrice2!=''">
+            and channel_price &lt;=${params.bo.channelPrice2}
+        </if>
+        <if
+                test="params.bo.channelBuildArea1!=null and params.bo.channelBuildArea1!=''">
+            and channel_buildarea &gt;= ${params.bo.channelBuildArea1}
+        </if>
+        <if
+                test=" params.bo.channelBuildArea2!=null and params.bo.channelBuildArea2!=''">
+            and channel_buildarea &lt;=${params.bo.channelBuildArea2}
+        </if>
+        <!-- group by channel_code -->
+        <!-- <if test="params.bo.sort!=null and params.bo.sort!=''">
+            order by
+            ${params.bo.sort}+0
+            ${params.bo.order}
+        </if> -->
+
+    </select>
+
+
+    <!-- 添加房源 -->
+    <insert id="addChannelHouseCopy">
+        insert into channel_house_copy(channel_code,
+        channel_nature,
+        channel_area,
+        channel_position,
+        channel_buildname,
+        channel_coverarea,
+        channel_buildarea,
+        channel_interior,
+        channel_purchasing,
+        channel_introduce,
+        channel_price,
+        channel_deposit,
+        channel_decoration,
+        channel_mortgage,
+        channel_tax,
+        channel_floor,
+        channel_buildage,
+        channel_housekeeping,
+        channel_housekeepingps,
+        channel_room,
+        channel_hall,
+        channel_kitchen,
+        channel_toilet,
+        user_id)
+        values(
+        #{channelCode},#{channelNature},#{channelArea},#{channelPosition},#{channelBuildName},
+        #{channelCoverArea},#{channelBuildArea},#{channelInterior},#{channelPurchasing},#{channelIntroduce},
+        #{channelPrice},#{channelDeposit},#{channelDecoration},#{channelMortgage},#{channelTax},
+        #{channelFloor},#{channelBuildAge},#{channelHouseKeeping},#{channelHouseKeepingPs},#{channelRoom},#{channelHall},#{channelKitchen},#{channelToilet},#{userId}
+        )
+    </insert>
+
+    <!-- 添加房源 -->
+    <insert id="addChannelHouse">
+        insert into channel_house(
+        channel_nature,
+        channel_area,
+        channel_position,
+        channel_buildname,
+        channel_coverarea,
+        channel_buildarea,
+        channel_interior,
+        channel_purchasing,
+        channel_introduce,
+        channel_price,
+        channel_deposit,
+        channel_decoration,
+        channel_mortgage,
+        channel_tax,
+        channel_floor,
+        channel_buildage,
+        channel_housekeeping,
+        channel_room,
+        channel_hall,
+        channel_kitchen,
+        channel_toilet,
+        channel_housekeepingps)
+        values(
+        #{channelNature},#{channelArea},#{channelPosition},#{channelBuildName},
+        #{channelCoverArea},#{channelBuildArea},#{channelInterior},#{channelPurchasing},#{channelIntroduce},
+        #{channelPrice},#{channelDeposit},#{channelDecoration},#{channelMortgage},#{channelTax},
+        #{channelFloor},#{channelBuildAge},#{channelHouseKeeping},#{channelRoom},#{channelHall},#{channelKitchen},#{channelToilet},#{channelHouseKeepingPs}
+        )
+    </insert>
+
+    <!-- 修改房源 -->
+    <update id="modifyChannelHouse">
+        update channel_house set
+        channel_nature=#{channelNature},
+        channel_area=#{channelArea},
+        channel_position=#{channelPosition},
+        channel_buildname=#{channelBuildName},
+        channel_coverarea=#{channelCoverArea},
+        channel_buildarea=#{channelBuildArea},
+        channel_interior=#{channelInterior},
+        channel_purchasing=#{channelPurchasing},
+        channel_introduce=#{channelIntroduce},
+        channel_price=#{channelPrice},
+        channel_deposit=#{channelDeposit},
+        channel_decoration=#{channelDecoration},
+        channel_mortgage=#{channelMortgage},
+        channel_tax=#{channelTax},
+        channel_floor=#{channelFloor},
+        channel_buildage=#{channelBuildAge},
+        channel_housekeeping=#{channelHouseKeeping},
+        channel_room=#{channelRoom},
+        channel_hall=#{channelHall},
+        channel_kitchen=#{channelKitchen},
+        channel_toilet=#{channelToilet},
+        channel_housekeepingps=#{channelHouseKeepingPs}
+        where channel_code=#{channelCode}
+    </update>
+
+
+    <!-- 删除 -->
+    <delete id="deleteCode">
+        delete from channel_house where channel_code=#{channelCode}
+    </delete>
+
+
+    <!-- 其他信息查询 -->
+    <select id="showChannelHouseXq"
+            resultType="com.wyzc.htgl.po.ChannelHousePo">
+        select channel_housekeeping channelHouseKeeping,
+        channel_housekeepingps channelHouseKeepingPs
+        from channel_house
+        where channel_code=#{channelCode}
+    </select>
+
+    <!-- 查询是否渠道 -->
+    <select id="searchQd"
+            resultType="com.wyzc.htgl.po.ChannelHousePo">
+        select wp_id wpId
+        from wyzc_user_info
+        where user_tel=#{userId}
+    </select>
+
+</mapper>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>到访情况统计</title>
+<link rel="stylesheet" type="text/css" href="../../css/themes/default/easyui.css" />
+<link rel="stylesheet" type="text/css" href="../../css/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/common/main.css" />
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/common/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="js/clientInfo.js"></script>
+<script src="../../js/easyui-lang-zh_CN.js"></script>
+<style type="text/css">
+	.sp{
+		display:inline-block;
+		text-align: right;
+		width:110px;
+	}
+</style>
+</head>
+<body>
+		<table class="btbHead">
+		<tr>
+			<td style='width: 25%;'>
+				<img src='../../images/common/title.gif' align='absmiddle'/>客户资料 
+			</td>
+			<td style="text-align: right;">
+				<a id="searchBtn" class="easyui-linkbutton" iconCls="icon-search">&nbsp;查&nbsp;&nbsp;询&nbsp;</a>
+				<a id="addBtn" class="easyui-linkbutton" iconCls="icon-add">&nbsp;新&nbsp;&nbsp;增&nbsp;</a>
+				<a href="javascript:doModify()" id="modifyBtn"
+				class="easyui-linkbutton" iconCls="icon-edit">&nbsp;修&nbsp;&nbsp;改&nbsp;</a>
+				<a id="removeBtn" class="easyui-linkbutton" iconCls="icon-remove">&nbsp;删&nbsp;&nbsp;除&nbsp;</a>
+				 <a href="javascript:clearForm()"
+						 class="easyui-linkbutton" iconCls="icon-search">&nbsp;重&nbsp;&nbsp;置&nbsp;</a>
+			</td>
+		</tr>
+	</table>
+	<form id="serchForm">
+		<table class="btbForm">
+			<tr>
+				<td>
+					<input name="keyWorld" class="easyui-searchbox" data-options="prompt:'请输入想要查询的信息',searcher:searchKeyWorld" style="width:150px;" />
+					<input name="counselor" class="easyui-searchbox" data-options="prompt:'顾问名字查询',searcher:searchKeyWorld" style="width:100px;" />
+					<input name="cAddress" class="easyui-searchbox" data-options="prompt:'谈单地点查询',searcher:searchKeyWorld" style="width:100px;" />
+					
+						<span class="sa">组长</span><input id="selcCounselor" name="cCounselor" />
+					
+					<span class="sa">部门</span><input id="cPart" name="cPart" />
+					日期<input name="startTime" data-options="editable:false" class="easyui-datebox"/>~<input data-options="editable:false" name="endTime" class="easyui-datebox"/>					
+				</td>
+			</tr>
+		</table>
+	</form>
+		
+	<div style="margin:5px;"></div>
+	
+	
+<!-- 数据展现 -->
+
+	<table id="tt" data-options="pagination:true,singleSelect:true">
+		
+	</table>
+
+
+<!-- 客户资料录入 -->
+	<div id="clientInfo_div" class="easyui-dialog" style="height:320px;width:400px;" 
+	data-options="buttons:'#clientInfo_btn',closed:true,modal:true">
+		<form action="post" id="clientInfo_form" enctype="multipart/form-data">
+			<input type="hidden" id="cId" name="cId"> 
+			<table id="clientInfo_tab">
+				<tr><td></td><td></td></tr>
+				<tr>
+					<td>
+						<span class="sp">客户姓名</span>
+					</td>
+					<td>
+						<input data-options="width:200" class="easyui-textbox" name="cName" id="cName"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">联系电话</span>
+					</td>
+					<td>
+						<input data-options="width:200" class="easyui-numberbox" name="cTel" id="cTel"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">所属顾问</span>
+					</td>
+					<td>
+						<input data-options="width:200" class="easyui-textbox" name="cCounselor" id="cCounselor"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">上级领导</span>
+					</td>
+					<td>
+						<input data-options="width:200,editable:false,panelHeight:'auto'" class="easyui-combobox" name="cLeader" id="cLeader"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">所属部门</span>
+					</td>
+					<td>
+						<input data-options="width:200" class="easyui-textbox" name="cPart" id="ccPart"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">谈单人</span>
+					</td>
+					<td>
+						<input class="easyui-textbox" data-options="width:200" name="cDecider" id="cDecider"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">谈单地点</span>
+					</td>
+					<td>
+						<input data-options="width:200" class="easyui-textbox" name="cAddress" id="cAddress"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">到访时间</span>
+					</td>
+					<td>
+						<input data-options="width:200,editable:false" class="easyui-datetimebox" name="cTime" id="cTime"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">日期</span>
+					</td>
+					<td>
+						<input data-options="width:200,editable:false" class="easyui-datebox" name="cDate" id="cDate"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">到访次数</span>
+					</td>
+					<td>
+						<select id="cc" data-options="editable:false,panelHeight:'auto'" class="easyui-combobox" name="cFrequency" style="width:200px;">   
+						    <option value="初次到访">初次到访</option>   
+						    <option value="二次到访">二次到访</option>   
+						    <option value="3次及以上">三次及以上</option>   						   
+						</select> 
+					</td>
+				</tr>
+			</table>
+		</form>		
+		<div id="clientInfo_btn">
+			<a id="submitBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">提交</a>
+			<a id="closeBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no'">关闭</a>    
+		</div>
+	</div>
+
+</body>
+</html>

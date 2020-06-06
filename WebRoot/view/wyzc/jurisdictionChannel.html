@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="../../css/themes/default/easyui.css" />
+<link rel="stylesheet" type="text/css" href="../../css/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/common/main.css" />
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/common/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="js/jurisdictionChannel.js"></script>
+<script src="../../js/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+	<table class="btbHead">
+		<tr>
+			<td style='width: 2568;' colspan="3"><img
+				src='../../images/common/title.gif' align='absmiddle' />权限信息</td>
+		</tr>
+		<tr>
+			<td style="text-align: right;">
+				<a href="javascript:doSave()" class="easyui-linkbutton"
+			iconCls="icon-save">保存</a>
+			</td>
+		</tr>
+	</table>
+	
+	<!-- 数据展现 -->
+	<table id = "tb" style="width:100%;text-align: center;">
+		<tr>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+			<td><input type = 'checkbox' name = 'authority01' onclick = 'selectedColumns(this)'/></td>
+			<td><input type = 'checkbox' name = 'authority02' onclick = 'selectedColumns(this)'/></td>
+			<td><input type = 'checkbox' name = 'authority03' onclick = 'selectedColumns(this)'/></td>
+			<td><input type = 'checkbox' name = 'authority04' onclick = 'selectedColumns(this)'/></td>
+			<td><input type = 'checkbox' name = 'authority05' onclick = 'selectedColumns(this)'/></td>
+			<td><input type = 'checkbox' name = 'authority06' onclick = 'selectedColumns(this)'/></td>
+			<td><input type = 'checkbox' name = 'authority07' onclick = 'selectedColumns(this)'/></td>
+			<td><input type = 'checkbox' name = 'authority08' onclick = 'selectedColumns(this)'/></td>
+			<td><input type = 'checkbox' name = 'authority09' onclick = 'selectedColumns(this)'/></td>
+			<td><input type = 'checkbox' name = 'authority10' onclick = 'selectedColumns(this)'/></td>
+			<td><input type = 'checkbox' name = 'authority11' onclick = 'selectedColumns(this)'/></td>
+			<td><input type = 'checkbox' name = 'authority12' onclick = 'selectedColumns(this)'/></td>
+			<td><input type = 'checkbox' name = 'authority13' onclick = 'selectedColumns(this)'/></td>
+			<td><input type = 'checkbox' name = 'authority14' onclick = 'selectedColumns(this)'/></td>
+			<td><input type = 'checkbox' name = 'authority15' onclick = 'selectedColumns(this)'/></td>
+		</tr>
+		
+	</table>
+	
+	<table id="all" data-options="pagination:true,singleSelect:true">
+		
+	</table>
+</body>
+</html>

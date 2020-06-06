@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>谈单情况统计</title>
+<link rel="stylesheet" type="text/css" href="../../css/themes/default/easyui.css" />
+<link rel="stylesheet" type="text/css" href="../../css/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/common/main.css" />
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/common/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="js/negotiateCaseStatistics.js"></script>
+<script src="../../js/easyui-lang-zh_CN.js"></script>
+<style type="text/css">
+	.sp{
+		display:inline-block;
+		text-align: right;
+		width:110px;
+	}
+</style>
+</head>
+<body>
+		<table class="btbHead">
+		<tr>
+			<td style='width: 25%;'>
+				<img src='../../images/common/title.gif' align='absmiddle'/>谈单情况统计 
+			</td>
+			<td style="text-align: right;">
+				<a id="searchBtn" class="easyui-linkbutton" iconCls="icon-search">&nbsp;查&nbsp;&nbsp;询&nbsp;</a>
+				<a href="javascript:todayVisit()" class="easyui-linkbutton" iconCls="icon-search">今日谈单</a>
+				<a href="javascript:yestodayVisit()" class="easyui-linkbutton" iconCls="icon-search">昨日谈单</a>
+				<a href="javascript:threeDaysVisit()" class="easyui-linkbutton" iconCls="icon-search">三日内谈单</a>
+				<a href="javascript:oneWeekVisit()" class="easyui-linkbutton" iconCls="icon-search">一周日内谈单</a>
+				<a href="javascript:oneMonthVisit()" class="easyui-linkbutton" iconCls="icon-search">一月内谈单</a>
+				<a href="javascript:doModify()" id="modifyBtn"
+				class="easyui-linkbutton" iconCls="icon-edit">&nbsp;修&nbsp;&nbsp;改&nbsp;</a>
+				<a id="removeBtn" class="easyui-linkbutton" iconCls="icon-remove">&nbsp;删&nbsp;&nbsp;除&nbsp;</a>
+				 <a href="javascript:resetData()"
+						 class="easyui-linkbutton" iconCls="icon-search">&nbsp;重&nbsp;&nbsp;置&nbsp;</a>
+			</td>
+		</tr>
+	</table>
+	<form id="serchForm">
+		<table class="btbForm">
+			<tr>
+				<td>
+					<input name="keyWorld" class="easyui-textbox" data-options="prompt:'请输入想要查询的信息'" style="width:150px;" />
+					<input name="cDecider" class="easyui-textbox" data-options="prompt:'谈单人名字查询'" style="width:100px;" />
+					<span class="sa">部门</span><input id="cPart" name="cDepart" />
+					<span class="sa">谈单结果</span>
+					<select class="easyui-combobox" name="cResult" style="width:80px;" data-options="panelHeight:'auto',editable:false">    
+					    <option value="">请选择</option> 
+					    <option value="签单">签单</option>   
+					    <option value="">未签</option>   
+					</select> 
+					<span class="sa">是否网签</span>
+					<select class="easyui-combobox" name="cIsonline" style="width:75px;" data-options="panelHeight:'auto',editable:false">   
+					     <option value="">请选择</option>  
+					    <option value="是">是</option>   
+					    <option value="否">否</option>   
+					</select> 
+					日期<input name="startTime" data-options="editable:false" class="easyui-datebox"/>~<input data-options="editable:false" name="endTime" class="easyui-datebox"/>					
+				</td>
+			</tr>
+		</table>
+	</form>
+		
+	<div style="margin:5px;"></div>
+	
+	
+<!-- 数据展现 -->
+
+	<table id="tt" data-options="pagination:true,singleSelect:true">
+		
+	</table>
+
+
+<!-- 客户资料录入 -->
+	<div id="clientInfo_div" class="easyui-dialog" style="height:320px;width:400px;" 
+	data-options="buttons:'#clientInfo_btn',closed:true,modal:true">
+		<form action="post" id="clientInfo_form" enctype="multipart/form-data">
+			<input type="hidden" id="cId" name="cId"> 
+			<table id="clientInfo_tab">
+				<tr><td></td><td></td></tr>
+				<tr>
+					<td>
+						<span class="sp">客户姓名</span>
+					</td>
+					<td>
+						<input data-options="width:200,readonly:true" class="easyui-textbox" name="cName" id="cName"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">客户负责人</span>
+					</td>
+					<td>
+						<input data-options="width:200,readonly:true" class="easyui-textbox" name="cCounselor" id="cCounselor"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">谈单人</span>
+					</td>
+					<td>
+						<input class="easyui-textbox" data-options="width:200" name="cDecider" id="cDecider"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">谈单人所属部门</span>
+					</td>
+					<td>
+						<input data-options="width:200" class="easyui-textbox" name="cDepart" id="cDepart"/>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>
+						<span class="sp">谈单地点</span>
+					</td>
+					<td>
+						<input data-options="width:200" class="easyui-textbox" name="cAddress" id="cAddress"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">谈单结果</span>
+					</td>
+					<td>
+						<input data-options="width:200,readonly:true" class="easyui-textbox" name="cResult"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">具体情况</span>
+					</td>
+					<td>
+						<input data-options="width:200,height:40,multiline:true,readonly:true" class="easyui-textbox" name="cCondition"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">是否网签</span>
+					</td>
+					<td>
+						<input data-options="width:200,readonly:true" class="easyui-textbox" name="cIsonline"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">谈单时间</span>
+					</td>
+					<td>
+						<input data-options="width:200,editable:false" class="easyui-datetimebox" name="cTime" id="cTime"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">日期</span>
+					</td>
+					<td>
+						<input data-options="width:200,editable:false" class="easyui-datebox" name="cDate" id="cDate"/>
+					</td>
+				</tr>
+				
+			</table>
+		</form>		
+		<div id="clientInfo_btn">
+			<a id="submitBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">提交</a>
+			<a id="closeBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no'">关闭</a>    
+		</div>
+	</div>
+
+
+<!-- 具体情况 -->
+	<div id="condition_div" title="具体情况" class="easyui-dialog" style="height:200px;width:200px;" 
+	data-options="buttons:'#condition_btn',closed:true,modal:true">
+		<p style=" color: transparent;text-shadow: 0 0 0 #000;" id="condition_p"></p>
+		<div id="condition_btn">
+			<a id="conditionCloseBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no'">关闭</a>    
+		</div>
+	</div>
+
+
+
+</body>
+</html>

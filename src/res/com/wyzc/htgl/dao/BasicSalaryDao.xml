@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyzc.htgl.dao.BasicSalaryDao">
+    <select id="showBasicSalary" resultType="com.wyzc.htgl.po.BasicSalaryPo">
+        select fbs_number fbsNumber,
+        fbs_name fbsName,
+        fbs_value fbsValue from Finace_basicSalary
+        <where>
+            <if test="params.bo.searchMo!=null and params.bo.searchMo!='' ">
+                and fbs_number like
+                CONCAT('%','${params.bo.searchMo}','%')
+                or fbs_name like
+                CONCAT('%','${params.bo.searchMo}','%')
+                or fbs_value like
+                CONCAT('%','${params.bo.searchMo}','%')
+            </if>
+        </where>
+        group by fbs_number
+    </select>
+
+    <insert id="addBasicSalary" parameterType="com.wyzc.htgl.po.BasicSalaryPo">
+        insert into Finace_basicSalary(fbs_number, fbs_name,fbs_value)
+        values (#{fbsNumber},#{fbsName},#{fbsValue})
+    </insert>
+
+    <select id="searchModifyBasicSalary" parameterType="com.wyzc.htgl.po.BasicSalaryPo"
+            resultType="com.wyzc.htgl.po.BasicSalaryPo">
+        select fbs_number fbsNumber,
+        fbs_name fbsName,
+        fbs_value fbsValue from Finace_basicSalary
+        where fbs_number = #{fbsNumber}
+    </select>
+
+    <update id="modifyBasicSalary" parameterType="com.wyzc.htgl.po.BasicSalaryPo">
+        update Finace_basicSalary set
+        fbs_name=#{fbsName},
+        fbs_value=#{fbsValue}
+        where fbs_number=#{fbsNumber}
+    </update>
+</mapper>

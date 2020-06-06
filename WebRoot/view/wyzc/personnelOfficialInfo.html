@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="../../css/themes/default/easyui.css" />
+<link rel="stylesheet" type="text/css" href="../../css/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/common/main.css" />
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="js/personnelOfficialInfo.js"></script>
+<script src="../../js/easyui-lang-zh_CN.js"></script>
+<style type="text/css">
+	.sp{
+		display:inline-block;
+		text-align: right;
+		width:110px;
+	}
+</style>
+</head>
+<body>
+	<!-- 页头 -->
+
+	<table class="btbHead">
+		<tr>
+			<td style='width: 25%;'>
+				<img src='../../images/common/title.gif' align='absmiddle'/>试岗员工资料 
+			</td>
+			<td style="text-align: right;">
+				<a id="searchBtn" class="easyui-linkbutton" iconCls="icon-search">&nbsp;查&nbsp;&nbsp;询&nbsp;</a>
+					<a href="javascript:clearForm()"
+						 class="easyui-linkbutton" iconCls="icon-search">&nbsp;重&nbsp;&nbsp;置&nbsp;</a>
+				<span id="ssp">
+					<a id="addBtn" class="easyui-linkbutton" iconCls="icon-add">&nbsp;新&nbsp;&nbsp;增&nbsp;</a>
+				</span>			
+				<span id="span">
+					<a href="javascript:doModify()" id="modifyBtn"
+					class="easyui-linkbutton" iconCls="icon-edit">&nbsp;修&nbsp;&nbsp;改&nbsp;</a>
+					<a id="removeBtn" class="easyui-linkbutton" iconCls="icon-remove">&nbsp;删&nbsp;&nbsp;除&nbsp;</a>
+					<a id="exportSome" class="easyui-linkbutton" iconCls="icon-remove">导出当前页</a>
+					<a id="exportAll" href="../../exportAllOfficia.json" class="easyui-linkbutton" iconCls="icon-remove">导出全部</a>
+				</span>
+				
+			</td>
+		</tr>
+	</table>
+	<form id="serchForm">
+		<table class="btbForm">
+			<tr>
+				<td>
+					<input name="keyWorld" class="easyui-textbox" data-options="prompt:'请输入任意想要查询的信息'" style="width:180px;" />
+					民族<input name="nation" class="easyui-textbox" data-options="prompt:'请输入要查询的民族'" style="width:140px;" />		
+					户口<select id="registered" data-options="editable:false,panelHeight:'auto'" class="easyui-combobox" name="registered" style="width:70px;">      
+					     <option value="">请选择</option>
+					    <option value="城镇">城镇</option>   
+					    <option value="农村">农村</option>   					    
+					</select> 
+					学历<input name="education" data-options="prompt:'输入学历'"  style="width:70px" class="easyui-textbox"/>
+					姓名<input name="userName"  data-options="prompt:'输入姓名'"  style="width:70px" class="easyui-textbox"/>	
+					岗位名称 <input name="postName" data-options="prompt:'输入岗位名称'" style="width:90px;" class="easyui-textbox"/>	
+					所属部门 <input name="wpId" id="wpId"  style="width:110px;" />	
+					岗位级别<input name="wdId" id="wdId" style="width:80px;"/>
+				</td>
+			</tr>
+			
+			<tr>
+				<td>									 					
+					 正式/试用<select id="isOfficial" data-options="editable:false,panelHeight:'auto'" class="easyui-combobox" name="isOfficial" style="width:65px;">      
+					    <option value="">请选择</option>
+					    <option value="正式">正式</option>   
+					    <option value="试用">试用</option>   					    
+					</select> 
+					 到岗日期 <input style="width:100px" data-options="editable:false" id="startWorkTimeSmall" name="startWorkTimeSmall" class="easyui-datebox"/>~ 
+					 <input style="width:100px" data-options="editable:false" id="startWorkTimeBig" name="startWorkTimeBig" class="easyui-datebox"/>
+					 转正日期 <input style="width:100px" data-options="editable:false" id="turnOfficialTimeSmall" name="turnOfficialTimeSmall" class="easyui-datebox"/>~ 
+					 <input style="width:100px" data-options="editable:false" id="turnOfficialTimeBig" name="turnOfficialTimeBig" class="easyui-datebox"/>
+					   起始工龄  <input style="width:70px;" name="workAgeSmall" class="easyui-textbox"/>
+					   截止工龄<input style="width:70px;"  name="workAgeBig" class="easyui-textbox"/> 					
+				</td>
+			</tr>
+			<tr>
+				<td>
+					  起始月份<select id="startMounth" data-options="editable:false,panelHeight:'auto'" class="easyui-combobox" name="startMounth" style="width:70px;">   
+					    <option value="">请选择</option> 
+					    <option value="1">01</option>   
+					    <option value="2">02</option>
+					    <option value="3">03</option>   
+					    <option value="4">04</option>   
+					    <option value="5">05</option>   
+					    <option value="6">06</option>   
+					    <option value="7">07</option>   
+					    <option value="8">08</option>   
+					    <option value="9">09</option>   
+					    <option value="10">10</option>   
+					    <option value="11">11</option>   
+					    <option value="12">12</option>   					         					    
+					</select> 
+					   截止月份 <select id="endMounth" data-options="editable:false,panelHeight:'auto'" class="easyui-combobox" name="endMounth" style="width:70px;">      
+					    <option value="">请选择</option>
+					    <option value="1">01</option>   
+					    <option value="2">02</option>
+					    <option value="3">03</option>   
+					    <option value="4">04</option>   
+					    <option value="5">05</option>   
+					    <option value="6">06</option>   
+					    <option value="7">07</option>   
+					    <option value="8">08</option>   
+					    <option value="9">09</option>   
+					    <option value="10">10</option>   
+					    <option value="11">11</option>   
+					    <option value="12">12</option>   					         					    
+					</select>
+					   起始年份  <input style="width:70px;" name="startYear" class="easyui-textbox"/>
+					   截止年份<input style="width:70px;"  name="endYear" class="easyui-textbox"/> 
+					   起始年龄 <input style="width:70px;" name="startAge" class="easyui-textbox"/>
+					   截止年龄<input style="width:70px;" name="endAge" class="easyui-textbox"/>  
+				</td>
+			</tr>
+		</table>
+	</form>
+		
+	<div style="margin:5px;"></div>
+
+<!-- 数据展现 -->
+
+	<table id="tt" data-options="pagination:true,singleSelect:true">
+		
+	</table>
+
+
+<!-- 修改选项界面 -->
+	<div id="personnelTest_mod_div" class="easyui-dialog" style="height:100px;width:400px;" 
+	data-options="buttons:'#personnelTest_mod_btn',closed:true,modal:true">
+		 <form action="post" id="personnelTest_mod_form" enctype="multipart/form-data">
+			<table id="personnelTest_mod_tab" style="width: 380px">
+				<tr>
+					<td style="text-align: center;">
+						<input type="radio" checked="checked" name="cho" value=0>修改当前选中信息
+						<input type="radio" name="cho" value=1>调整为离职员工
+					</td>
+				</tr>
+				
+			</table>
+		</form>		 
+		<div id="personnelTest_mod_btn">
+			<a id="mod_submitBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">提交</a>
+			<a id="mod_closeBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no'">关闭</a>    
+		</div>
+	</div>
+
+<!-- 在职员工新增页面 -->
+	<div id="personnel_official_div" class="easyui-dialog" style="height:320px;width:400px;" 
+	data-options="buttons:'#personne_official_btn',closed:true,modal:true">
+		<form action="post" id="personnel_official_form" enctype="multipart/form-data">
+			<input type="hidden" id="cId" name="userId"> 
+			<input type="hidden" name="fileNumber">
+			<input type="hidden" name="dimissionTime">
+			<input type="hidden" name="turnOfficalTime">
+			<input type="hidden" name="birDate">
+			<input type="hidden" name="birMounth">
+			<input type="hidden" name="birYear">
+			<input type="hidden" name="age">
+			<input type="hidden" name="isOfficial">
+			<input type="hidden" name="contractType">
+			<input type="hidden" name="workAge">
+			<input type="hidden" name=userIdCardAddress>
+			<input type="hidden" name="contractTime">
+			<input type="hidden" name="contractEndTime">
+			<input type="hidden" name="contractDeadline">  
+			<input type="hidden" name = "sign">               
+			<table id="personnel_official_tab">
+				<tr><td></td><td></td></tr>
+				<tr>
+					<td>
+						<span class="sp">所属部门</span>
+					</td>
+					<td>
+						<input data-options="width:200" name="wpId" id="addWpId"/>
+						 
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">岗位名称</span>
+					</td>
+					<td>
+						<input data-options="width:200" class="easyui-textbox" name="postName" id="addWostName"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">岗位级别</span>
+					</td>
+					<td>
+						<input data-options="width:200" name="wdId" id="addWdId"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">姓名</span>
+					</td>
+					<td>
+						<input class="easyui-textbox" name="userName" style="width:200px;"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">性别</span>
+					</td>
+					<td>
+						<select id="endMounth" data-options="editable:false,panelHeight:'auto'" class="easyui-combobox" name="userSex" style="width:200px;">      
+						    <option value="">请选择</option>
+						    <option value="保密">保密</option>
+						    <option value="男">男</option>   
+						    <option value="女">女</option>
+						    			         					    
+						</select> 
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">身份证号</span>
+					</td>
+					<td>
+						<input class="easyui-textbox" name="identityCard" style="width:200px;"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">身份证地址</span>
+					</td>
+					<td>
+						<input class="easyui-textbox" name="userIdCardAddress" style="width:200px;"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">到岗日期</span>
+					</td>
+					<td>
+						<input data-options="editable:false" class="easyui-datebox" name="startWorkTime" style="width:200px;"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">民族</span>
+					</td>
+					<td>
+						<input class="easyui-textbox" name="nation" style="width:200px;"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">户口</span>
+					</td>
+					<td>
+						<select id="addRegistered" data-options="editable:false,panelHeight:'auto'" class="easyui-combobox" name="registered" style="width:200px;">      
+						    <option value="">请选择</option>
+						    <option value="城镇">城镇</option>   
+						    <option value="农村">农村</option>
+						    			         					    
+						</select> 
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">学历</span>
+					</td>
+					<td>
+						<input class="easyui-textbox" name="education" style="width:200px;"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">联系电话</span>
+					</td>
+					<td>
+						<input class="easyui-numberbox" name="contactTel" style="width:200px;"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">正式/试用</span>
+					</td>
+					<td>
+						<select id="isOfficial" data-options="editable:false,panelHeight:'auto'" class="easyui-combobox" name="isOfficial" style="width:200px;">      
+						    <option value="">请选择</option>
+						    <option value="正试">正试</option>   
+						    <option value="试用">试用</option>						    			         					    
+						</select> 
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">合同类别</span>
+					</td>
+					<td>
+						<select id="contractType" data-options="editable:false,panelHeight:'auto'" class="easyui-combobox" name="contractType" style="width:200px;">      
+						    <option value="">请选择</option>
+						    <option value="正式">正式</option>   
+						    <option value="试用">试用</option>		
+						    <option value="未签">未签</option>					    			         					    
+						</select> 
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">转正日期</span>
+					</td>
+					<td>
+						<input class="easyui-datebox" data-options="editable:false" name="turnOfficialTime" style="width:200px;"/>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">备注</span>
+					</td>
+					<td>
+						<input class="easyui-textbox" name="remark" id="remark" style="width:200px;"/>
+					</td>
+				</tr>
+			</table>
+		</form>		
+		<div id="personne_official_btn">
+			<a id="submitOfficialBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">提交</a>
+			<a id="closeOfficialBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no'">关闭</a>    
+		</div>
+	</div>
+
+<!-- 离职员工页面 -->
+	<div id="personnel_leave_div" class="easyui-dialog" style="height:100px;width:300px;" 
+	data-options="buttons:'#personnel_leave_btn',closed:true,modal:true">
+		<form action="post" id="personnel_leave_form" enctype="multipart/form-data">
+			<input type="hidden" id="cId" name="userId"> 
+			<table id="personnel_leave_tab">
+				<tr>
+					<td>
+						<span class="sp">离职时间</span>
+					</td>
+					<td>
+						<input data-options="editable:false" class="easyui-datebox" name="dimissionTime"/>
+					</td>
+				</tr>
+			</table>
+		</form>		
+		<div id="personnel_leave_btn">
+			<a id="submitLeaveBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">提交</a>
+			<a id="closeLeaveBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no'">关闭</a>    
+		</div>
+	</div>
+</body>
+</html>

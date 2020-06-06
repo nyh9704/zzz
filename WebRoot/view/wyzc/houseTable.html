@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>房源信息</title>
+<link rel="stylesheet" type="text/css"
+	href="../../css/themes/default/easyui.css" />
+<link rel="stylesheet" type="text/css" href="../../css/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/common/main.css" />
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="js/houseTable.js"></script>
+<script src="../../js/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="js/datagrid-export.js"></script>
+</head>
+<style type="text/css">
+.sp {
+	font-weight: bold;
+	text-align: right;
+}
+
+#loading {
+	display: none;
+}
+
+#bg {
+	display: none;
+	position: absolute;
+	top: 0%;
+	left: 0%;
+	width: 100%;
+	height: 100%;
+	background-color: white;
+	z-index: 1001;
+	-moz-opacity: 0.7;
+	opacity: .70;
+	filter: alpha(opacity = 70);
+}
+
+#loading {
+	display: none;
+	position: absolute;
+	top: 25%;
+	left: 22%;
+	padding: 8px;
+	z-index: 1002;
+	overflow: auto;
+}
+</style>
+<body>
+
+	<table class="btbHead">
+		<tr>
+			<td style='width: 25%;' colspan="3"><img
+				src='../../images/common/title.gif' align='absmiddle' />房源信息</td>
+		</tr>
+	</table>
+	<table class="btbForm">
+		<tr>
+			<td text-algin="left" style="width: 65%">
+				<form id="form_search" method="post">
+					<input type="hidden" name = "nowUploadDate">
+					<input id="searchMo" name="searchMo" class="easyui-searchbox"
+						data-options="prompt:'请输入想要查询的房源',searcher:doMoSearch"
+						style="width: 150px;" id="searchMo" /> <select id="cc"
+						class="easyui-combobox" name="shiArea" style="width: 90px;"
+						data-options="editable:false,panelHeight:'auto'">
+						<option value="">请选择区域</option>
+						<option>渝北</option>
+						<option>南岸</option>
+						<option>渝中</option>
+						<option>巴南</option>
+						<option>北碚</option>
+						<option>九龙坡</option>
+						<option>江北</option>
+						<option>大渡口</option>
+						<option>沙坪坝</option>
+					</select> <select id="shiFinish" class="easyui-combobox" name="shiFinish"
+						style="width: 80px;"
+						data-options="editable:false,panelHeight:'auto'">
+						<option value="">装修程度</option>
+						<option>精装</option>
+						<option>清水</option>
+						<option>豪装</option>
+						<option>简装</option>
+						<option>中装</option>
+					</select> 
+					<select id="shiIsElevactor" class="easyui-combobox" name="shiIsElevactor"
+						style="width: 80px;"
+						data-options="editable:false,panelHeight:'auto'">
+						<option value="">电梯类型</option>
+						<option>步梯</option>
+						<option>电梯</option>
+						<option>未知</option>
+					</select>
+					<input class="easyui-numberbox" data-options="prompt:'请输入建筑年份'"
+						style="width: 100px" name="shiBulidDate">&nbsp;&nbsp;
+						<input class="easyui-numberbox" data-options="prompt:'价格'"
+						style="width: 50px" name="shiStartPrice1"> ~<input class="easyui-numberbox" data-options="prompt:'价格'"
+						style="width: 50px" name="shiStartPrice2">万元&nbsp;&nbsp;
+						<input class="easyui-numberbox" data-options="prompt:'面积'"
+						style="width: 50px" name="shiSpace1"> ~<input class="easyui-numberbox" data-options="prompt:'面积'"
+						style="width: 50px" name="shiSpace2"> ㎡
+						 <a href="javascript:doMoSearch()"
+						id="searchBtn" class="easyui-linkbutton" iconCls="icon-search">&nbsp;查&nbsp;&nbsp;询&nbsp;</a>
+						<a href="javascript:clearForm()"
+						 class="easyui-linkbutton" iconCls="icon-search">&nbsp;重&nbsp;&nbsp;置&nbsp;</a>
+						<span id="spHidden">
+							<a href="javascript:doModify()" id="modifyBtn"
+				class="easyui-linkbutton" iconCls="icon-edit">&nbsp;修&nbsp;&nbsp;改&nbsp;</a>
+						</span>
+						
+							<!-- <a href="/training/exportHouse.json" id="doExport"
+							class="easyui-linkbutton" iconCls="icon-remove">&nbsp;导出全部数据</a> -->
+							<a href="/training/exportHouseDq.json" id="a"
+							class="easyui-linkbutton" iconCls="icon-remove">&nbsp;导出当前数据</a>
+		
+						<a href="javascript:doUpFile()" id="doUpFile"
+							class="easyui-linkbutton" iconCls="icon-print">&nbsp;上传新增&nbsp;</a>
+						<!-- <a href="javascript:toDayAdd()" id="doUpFile"
+							class="easyui-linkbutton" iconCls="icon-print">&nbsp;当&nbsp;日&nbsp;新&nbsp;增&nbsp;</a> -->
+						<!-- <a href="javascript:toDayKKp()" id="doUpFile"
+							class="easyui-linkbutton" iconCls="icon-print">&nbsp;当&nbsp;日&nbsp;开&nbsp;拍&nbsp;</a> -->
+						<a href="javascript:toDayCCh()" id="doUpFile"
+							class="easyui-linkbutton" iconCls="icon-print">&nbsp;上传撤回&nbsp;</a>
+						<!-- <a href="javascript:searchToDayCh()" id="doUpFile"
+							class="easyui-linkbutton" iconCls="icon-print">&nbsp;今&nbsp;日&nbsp;新&nbsp;增&nbsp;</a> -->
+							
+					<a href="javascript:searchUploadToday()" id="doUpFile"
+							class="easyui-linkbutton" iconCls="icon-search">查询今日新增</a>
+					<a href="javascript:searchAuctionToday()" id="doUpFile"
+							class="easyui-linkbutton" iconCls="icon-search">查询今日开拍</a>
+					<a href="javascript:searchEndToday()" id="doUpFile"
+							class="easyui-linkbutton" iconCls="icon-search">查询预计今日结束</a>
+					</form>
+					
+					<!-- <a href="javascript:doAdd()" id="addBtn" class="easyui-linkbutton"
+						iconCls="icon-add">&nbsp;房&nbsp;源&nbsp;录&nbsp;入</a> -->
+					
+				<!-- <a href="javascript:doDelete()" id="deleteBtn"
+				class="easyui-linkbutton" iconCls="icon-remove">&nbsp;删&nbsp;&nbsp;除&nbsp;</a>   -->
+
+				
+			</td>
+
+		</tr>
+	</table>
+
+	<div style="margin: 5px;"></div>
+
+	<!-- 功能列表 -->
+	<table id="t" class="easyui-datagrid" 
+		data-options="singleSelect:true,pagination:true,pageSize:'10',remoteSort: true,striped:true,url:'/training/showHouse.json'">
+		<thead>
+			<tr>
+				<th data-options="field:'12',width:'2%'">优指</th>
+				<th data-options="field:'shiArea',width:'4%'">区域</th>
+				<th data-options="field:'shiName',width:'7%'">楼盘名称</th>
+				<th data-options="field:'shiHouseNumber',width:'11%'">房号</th>
+				<th data-options="field:'shiSpace',width:'4%',sortable:true">面积㎡</th>
+				<th data-options="field:'shiFinish',width:'3%'">装修</th>
+				<th data-options="field:'shiConstruction',width:'6%'">室内结构</th>
+				<th data-options="field:'shiIsElevactor',width:'5%'">有无电梯</th>
+				<th data-options="field:'shiLc',width:'4%'">楼层</th>
+				<th data-options="field:'shiStartPrice',width:'6%',sortable:true">起拍价(万元)</th>
+				<th data-options="field:'shiPrice',width:'6%',sortable:true">市场价</th>
+				<th data-options="field:'shiGuaranteePrice',width:'5%'">保证金</th>
+				<th data-options="field:'shiAddPrice',width:'5%',sortable:true">加价幅度</th>
+				<th data-options="field:'shiAuctionDate',width:'6%',sortable:true">竞拍日期</th>
+				<th data-options="field:'shiBulidDate',width:'6%',sortable:true">建成时间</th>
+				<th data-options="field:'shiLocation',width:'5%'">位置</th>
+				<th data-options="field:'shiTudi',width:'5%'">土地类型</th>
+				<th data-options="field:'shiUrl',width:'3%'" formatter='href'>网址</th>
+				<th data-options="field:'shiCode',width:'5%'" formatter='details'>房屋详情</th>
+				<th data-options="field:'shiAppendix',width:'3%'" formatter='shiAppendix'>附件</th>
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+
+
+
+	<!-- 添加界面弹窗 -->
+	<div id="dd" class="easyui-dialog" style="width: auto; height: auto;"
+		data-options="iconCls:'icon-save',closed:true,resizable:true,modal:true,buttons:'#btn_dlg'">
+
+		<form id="form_save" method="post">
+			<table class="btbForm" cellpadding="2px" style="padding-top: 10px;"
+				id="ddTable">
+
+
+				<tr>
+					<input type="hidden" name="shiCode" id="shiCode" />
+					<td style="width: 15%; text-align: right;">区域</td>
+					<td style="width: 36%" colspan="3"><input type="text"
+						id=shiArea name="shiArea" style="width: 325px;"
+						class="easyui-textbox" data-options="prompt: '输入区名称（例如江北区）'" /></td>
+				</tr>
+				<tr>
+					<td style="width: 17%; text-align: right;">楼盘名称</td>
+					<td style="width: 36%" colspan="3"><input type="text"
+						id="shiName" name="shiName" style="width: 325px;"
+						class="easyui-textbox" data-options="prompt: '请输入楼盘名称'" /></td>
+				</tr>
+				<tr>
+					<td style="width: 17%; text-align: right;">房号</td>
+					<td style="width: 36%" colspan="3"><input type="text"
+						id="shiHouseNumber" name="shiHouseNumber" style="width: 325px;"
+						class="easyui-textbox" data-options="prompt: '请输入房号（具体地址）'" /></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">面积㎡</td>
+					<td style="width: 36%" colspan="3"><input type="text"
+						id="shiSpace" name=shiSpace style="width: 325px;"
+						class="easyui-textbox" data-options="prompt: '请输入面积'" /></td>
+				</tr>
+				<tr>
+					<td style="width: 17%; text-align: right;">结构</td>
+					<td style="width: 36%" colspan="3"><input type="text"
+						id="shiConstruction" name="shiConstruction" style="width: 325px;"
+						class="easyui-textbox" data-options="prompt: '请输入几室几厅'" /></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">装修</td>
+					<td colspan="3"><input type="text" id="shiFinish"
+						name="shiFinish" style="width: 325px;" class="easyui-textbox"
+						data-options="prompt: '请输入装修（精装/简装/清水）'" /></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">起拍价</td>
+					<td colspan="3"><input type="text" id="shiStartPrice"
+						name="shiStartPrice" style="width: 325px;"
+						class="easyui-textbox" data-options="prompt: '请输入起拍价'" /></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">市场价</td>
+					<td colspan="3"><input type="text" id="shiPrice"
+						name="shiPrice" style="width: 325px;" class="easyui-textbox"
+						data-options="prompt: '请输入市场价（万元）' " /></td>
+				</tr>
+
+				<tr>
+					<td style="text-align: right;">保证金</td>
+					<td colspan="3"><input type="text" id="shiGuaranteePrice"
+						name="shiGuaranteePrice" style="width: 325px;"
+						class="easyui-textbox" data-options="prompt: ' 请输入保证金'" /></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">有无电梯</td>
+					<td colspan="3"><select class="easyui-combobox"
+						name="shiIsElevactor" style="width: 325px;"
+						data-options="panelHeight:'auto',editable:false,prompt: '请选择' ">
+							<option value="有">有</option>
+							<option>无</option>
+					</select></td>
+				</tr>
+				</tr>
+				<tr>
+					<td style="width: 17%; text-align: right;">楼层</td>
+					<td style="width: 36%" colspan="3"><input type="text"
+						id="shiLc" name="shiLc" style="width: 325px;"
+						class="easyui-textbox"
+						data-options="prompt: '请输入楼层（23/30）,30为总楼层，23为房间在多少楼，以/分隔'" /></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">加价幅度</td>
+					<td colspan="3"><input type="text" id="shiAddPrice"
+						name="shiAddPrice" style="width: 325px;" class="easyui-numberbox"
+						data-options="prompt: '请输入加价幅度（元）' " /></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">开拍时间</td>
+					<td colspan="3"><input style="width: 325px;"
+						id="shiAuctionDate" name="shiAuctionDate" type="text"
+						data-options="prompt: '请选择开拍时间' " class="easyui-datebox">
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">建成时间</td>
+					<td colspan="3"><input style="width: 325px;" id="shiBulidDate"
+						name="shiBulidDate" type="text" data-options="prompt: '请选择建成时间' "
+						class="easyui-textbox"></td>
+				</tr>
+				<tr>
+					<td style="width: 17%; text-align: right;">位置</td>
+					<td style="width: 36%" colspan="3"><input type="text"
+						id="shiLocation" name="shiLocation" style="width: 325px;"
+						class="easyui-textbox" data-options="prompt: '请输入具体位置'" /></td>
+				</tr>
+
+				<tr>
+					<td style="width: 17%; text-align: right;">土地类型</td>
+					<td style="width: 36%" colspan="3"><input type="text"
+						id="shiTudi" name="shiTudi" style="width: 325px;"
+						class="easyui-textbox" data-options="prompt: '请输入土地类型'" /></td>
+				</tr>
+				<tr>
+					<td style="width: 17%; text-align: right;">具体网址</td>
+					<td style="width: 36%" colspan="3"><input type="text"
+						id="shiUrl" name="shiUrl" style="width: 325px;"
+						class="easyui-textbox" data-options="prompt: '请输入具体网址（可选填）'" /></td>
+				</tr>
+				<tr>
+					<td style="width: 17%; text-align: right;">附件网址</td>
+					<td style="width: 36%" colspan="3"><input type="text"
+						id="shiAppendix" name="shiAppendix" style="width: 325px;"
+						class="easyui-textbox" data-options="prompt: '请输入具体网址（可选填）'" /></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+
+	<!-- 弹出框底部的按钮 -->
+	<div id="btn_dlg" style="display: none; text-align: right;">
+		<a href="javascript:doSave()" class="easyui-linkbutton"
+			iconCls="icon-save">保存</a> <a href="javascript:doCancel()"
+			class="easyui-linkbutton" iconCls="icon-cancel">取消</a> <a
+			href="javascript:doRest()" class="easyui-linkbutton"
+			iconCls="icon-reload">重置</a>
+	</div>
+
+
+	<div id="particulars_win"
+		data-options="iconCls:'icon-save',closable:true,buttons:'#particularsCloseBtn'"
+		class="easyui-dialog" title="房屋详情"
+		style="width: 500px; height: 420px; background: white;">
+
+		<form id="particulars_form">
+			<table id="particulars_tab" align="center">
+				<tr>
+					<td style="text-align: right;"><span class="sp">区域：</span></td>
+					<td><span name="shiArea" id="shiArea"></span></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">楼盘名称：</span></td>
+					<td><span name="shiName" id="shiName"></span></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">房号：</span></td>
+					<td><span name="shiHouseNumber" id="shiHouseNumber"></span></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">装修：</span></td>
+					<td><span id="shiFinish" name="shiFinish" style="width: 300px"></span>
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">室内结构：</span></td>
+					<td><span id="shiConstruction" name="shiConstruction"></span>
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">面积㎡：</span></td>
+					<td><span id="shiSpace" name="shiSpace"></span></td>
+				</tr>
+
+
+				<tr>
+					<td style="text-align: right;"><span class="sp">有无电梯：</span></td>
+					<td><span name="shiIsElevactor"></span></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">楼层：</span></td>
+					<td><span name="shiLc"></span></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">起拍价：</span></td>
+					<td><span name="shiStartPrice"></span></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">市场价：</span></td>
+					<td><span name="shiPrice"> </span></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">保证金：</span></td>
+					<td><span name="shiGuaranteePrice"></span></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">加价幅度：</span></td>
+					<td><span id="shiAddPrice" name="shiAddPrice"></span></td>
+
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">竞拍日期：</span></td>
+					<td><span id="shiAuctionDate" name="shiAuctionDate"></span></td>
+
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">土地类型：</span></td>
+					<td><span name="shiTudi"></span></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">建成时间：</span></td>
+					<td><span name="shiBulidDate"></span></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">位置：</span></td>
+					<td><span name="shiLocation"></span></td>
+				</tr>
+
+				<tr>
+					<td style="text-align: right;"><span class="sp">网址：</span></td>
+					<td><span name="shiUrl"><a href="#"></a></span></td>
+				</tr>
+
+			</table>
+		</form>
+		<div id="prticulars_div">
+			<a id="particularsCloseBtn" href="javascript:closePartichlarsWin()"
+				class="easyui-linkbutton" data-options="iconCls:'icon-no'">关闭</a>
+		</div>
+	</div>
+
+
+
+	<div id="bg"></div>
+	<div id="loading">
+		<p>
+		<h2>正在操作中，请耐心等候~~</h2>
+		</p>
+		<img src="image/loading.gif" />
+	</div>
+	
+
+
+	<!-- 上传界面 -->
+	<div id="upfileload" class="easyui-dialog"
+		style="width: auto; height: auto;"
+		data-options="iconCls:'icon-save',closed:true,resizable:true,modal:true,buttons:'#btn_upFile'">
+		<h3>
+			请选择上传的excel(表格.xls)！<img src="image/jg.jpg"
+				style="width: 20px; height: 20px;">
+		</h3>
+		<p style="color: red; font-weight: bold;">此操作不可以返回！慎重选择！否则后果严重！</p>
+		<form id="upLoadFile" method="post" enctype="multipart/form-data">
+			<input type="file" id="file1" name="file1">
+		</form>
+	</div>
+
+	<!-- 当日新增界面 -->
+	<div id="addXz" class="easyui-dialog"
+		style="width: auto; height: auto;"
+		data-options="iconCls:'icon-save',closed:true,resizable:true,modal:true,buttons:'#btn_toDayXz'">
+		<h3>
+			请选择当日新增的excel(表格.xls)！<img src="image/jg.jpg"
+				style="width: 20px; height: 20px;">
+		</h3>
+		<p style="color: red; font-weight: bold;">此操作不可以返回！慎重选择！否则后果严重！</p>
+		<form id="addXX" method="post" enctype="multipart/form-data">
+			<input type="file" id="file2" name="file1">
+		</form>
+	</div>
+
+	<!-- 当日开拍界面 -->
+	<div id="addLKp" class="easyui-dialog"
+		style="width: auto; height: auto;"
+		data-options="iconCls:'icon-save',closed:true,resizable:true,modal:true,buttons:'#btn_toDayKp'">
+		<h3>
+			请选择当日开拍的excel(表格.xls)！<img src="image/jg.jpg"
+				style="width: 20px; height: 20px;">
+		</h3>
+		<p style="color: red; font-weight: bold;">此操作不可以返回！慎重选择！否则后果严重！</p>
+		<form id="addLKpp" method="post" enctype="multipart/form-data">
+			<input type="file" id="file3" name="file1">
+		</form>
+	</div>
+
+
+	<!-- 当日撤回界面 -->
+	<div id="addCh" class="easyui-dialog"
+		style="width: auto; height: auto;"
+		data-options="iconCls:'icon-save',closed:true,resizable:true,modal:true,buttons:'#btn_toDayCh'">
+		<h3>
+			请选择撤回的excel(表格.xls)！<img src="image/jg.jpg"
+				style="width: 20px; height: 20px;">
+		</h3>
+		<p style="color: red; font-weight: bold;">此操作不可以返回！慎重选择！否则后果严重！</p>
+		<form id="addCzz" method="post" enctype="multipart/form-data">
+			<input type="file" id="file4" name="file1">
+		</form>
+	</div>
+
+
+	<div id="btn_toDayXz" style="display: none; text-align: right;">
+		<a href="javascript:toDayXz()" class="easyui-linkbutton"
+			iconCls="icon-redo">上传</a><a href="javascript:doGb()"
+			class="easyui-linkbutton" iconCls="icon-cancel">关闭</a>
+	</div>
+
+
+	<div id="btn_toDayKp" style="display: none; text-align: right;">
+		<a href="javascript:toDayKp()" class="easyui-linkbutton"
+			iconCls="icon-redo">上传</a><a href="javascript:doGb()"
+			class="easyui-linkbutton" iconCls="icon-cancel">关闭</a>
+	</div>
+
+
+	<!-- 上传撤回 -->
+	<div id="btn_toDayCh" style="display: none; text-align: right;">
+		<a href="javascript:toDayCh()" class="easyui-linkbutton"
+			iconCls="icon-redo">上传</a><a href="javascript:doGb()"
+			class="easyui-linkbutton" iconCls="icon-cancel">关闭</a>
+	</div>
+
+
+
+	<!-- 上传新增 -->
+	<div id="btn_upFile" style="display: none; text-align: right;">
+		<a href="javascript:doAddFy()" class="easyui-linkbutton"
+			iconCls="icon-redo">上传新增</a> <!-- <a href="javascript:doGqFy()"
+			class="easyui-linkbutton" iconCls="icon-undo">上传过期房源</a> --> <a
+			href="javascript:doGb()" class="easyui-linkbutton"
+			iconCls="icon-cancel">关闭</a>
+	</div>
+
+
+	<!-- 查询当日新增 -->
+	<div id="todayXin" class="easyui-window" title="当日新增"
+		style="width: 100%; height: 100%"
+		data-options="iconCls:'icon-save',modal:true">
+		<div class="easyui-layout" data-options="fit:true">
+			<table id="todayXinZ" class="easyui-datagrid"
+				data-options="singleSelect:true,pagination:true,pageSize:'10',url:'/training/searchTodyXz.json'">
+				<thead>
+					<tr>
+						<th data-options="field:'12',width:'5%'">优质指数</th>
+						<th data-options="field:'shiArea',width:'5%'">区域</th>
+						<th data-options="field:'shiName',width:'7%'">楼盘名称</th>
+						<th data-options="field:'shiHouseNumber',width:'8%'">房号</th>
+						<th data-options="field:'shiSpace',width:'4%'">面积㎡</th>
+						<th data-options="field:'shiFinish',width:'3%'">装修</th>
+						<th data-options="field:'shiConstruction',width:'8%'">室内结构</th>
+						<th data-options="field:'shiIsElevactor',width:'5%'">有无电梯</th>
+						<th data-options="field:'shiLc',width:'4%'">楼层</th>
+						<th data-options="field:'shiStartPrice',width:'6%'">起拍价</th>
+						<th data-options="field:'shiPrice',width:'6%'">市场价</th>
+						<th data-options="field:'shiGuaranteePrice',width:'5%'">保证金</th>
+						<th data-options="field:'shiAddPrice',width:'5%'">加价幅度</th>
+						<th data-options="field:'shiAuctionDate',width:'6%'">竞拍日期</th>
+						<th data-options="field:'shiBulidDate',width:'6%'">建成时间</th>
+						<th data-options="field:'shiLocation',width:'5%'">位置</th>
+						<th data-options="field:'shiTudi',width:'5%'">土地类型</th>
+						<th data-options="field:'shiUrl',width:'3%'" formatter='href'>网址</th>
+						<th data-options="field:'shiCode',width:'5%'" formatter='details'>房屋详情</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- 查询当日开拍-->
+	<div id="todayKai" class="easyui-window" title="当日开始"
+		style="width: 600px; height: 400px"
+		data-options="iconCls:'icon-save',modal:true">
+		<div class="easyui-layout" data-options="fit:true">
+			<table id="todayKaiP" class="easyui-datagrid"
+				data-options="singleSelect:true,pagination:true,pageSize:'10',url:'/training/searchTodyKp.json'">
+				<thead>
+					<tr>
+						<th data-options="field:'shiHouseNumber',width:'80%'">房号</th>
+						<th data-options="field:'shiUrl',width:'20%'" formatter='href'>网址</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- 查询当日撤回 -->
+	<div id="todayChe" class="easyui-window" title="当日撤回"
+		style="width: 600px; height: 400px"
+		data-options="iconCls:'icon-save',modal:true">
+		<div class="easyui-layout" data-options="fit:true">
+			<table id="todayCheH" class="easyui-datagrid"
+				data-options="singleSelect:true,pagination:true,pageSize:'10',url:'/training/searchTodyCh.json'">
+				<thead>
+					<tr>
+						<th data-options="field:'shiHouseNumber',width:'80%'">房号</th>
+						<th data-options="field:'shiUrl',width:'20%'" formatter='href'>网址</th>
+					</tr>
+				</thead>
+				<tbody>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</body>
+</html>

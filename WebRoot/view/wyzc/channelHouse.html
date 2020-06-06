@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>房源信息</title>
+<link rel="stylesheet" type="text/css"
+	href="../../css/themes/default/easyui.css" />
+<link rel="stylesheet" type="text/css" href="../../css/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/common/main.css" />
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="js/channelHouse.js"></script>
+<script src="../../js/easyui-lang-zh_CN.js"></script>
+<script type="text/javascript" src="js/datagrid-export.js"></script>
+</head>
+<style type="text/css">
+.sp {
+	font-weight: bold;
+	text-align: right;
+}
+
+#loading {
+	display: none;
+}
+a{ text-decoration:none;
+	color: blue;
+	font-weight: bold;} 
+#bg {
+	display: none;
+	position: absolute;
+	top: 0%;
+	left: 0%;
+	width: 100%;
+	height: 100%;
+	background-color: white;
+	z-index: 1001;
+	-moz-opacity: 0.7;
+	opacity: .70;
+	filter: alpha(opacity = 70);
+}
+
+#loading {
+	display: none;
+	position: absolute;
+	top: 25%;
+	left: 22%;
+	padding: 8px;
+	z-index: 1002;
+	overflow: auto;
+}
+</style>
+<body>
+
+	<table class="btbHead">
+		<tr>
+			<td style='width: 25%;' colspan="3"><img
+				src='../../images/common/title.gif' align='absmiddle' />房源信息</td>
+		</tr>
+	</table>
+	<table class="btbForm">
+		<tr>
+			<td text-algin="left" style="width: 65%">
+				<form id="form_search" method="post">
+					<input id="searchMo" name="searchMo" class="easyui-searchbox"
+						data-options="prompt:'请输入想要查询的房源',searcher:doMoSearch"
+						style="width: 150px;" id="searchMo" /> <select id="cc"
+						class="easyui-combobox" name="channelArea" style="width: 90px;"
+						data-options="editable:false,panelHeight:'auto'">
+						<option value="请选择区域">请选择区域</option>
+						<option>渝北</option>
+						<option>南岸</option>
+						<option>渝中</option>
+						<option>巴南</option>
+						<option>北碚</option>
+						<option>九龙坡</option>
+						<option>江北</option>
+						<option>大渡口</option>
+						<option>沙坪坝</option>
+					</select> <select id="channelDecoration" class="easyui-combobox" name="channelDecoration"
+						style="width: 80px;"
+						data-options="editable:false,panelHeight:'auto'">
+						<option value="装修程度">装修程度</option>
+						<option>精装</option>
+						<option>清水</option>
+						<option>豪装</option>
+						<option>简装</option>
+						<option>中装</option>
+					</select> 
+					<select id="channelNature" class="easyui-combobox" name="channelNature"
+						style="width: 80px;"
+						data-options="editable:false,panelHeight:'auto'">
+						<option value="性质">性质</option>
+						<option>住宅</option>
+						<option>别墅</option>
+						<option>洋房</option>
+					</select>
+					<input class="easyui-numberbox" data-options="prompt:'请输入建筑年份'"
+						style="width: 100px" name="channelBuildAge">&nbsp;&nbsp;
+						<input class="easyui-numberbox" data-options="prompt:'建筑面积'"
+						style="width: 100px" name="channelBuildArea1"> ~<input class="easyui-numberbox" data-options="prompt:'建筑面积'"
+						style="width: 100px" name="channelBuildArea2"> ㎡&nbsp;&nbsp;
+						<input class="easyui-numberbox" data-options="prompt:'价格'"
+						style="width: 100px" name="channelPrice1"> ~<input class="easyui-numberbox" data-options="prompt:'价格'"
+						style="width: 100px" name="channelPrice2">万元
+						
+						 <a href="javascript:doMoSearch()"
+						id="searchBtn" class="easyui-linkbutton" iconCls="icon-search">&nbsp;查&nbsp;&nbsp;询&nbsp;</a>
+						
+						 <a href="javascript:clearForm()"
+						 class="easyui-linkbutton" iconCls="icon-search">&nbsp;重&nbsp;&nbsp;置&nbsp;</a>
+						 
+						<a href="javascript:doDelete()" id="deleteBtn"
+				class="easyui-linkbutton" iconCls="icon-remove">&nbsp;批&nbsp;&nbsp;量&nbsp;&nbsp;删&nbsp;&nbsp;除&nbsp;</a>
+				<a id="addBtn" class="easyui-linkbutton" iconCls="icon-add">&nbsp;新&nbsp;&nbsp;增&nbsp;&nbsp;渠&nbsp;&nbsp;道&nbsp;&nbsp;房&nbsp;&nbsp;源&nbsp;</a>
+					</form>
+						
+					<!-- <a href="javascript:doAdd()" id="addBtn" class="easyui-linkbutton"
+						iconCls="icon-add">&nbsp;房&nbsp;源&nbsp;录&nbsp;入</a> -->
+					<!--  <a href="javascript:doModify()" id="modifyBtn"
+				class="easyui-linkbutton" iconCls="icon-edit">&nbsp;修&nbsp;&nbsp;改&nbsp;</a>
+			-->
+
+				
+			</td>
+
+	</table>
+
+	<div style="margin: 5px;"></div>
+
+	<!-- 功能列表 -->
+	<table id="t" class="easyui-datagrid" 
+		data-options="pagination:true,pageSize:'10',remoteSort: true,striped:true,url:'/training/showChannelHouse.json'">
+		<thead>
+			<tr>
+			 	<th field="ck" checkbox="true"></th>
+				<th data-options="field:'12',width:'3%',sortable:true,halign: 'center'">优指</th>
+				<th data-options="field:'channelArea',width:'3%',halign: 'center'">区域</th>
+				<th data-options="field:'channelPosition',width:'4%',halign: 'center'">位置</th>
+				<th data-options="field:'channelBuildName',width:'7%',halign: 'center'">楼盘名称</th>
+				<th data-options="field:'channelFloor',width:'3%',halign: 'center'">楼层</th>
+				<th data-options="field:'channelCoverArea',width:'4%',sortable:true,halign: 'center'">套内面积</th>
+				<th data-options="field:'channelBuildArea',width:'4%',sortable:true,halign: 'center'">建筑面积</th>
+				<th data-options="field:'channelInterior',width:'6%',halign: 'center'">室内结构</th>
+				<th data-options="field:'channelDecoration',width:'3%',halign: 'center'">装修</th>
+				<th data-options="field:'channelNature',width:'3%',halign: 'center'">性质</th>
+				<th data-options="field:'channelPrice',width:'5%',sortable:true,halign: 'center'">价格（万元）</th>
+				<th data-options="field:'channelDeposit',width:'4%',halign: 'center'">订金（万元）</th>
+				<th data-options="field:'channelPurchasing',width:'5%',halign: 'center'">购房流程</th>
+				<th data-options="field:'channelMortgage',width:'10%',halign: 'center'">按揭情况</th>
+				<th data-options="field:'channelTax',width:'4%',halign: 'center'">税费情况</th>
+				<th data-options="field:'channelBuildAge',width:'4%',sortable:true,halign: 'center'">建筑年代</th>
+				<th data-options="field:'channelIntroduce',width:'18%',halign: 'center'">介绍</th>
+				<th data-options="field:'xq',width:'4%',halign: 'center'" formatter='xq'>其他信息</th>
+				<th data-options="field:'xg',width:'3%',halign: 'center'" formatter='details'>修改</th>
+				<th data-options="field:'sc',width:'3%',halign: 'center'" formatter='deleteId'>删除</th>
+				
+			</tr>
+		</thead>
+		<tbody>
+		</tbody>
+	</table>
+
+
+
+	<!-- 添加界面弹窗 -->
+	<div id="dd" class="easyui-dialog" style="width: 550px; height: 500px;" border="1"
+		data-options="iconCls:'icon-save',closed:true,resizable:true,modal:true,buttons:'#btn_dlg'">
+
+		<form id="form_save" method="post">
+			<table class="btbForm" cellpadding="2px" style="padding-top: 10px;"
+				id="ddTable">
+
+
+				<tr>
+					<input type="hidden" name="channelCode" />
+					<td style="width: 15%; text-align: right;">性质</td>
+					<td style="width: 36%" colspan="3">
+					<select class="easyui-combobox" name="channelNature"
+						style="width: 325px;"
+						data-options="editable:false,panelHeight:'auto'">
+						<option value="性质">性质</option>
+						<option>住宅</option>
+						<option>别墅</option>
+						<option>洋房</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td style="width: 17%; text-align: right;">区域</td>
+					<td style="width: 36%" colspan="3"><select id="cc"
+						class="easyui-combobox" name="channelArea" style="width: 325px;"
+						data-options="editable:false,panelHeight:'auto'">
+						<option value="请选择区域">请选择区域</option>
+						<option>渝北</option>
+						<option>南岸</option>
+						<option>渝中</option>
+						<option>巴南</option>
+						<option>北碚</option>
+						<option>九龙坡</option>
+						<option>江北</option>
+						<option>大渡口</option>
+						<option>沙坪坝</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td style="width: 17%; text-align: right;">位置</td>
+					<td style="width: 36%" colspan="3"><input type="text"
+						 name="channelPosition" style="width: 325px;"
+						class="easyui-textbox" data-options="prompt: '请输入位置（具体地址）'" /></td>
+				</tr>
+				<tr>
+					<td style="width: 17%; text-align: right;">楼盘名称</td>
+					<td style="width: 36%" colspan="3"><input type="text"
+						 name="channelBuildName" style="width: 325px;"
+						class="easyui-textbox" data-options="prompt: '请输入楼盘名称'" /></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">套内面积㎡</td>
+					<td style="width: 36%" colspan="3"><input type="text"
+						id="channelCoverArea" name=channelCoverArea style="width: 325px;"
+						class="easyui-numberbox" data-options="prompt: '请输入套内面积'"/></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">建筑面积㎡</td>
+					<td style="width: 36%" colspan="3"><input type="text"
+						id="channelBuildArea" name=channelBuildArea style="width: 325px;"
+						class="easyui-numberbox" data-options="prompt: '请输入建筑面积'"/></td>
+				</tr>
+				<tr>
+					<td style="width: 17%; text-align: right;">室内结构</td>
+					<td style="width: 36%" colspan="3"><input type="text"
+						id="channelRoom" name="channelRoom" style="width: 60px;"
+						class="easyui-numberbox"/>室
+						<input type="text"
+						id="channelHall" name="channelHall" style="width: 60px;"
+						class="easyui-numberbox"/>厅
+						<input type="text"
+						id="channelKitchen" name="channelKitchen" style="width: 60px;"
+						class="easyui-numberbox"/>厨
+						<input type="text"
+						id="channelToilet" name="channelToilet" style="width: 60px;"
+						class="easyui-numberbox"/>卫</td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">装修情况</td>
+					<td colspan="3"><select class="easyui-combobox" name="channelDecoration"
+						style="width: 325px;"
+						data-options="editable:false,panelHeight:'auto'">
+						<option value="装修程度">装修程度</option>
+						<option>精装</option>
+						<option>清水</option>
+						<option>豪装</option>
+						<option>简装</option>
+						<option>中装</option>
+					</select> </td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">购房流程</td>
+					<td colspan="3"><select class="easyui-combobox" name="channelPurchasing"
+						style="width: 325px;"
+						data-options="editable:false,panelHeight:'auto'">
+						<option value="购房流程">购房流程</option>
+						<option>一手流程</option>
+						<option>二手流程</option>
+					</select> </td>
+				</tr>
+				<tr>
+					<td style="width: 17%; text-align: right;">介绍</td>
+					<td style="width: 36%" colspan="3"><input type="text"
+						 name="channelIntroduce" style="width: 325px;height:50px;"
+						class="easyui-textbox" data-options="prompt: '请输入介绍',multiline:true" /></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">价格（万）</td>
+					<td style="width: 36%" colspan="3"><input type="text"
+						 name="channelPrice" style="width: 325px;"
+						class="easyui-numberbox" data-options="prompt: '请输入价格（万）'"/></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">订金（万）</td>
+					<td style="width: 36%" colspan="3"><input type="text"
+						name=channelDeposit style="width: 325px;"
+						class="easyui-numberbox" data-options="prompt: '请输入订金（万）'"/></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">按揭情况</td>
+					<td colspan="3"><input type="text" 
+						name="channelMortgage" style="width: 325px;" class="easyui-textbox"
+						data-options="prompt: '请输入按揭情况' " /></td>
+				</tr>
+<tr>
+					<td style="text-align: right;">税费情况</td>
+					<td colspan="3"><input type="text" 
+						name="channelTax" style="width: 325px;" class="easyui-textbox"
+						data-options="prompt: '请输入税费情况' " /></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">楼层</td>
+					<td colspan="3"><input type="text" 
+						name="channelFloor" style="width: 325px;"
+						class="easyui-numberbox" data-options="prompt: ' 请输入楼层'" /></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">建筑年代</td>
+					<td colspan="3"><input type="text" 
+						name="channelBuildAge" style="width: 325px;"
+						class="easyui-numberbox" data-options="prompt: ' 请输入建筑年代'" /></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;">看房情况</td>
+					<td colspan="3"><input type="text" 
+						name="channelHouseKeeping" style="width: 325px;"
+						class="easyui-textbox" data-options="prompt: ' 请输入看房情况'" /></td>
+				</tr>
+				<tr>
+					<td style="width: 17%; text-align: right;">看房情况备注</td>
+					<td style="width: 36%" colspan="3"><input type="text"
+						 name="channelHouseKeepingPs" style="width: 325px;height:50px;"
+						class="easyui-textbox" data-options="prompt: '请输入介绍（备注！！）',multiline:true" /></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+
+	<!-- 弹出框底部的按钮 -->
+	<div id="btn_dlg" style="display: none; text-align: right;">
+		<a href="javascript:doSave()" class="easyui-linkbutton"
+			iconCls="icon-save">保存</a> <a href="javascript:doCancel()"
+			class="easyui-linkbutton" iconCls="icon-cancel">取消</a> <a
+			href="javascript:doRest()" class="easyui-linkbutton"
+			iconCls="icon-reload">重置</a>
+	</div>
+
+
+	<div id="particulars_win"
+		data-options="iconCls:'icon-save',closed:true,buttons:'#particularsCloseBtn'"
+		class="easyui-dialog" title="房屋详情"
+		style="width: 420px; height: 250px; background: white;">
+
+		<form id="particulars_form">
+			<table id="particulars_tab" align="left">
+				<tr>
+					<td style="text-align: right;"><span class="sp">看房情况：</span></td>
+					<td><p id="channelHouseKeeping"></p></td>
+				</tr>
+				<tr>
+					<td style="text-align: right;"><span class="sp">备注：</span></td>
+					<td><p  id="channelHouseKeepingPs"></p></td>
+				</tr>
+			
+			
+			</table>
+		</form>
+		<div id="prticulars_div">
+			<a id="particularsCloseBtn" href="javascript:closePartichlarsWin()"
+				class="easyui-linkbutton" data-options="iconCls:'icon-no'">关闭</a>
+		</div>
+	</div>
+
+
+
+	<div id="bg"></div>
+	<div id="loading">
+		<p>
+		<h2>正在操作中，请耐心等候~~</h2>
+		</p>
+		<img src="image/loading.gif" />
+	</div>
+
+
+	
+</body>
+</html>

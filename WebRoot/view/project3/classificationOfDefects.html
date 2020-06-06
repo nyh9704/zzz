@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+	<link rel="stylesheet" type="text/css" href="../../css/themes/default/easyui.css" />
+<link rel="stylesheet" type="text/css" href="../../css/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/common/main.css" />
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script src="../../js/easyui-lang-zh_CN.js"></script>
+
+	<script type="text/javascript" src="js/classificationOfDefects.js"></script>
+	<style type="text/css">
+		#add_win,#upd_win{
+			width: 300px;
+			height: 300px;
+			border: 1px solid #95B8E7;
+		}
+		#add_tab,#upd_tab{
+			font-size: 16px;
+			border-color: #95B8E7;
+		}
+	</style>
+</head>
+<body>
+	<table class='btbHead'>
+		<tr>
+			<td style="width:25%;"><img
+				src="../../images/common/title.gif"
+				align="absmiddle">缺陷分类</td>
+		</tr>
+	</table>
+	
+	<form id="searchresForm">
+		<table class="btbForm">
+			<tr>
+				<td style="text-align:right;"><a href="#" id="addBtn"
+				class="easyui-linkbutton" iconCls="icon-add">新增</a>
+			</td>
+			</tr>
+		</table>
+	</form>
+	
+	<table id="dg" data-options="pagination:true">
+		
+    </table>
+    
+    <div id="add_win">
+		<form id="add_form">
+		<table id="add_tab">
+			<tr><td></td></tr>
+			<tr><td></td></tr>
+			<tr>
+				<td align="right">编号</td>
+				<td>
+					<input class="easyui-textbox" style="width:150px" name="typeCode"> 
+				</td>
+			</tr>
+			<tr>
+				<td align="right">缺陷分类</td>
+				<td>
+					<input class="easyui-textbox" style="width:150px" name="typeDesc"> 
+				</td>
+			</tr>
+			<tr>
+				<td align="right">状态</td>
+				<td>
+					<input class="easyui-textbox" style="width:150px" name="moduleState"> 
+				</td>
+			</tr>
+			<tr><td></td></tr>
+			<tr>
+				<td align="right">
+				</td>
+				<td align="right">
+					<a id="submitBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'">提交</a>
+					<a id="addCloseBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no'">关闭</a>    
+				</td>
+			</tr>
+			
+		</table>
+		</form>
+    </div>
+     <div id="upd_win">
+		<form id="upd_form">
+		<table id="upd_tab">
+		
+			<tr><td></td></tr>
+			<tr><td></td></tr>
+			<tr>
+				<td align="right">编号</td>
+				<td>
+					<input class="easyui-textbox" style="width:150px" name="severityCode" id="a" readonly="readonly"> 
+				</td>
+			</tr>
+			<tr>
+				<td align="right">缺陷分类</td>
+				<td>
+					<input class="easyui-textbox" style="width:150px" name="severityDesc" id="b"> 
+				</td>
+			</tr>
+			<tr>
+				<td align="right">状态</td>
+				<td>
+					<input class="easyui-textbox" style="width:150px" name="moduleState" id="c"> 
+				</td>
+			</tr>
+			<tr><td></td></tr>
+			<tr>
+				<td align="right">
+				</td>
+				<td align="right">
+					<a id="submitUpdBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-add'">提交</a>
+					<a id="updCloseBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no'">关闭</a>    
+				</td>
+			</tr>
+		
+		</table>
+		</form>	
+    </div>
+</body>
+</html>

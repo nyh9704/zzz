@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="../../css/themes/default/easyui.css" />
+<link rel="stylesheet" type="text/css" href="../../css/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/common/main.css" />
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="js/defectList.js"></script>
+<script src="../../js/easyui-lang-zh_CN.js"></script>
+
+<style type="text/css">
+
+   img[src=""],img:not([src]){
+
+      opacity:0;
+   }
+	
+	.sp{
+		display: inline-block;
+		width: 60px;
+		height: 25px;
+	}
+</style>
+</head>
+<body>
+<!-- 页头 -->
+
+	<table class="btbHead">
+		<tr>
+			<td style='width: 25%;'>
+				<img src='../../images/common/title.gif' align='absmiddle'/>缺陷列表 
+			</td>
+			<td style="text-align: right;">
+				<a id="searchBtn" class="easyui-linkbutton" iconCls="icon-search">&nbsp;查&nbsp;&nbsp;询&nbsp;</a>
+				<a id="addBtn" class="easyui-linkbutton" iconCls="icon-add">&nbsp;新&nbsp;&nbsp;增&nbsp;</a>
+				<a id="modifBtn" class="easyui-linkbutton" iconCls="icon-edit">&nbsp;修&nbsp;&nbsp;改&nbsp;</a>
+				<a id="removeBtn" class="easyui-linkbutton" iconCls="icon-remove">&nbsp;删&nbsp;&nbsp;除&nbsp;</a>
+			</td>
+		</tr>
+	</table>
+	<form id="serchForm">
+		<table class="btbForm">
+			<tr>
+				<td>
+					登记时间<input name="startTime" class= "easyui-datebox" data-options="editable:false" id="startTime">~
+					<input name="endTime" class= "easyui-datebox" data-options="editable:false" id="endTime">
+					项目<input name="projectId" class= "easyui-textbox" id="projectName" value="全部" 
+					data-options="editable:false"/>
+					状态<input name="issueState"  id="issueState" easyui-textbox value='全部' data-options="editable:false"/>
+					
+				</td>
+			</tr>
+		</table>
+	</form>
+		
+	<div style="margin:5px;"></div>
+
+<!-- 数据展现 -->
+
+	<table id="tt" data-options="pagination:true,singleSelect:true">
+		
+	</table>
+	
+<!-- 增加面板 -->
+
+	<div id="add_win" class="easyui-dialog" style="background:#fafafa;height:420px;width:450px;" 
+	data-options="buttons:'#add_div'"> 
+		<form id="add_form" method="post" enctype="multipart/form-data">
+			<table id="add_tab" align="center">
+				<tr>
+					<td><span class="sp">项目名称：</span><input style="width:130px" class="easyui-textbox" name="projectId" id="proName" data-options="editable:false,required:true"></td>										
+				</tr>
+				<tr>
+					<td><span class="sp">上级缺陷：</span><input class="easyui-numberbox" name="parentId" id="parentId" data-options="editable:false"></td>
+				</tr>
+				<tr>					
+					<td colspan="2" align="left"><span class="sp">缺陷名称：</span><input class="easyui-textbox" name="issueName" id="issueName"
+					style="width:295px" data-options=""></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="left">
+					<span class="sp">缺陷描述：</span><input class="easyui-textbox" 
+					data-options="multiline:true" style="width:295px;height:40px" name="issueDesc" id="issueDesc">  
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align="left">
+					<span class="sp">缺陷要求：</span><input class="easyui-textbox" 
+					data-options="multiline:true" style="width:295px;height:40px" name="doneCondition" id="doneConditionId">  
+					</td>
+				</tr>
+				<tr>
+					<td align="left">
+					<span class="sp">缺陷分类：</span><input class="easyui-textbox" style="width:100px" name="issueType" id="type"  data-options="editable:false">
+					</td>
+				</tr>
+				<tr>					
+					<td align="left">
+					<span class="sp">严重程度：</span><input class="easyui-textbox" style="width:100px" name="issueSeverity" id="severity" data-options="editable:false">
+					</td>
+				</tr>
+				<tr>
+					<td align="left">
+					<span class="sp">优先级：</span><input class="easyui-textbox" style="width:100px" name="issuePriority" id="priority" data-options="editable:false">
+					</td>				
+				</tr>
+				<tr>
+					<td align="left" >
+					<span class="sp">缺陷状态：</span><input class="easyui-textbox" style="width:100px" name="issueState" id="state" data-options="editable:false,required:true,readonly:true">
+					</td>
+				</tr>
+				<tr>
+					<td>
+					<span class="sp">预计工时：</span><input class="easyui-textbox" style="width:100px" name="planWorkHours" id="planWorkHours" data-options="">
+					</td>					
+				</tr>
+				<tr>
+					<td align="left"><span class="sp">计划开始：</span><input class="easyui-datebox" name="planStartTime" id="start"  
+	        			data-options="required:false,showSeconds:false" style="width:100px">
+	        		</td>
+				</tr>
+				<tr>
+					
+	        		<td align="left"><span class="sp">计划完成：</span><input class="easyui-datebox" name="planEndTime"  id="end"   
+	        			data-options="required:false,showSeconds:false" style="width:100px">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><input class="easyui-filebox" style="width:300px" name='filebox' id="filebox"
+					 data-options="buttonText: '选择文件',buttonAlign: 'left'">
+					</td>
+				</tr>
+			</table>
+		</form>
+		<div id="add_div">
+			<a id="submitBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">提交</a>
+			<a id="addCloseBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no'">关闭</a>    
+		</div>
+    </div>
+	
+<!-- 详情页面 -->	
+	<div id="particulars_win" 
+	data-options="iconCls:'icon-save',closable:true,buttons:'#particulars_div'"
+	class="easyui-dialog" title="修改面板" style="width:500px;height:420px;background:white;">
+	
+		<form id="particulars_form">
+			<table id="particulars_tab" align="center">
+				<tr>
+					<td><span class="sp">项目名称：</span><input name="projectName" style="border: none;" readonly="readonly"></td>									
+				</tr>
+				<tr>
+					<td><span class="sp">上级缺陷：</span><input name="parentId" id="particularsParentId" style="border: none;" readonly="readonly"></td>
+				</tr>
+				<tr>					
+					<td><span class="sp">缺陷名称：</span><input name="issueName" style="border:none;" readonly="readonly"></td>					
+				</tr>
+				<tr>
+					<td>
+						<span class="sp">完成率：</span><span id="doneRatio"></span>		
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<span class="sp">缺陷描述：</span>
+						<p id="issueDescHide" style="width:300px"></p>
+					</td>
+				</tr>
+				<tr>					
+					<td colspan="2">
+					<span class="sp">缺陷要求：</span>
+						<p id="doneConditionHide" style="width:300px"></p>
+					</td>
+				</tr>
+				<tr>
+					<td><span class="sp">缺陷分类：</span><input style="width:100px;border: none" name="typeDesc" readonly="readonly" value="请选择"></td>				
+				</tr>
+				<tr>
+					<td><span class="sp">严重程度：</span><input style="width:100px;border: none" name="severityDesc" readonly="readonly" value="请选择"></td>
+				</tr>
+				<tr>
+					<td><span class="sp">优先级：</span><input style="width:100px;border: none;" name="priorityDesc" 
+					readonly="readonly" value="请选择"></td>					
+				</tr>
+				<tr>
+					<td><span class="sp">缺陷状态：</span><input style="width:100px;border: none;" name="stateDesc" 
+					readonly="readonly" value="请选择" ></td>
+				</tr>
+				<tr>
+					<td><span class="sp">派发给：</span><span id="userName"></span> </td>
+								
+				</tr>
+				<tr>	
+					<td><span class="sp">预计工时：</span><input style="width:100px;border: none;" name="planWorkHours" readonly="readonly"></td>	
+				</tr>
+				<tr>	
+					<td><span class="sp">实际工时：</span><input style="width:100px;border: none;" name="actWorkHours" readonly="readonly"></td>	
+				</tr>
+				<tr>
+					<td><span class="sp">计划开始：</span><input name="planStartTime"  
+	        			data-options="required:false,showSeconds:false" style="width:100px;border: none;"
+	        			readonly="readonly">
+	        		</td>		
+				</tr>
+				<tr>
+	        		<td>
+	        		<span class="sp">计划完成：</span>
+	        		<input name="planEndTime"     
+	        			data-options="required:false,showSeconds:false" style="width:100px;border: none;"
+	        			readonly="readonly">
+					</td>
+				</tr>
+				<tr>
+	        		<td>
+	        		<span class="sp">实际开始：</span>
+	        		<input name="actStartTime"     
+	        			data-options="required:false,showSeconds:false" style="width:100px;border: none;"
+	        			readonly="readonly">
+					</td>
+				</tr>
+				<tr>
+	        		<td>
+	        		<span class="sp">实际完成：</span>
+	        		<input name="actEndTime"     
+	        			data-options="required:false,showSeconds:false" style="width:100px;border: none;"
+	        			readonly="readonly">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<p id="fileName" style="border: none;font-weight: bolder;"></p>
+						<p><span id="download"><a href="#" style="color: blue;" id="downloadFile">下载</a></span>
+						<span id="preview"><a href="#" style="color: blue;" id="previewPicture">预览</a></span></p>
+						
+					</td>
+				</tr>
+			</table>
+		</form>	
+		<div id="div_img" style="margin-left: 100px"><img src="" id="showHeadImg" style="width: 300px;height: 300px;border: 0px;"></div>
+		<div id="particulars_div">
+			<a id="particularsCloseBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no'">关闭</a>    
+		</div>
+	</div>
+	
+<!-- 修改面板 -->
+	 <div id="amend_win" data-options="iconCls:'icon-save',closable:true,buttons:'#amend_div'" 
+	class="easyui-dialog" title="修改面板" style="width:500px;height:420px;background:white;">	
+		<form id="amend_form" method="post" enctype="multipart/form-data">
+			<input type="hidden" name="issueId" id="hiddenIssueId">
+			<input type="hidden" name="projectId">
+			<input type = "hidden" name = "parentCode" id = "parentCode">
+			<table id="amend_tab" align="center">
+				<tr>
+					<td><span class="sp">项目名称：</span><input class="easyui-textbox" name="projectName" id="amendProName" readonly="readonly"></td>				
+				</tr>
+				<tr>				
+					<td><span class="sp">上级缺陷：</span><input class="easyui-textbox" name="parentName" id="amendParentId" readonly="readonly"></td>
+				</tr>
+				
+				<tr>
+					<td colspan="2"><span class="sp">缺陷名称：</span><input class="easyui-textbox" name="issueName" 
+					style="width:295px">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><span class="sp">缺陷描述：</span><input class="easyui-textbox" 
+					data-options="multiline:true" style="width:295px;height:40px" name="issueDesc" id="amendIssueDesc">  
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2"><span class="sp">缺陷要求：</span><input class="easyui-textbox" 
+					data-options="multiline:true" style="width:295px;height:40px" name="doneCondition" id="amendDoneCondition">  
+					</td>
+				</tr>
+				<tr>
+					<td><span class="sp">缺陷分类：</span><input class="easyui-combobox" style="width:100px" name="issueType" id="amendType" value="请选择" data-options="editable:false"></td>					
+				</tr>
+				<tr>
+					<td><span class="sp">严重程度：</span><input class=easyui-combobox style="width:100px" name="issueSeverity" id="amendSeverity" value="请选择" data-options="editable:false"></td>
+				</tr>
+				<tr>
+					<td><span class="sp">优先级：</span><input class="easyui-combobox" style="width:100px" name="issuePriority" id="amendPriority" value="请选择" data-options="editable:false"></td>							
+				</tr>
+				<tr>		
+					<td><span class="sp">缺陷状态：</span><input class="easyui-combobox" style="width:100px" name="issueState" value="请选择" id="amendState" data-options="editable:false"></td>
+				</tr>
+				<tr>
+					<td colspan="2"><span class="sp">预计工时：</span><input class="easyui-textbox" style="width:100px" name="planWorkHours" id="amendPlanWorkHours"></td>	
+				</tr>
+				<tr>
+					<td><span class="sp">计划开始：</span><input class="easyui-datebox" name="planStartTime" id="amendStart"  
+	        			data-options="required:false,showSeconds:false" style="width:100px"></td>			
+				</tr>
+				<tr>
+	        		<td><span class="sp">计划完成：</span><input class="easyui-datebox" name="planEndTime"  id="amendEnd"   
+	        			data-options="required:false,showSeconds:false" style="width:100px">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+					<p id="amendFileName" style="border: none;font-weight: bolder;"></p>
+					<span id="amendDownload"><a href="#" style="color: blue;" id="amendDownloadFile">下载</a></span>
+					<span id = "amendDelete"><a href="#" style="color: blue;" id="amendDeleteFile">删除</a></span>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+					<div id="filebox_div">
+						<input class="easyui-filebox" style="width:300px" name='filebox' id="amendFilebox"
+					 data-options="buttonText: '选择文件',buttonAlign: 'left'">
+					</div>
+					</td>
+				</tr>
+			</table>
+		</form>	
+		<div id="amend_img" style="margin-left: 100px">
+			<img src="" id="amendHeadImg" style="width: 200px;height: 300px;border: 0px;">
+		</div>
+		<div id="amend_div">
+			<a id="amendBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">提交</a>
+			<a id="amendCloseBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no'">关闭</a>    
+		</div>
+	</div>
+	
+	
+</body>
+</html>

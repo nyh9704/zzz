@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyzc.htgl.dao.ClientInfoDao">
+
+    <!-- 查询所有部门 -->
+    <select id="searchAllPart" resultType="com.wyzc.htgl.bo.ClientInfoBo">
+        select wp_name cPart from wyzc_part
+    </select>
+
+
+    <!-- 查询该顾问所在的部门 -->
+    <select id="searchPart" resultType="com.wyzc.htgl.po.WyzcDepartmentPo">
+        SELECT
+        wp_id wpId,
+        wp_name wpName
+        FROM
+        wyzc_part
+        WHERE
+        wp_id = (
+        SELECT
+        wp_id
+        FROM
+        wyzc_user_info
+        WHERE
+        user_name = #{cCounselor}
+        )
+    </select>
+
+
+    <!-- 查询该顾问的职务 -->
+    <select id="searchDuty" resultType="String">
+        select wd_id from wyzc_user_info where user_name = #{cCounselor}
+    </select>
+
+    <!-- 查询该顾问的领导 -->
+    <select id="searchLeader" resultType="com.wyzc.htgl.bo.ClientInfoBo">
+        SELECT
+        user_name cLeader
+        FROM
+        wyzc_user_info
+        WHERE
+        <if test="dutyClass == 2">
+            wd_id != 1 and wd_id != 4
+        </if>
+        <if test="dutyClass == 3">
+            wd_id = 3
+        </if>
+        AND wp_id = #{wpId} AND sign != 3
+    </select>
+
+    <!-- 新增到访客户信息 -->
+    <insert id="saveClientInfo">
+        INSERT INTO wyzc_clientinfo (
+        c_name,
+        c_tel,
+        c_counselor,
+        c_leader,
+        c_part,
+        c_decider,
+        c_address,
+        c_date,
+        c_time,
+        c_condition,
+        c_frequency,
+        c_depart
+        )
+        VALUES
+        (
+        #{cName},#{cTel},#{cCounselor},#{cLeader},#{cPart},#{cDecider},
+        #{cAddress},#{cDate},#{cTime},#{cCondition},#{cFrequency},#{cDepart})
+    </insert>
+
+
+    <!-- 获取当前登陆用户职务 -->
+    <select id="getUserDuty" resultType="String">
+        SELECT
+        wd_id
+        FROM
+        wyzc_user_info
+        WHERE
+        user_tel = #{userId}
+
+    </select>
+
+    <!-- 查询当前登陆用户所属部门 -->
+    <select id="getUserPart" resultType="String">
+        SELECT
+        wp_id
+        FROM
+        wyzc_user_info
+        WHERE
+        user_tel = #{userId}
+    </select>
+
+    <!-- 查询当前登陆用户的姓名 -->
+    <select id="searchUserName" resultType="String">
+        select user_name userName from wyzc_user_info where user_tel = #{userId}
+    </select>
+
+
+    <!-- 客服专用 -->
+    <select id="searchClientDataByKefu" resultType="com.wyzc.htgl.bo.ClientInfoBo">
+        SELECT
+        c_id cId,
+        c_name cName,
+        c_tel cTel,
+        c_counselor cCounselor,
+        c_leader cLeader,
+        c_part cPart,
+        c_decider cDecider,
+        c_address cAddress,
+        c_date cDate,
+        c_time cTime,
+        c_condition cCondition,
+        c_frequency cFrequency
+        FROM
+        wyzc_clientinfo
+        <where>
+            (c_isonline is null or c_isonline = '否')
+            <if test="params.bo.keyWorld!=null and params.bo.keyWorld!=''">
+                and c_name like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_tel like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_counselor like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_leader like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_part like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_decider like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_address like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_date like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_condition like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_frequency like CONCAT('%','${params.bo.keyWorld}','%')
+            </if>
+        </where>
+        GROUP BY c_id
+        <trim prefix="having" suffixOverrides="and">
+            <if test="params.bo.cCounselor!=null and params.bo.cCounselor!=''">
+                (c_counselor = #{params.bo.cCounselor} or
+                c_leader = #{params.bo.cCounselor}) and
+            </if>
+            <if test="params.bo.counselor!=null and params.bo.counselor!=''">
+                c_counselor like CONCAT('%','${params.bo.counselor}','%') and
+            </if>
+            <if test="params.bo.cPart!=null and params.bo.cPart!=''">
+                c_part = #{params.bo.cPart} and
+            </if>
+            <if test="params.bo.cAddress!=null and params.bo.cAddress!=''">
+                c_address like CONCAT('%','${params.bo.cAddress}','%') and
+            </if>
+            <if test="params.bo.startTime!=null and params.bo.startTime!=''">
+                c_date <![CDATA[>=]]> #{params.bo.startTime} and
+            </if>
+            <if test="params.bo.endTime!=null and params.bo.endTime!=''">
+                c_date <![CDATA[<=]]> #{params.bo.endTime} and
+            </if>
+        </trim>
+        <if test="params.bo.sort!=null and params.bo.sort!=''and params.bo.order!=null and params.bo.order!=''">
+            order by ${params.bo.sort} ${params.bo.order}
+        </if>
+    </select>
+
+
+    <!-- 普通员工专用 -->
+    <select id="searchClientDataByStaff" resultType="com.wyzc.htgl.bo.ClientInfoBo">
+        SELECT
+        t.c_id cId,
+        t.c_name cName,
+        t.c_tel cTel,
+        t.c_counselor cCounselor,
+        t.c_leader cLeader,
+        t.c_part cPart,
+        t.c_decider cDecider,
+        t.c_address cAddress,
+        t.c_date cDate,
+        t.c_time cTime,
+        t.c_condition cCondition,
+        t.c_frequency cFrequency
+        FROM
+        (
+        SELECT
+        c_id,
+        c_name,
+        c_tel,
+        c_counselor,
+        c_leader,
+        c_part,
+        c_decider,
+        c_address,
+        c_date,
+        c_time,
+        c_condition,
+        c_frequency
+        FROM
+        wyzc_clientinfo
+        WHERE
+        (c_isonline is null or c_isonline = '否') and c_counselor = #{params.bo.userName}
+        ) t
+        <where>
+            <if test="params.bo.keyWorld!=null and params.bo.keyWorld!=''">
+                and c_name like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_tel like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_counselor like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_leader like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_part like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_decider like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_address like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_date like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_condition like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_frequency like CONCAT('%','${params.bo.keyWorld}','%')
+            </if>
+            <if test="params.bo.cCounselor!=null and params.bo.cCounselor!=''">
+                and c_counselor like CONCAT('%','${params.bo.cCounselor}','%')
+                or c_leader like CONCAT('%','${params.bo.cCounselor}','%')
+            </if>
+            <if test="params.bo.cCounselor!=null and params.bo.cCounselor!=''">
+                and c_counselor like CONCAT('%','${params.bo.cCounselor}','%')
+                or c_leader like CONCAT('%','${params.bo.cCounselor}','%')
+            </if>
+            <if test="params.bo.counselor!=null and params.bo.counselor!=''">
+                and c_counselor like CONCAT('%','${params.bo.counselor}','%')
+            </if>
+            <if test="params.bo.cAddress!=null and params.bo.cAddress!=''">
+                and c_address like CONCAT('%','${params.bo.cAddress}','%')
+            </if>
+            <if test="params.bo.startTime!=null and params.bo.startTime!=''">
+                and c_date &gt;= #{params.bo.startTime}
+            </if>
+            <if test=" params.bo.endTime!=null and params.bo.endTime!=''">
+                and c_date &lt;=#{params.bo.endTime}
+            </if>
+            <if test="params.bo.cPart!=null and params.bo.cPart!=''">
+                and c_part = #{params.bo.cPart}
+            </if>
+
+        </where>
+        <if test="params.bo.sort!=null and params.bo.sort!=''and params.bo.order!=null and params.bo.order!=''">
+            order by ${params.bo.sort} ${params.bo.order}
+        </if>
+    </select>
+
+
+    <!-- 组长专用 -->
+    <select id="searchClientDataByGroupLeader" resultType="com.wyzc.htgl.bo.ClientInfoBo">
+
+        SELECT
+        t.c_id cId,
+        t.c_name cName,
+        t.c_tel cTel,
+        t.c_counselor cCounselor,
+        t.c_leader cLeader,
+        t.c_part cPart,
+        t.c_decider cDecider,
+        t.c_address cAddress,
+        t.c_date cDate,
+        t.c_time cTime,
+        t.c_condition cCondition,
+        t.c_frequency cFrequency
+        FROM
+        (
+        SELECT
+        c_id,
+        c_name,
+        c_tel,
+        c_counselor,
+        c_leader,
+        c_part,
+        c_decider,
+        c_address,
+        c_date,
+        c_time,
+        c_condition,
+        c_frequency
+        FROM
+        wyzc_clientinfo
+        WHERE
+        (c_counselor = #{params.bo.userName}
+        OR c_leader = #{params.bo.userName}) and c_isonline is null or c_isonline = '否'
+        ) t
+        <where>
+            <if test="params.bo.keyWorld!=null and params.bo.keyWorld!=''">
+                and c_name like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_tel like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_counselor like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_leader like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_part like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_decider like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_address like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_date like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_condition like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_frequency like CONCAT('%','${params.bo.keyWorld}','%')
+            </if>
+            <if test="params.bo.cCounselor!=null and params.bo.cCounselor!=''">
+                and c_counselor like CONCAT('%','${params.bo.cCounselor}','%')
+                or c_leader like CONCAT('%','${params.bo.cCounselor}','%')
+            </if>
+            <if test="params.bo.cCounselor!=null and params.bo.cCounselor!=''">
+                and c_counselor like CONCAT('%','${params.bo.cCounselor}','%')
+                or c_leader like CONCAT('%','${params.bo.cCounselor}','%')
+            </if>
+            <if test="params.bo.counselor!=null and params.bo.counselor!=''">
+                and c_counselor like CONCAT('%','${params.bo.counselor}','%')
+            </if>
+            <if test="params.bo.cAddress!=null and params.bo.cAddress!=''">
+                and c_address like CONCAT('%','${params.bo.cAddress}','%')
+            </if>
+            <if test="params.bo.startTime!=null and params.bo.startTime!=''">
+                and c_date &gt;= #{params.bo.startTime}
+            </if>
+            <if test=" params.bo.endTime!=null and params.bo.endTime!=''">
+                and c_date &lt;=#{params.bo.endTime}
+            </if>
+            <if test="params.bo.cPart!=null and params.bo.cPart!=''">
+                and c_part = #{params.bo.cPart}
+            </if>
+
+        </where>
+        <if test="params.bo.sort!=null and params.bo.sort!=''and params.bo.order!=null and params.bo.order!=''">
+            order by ${params.bo.sort} ${params.bo.order}
+        </if>
+    </select>
+
+
+    <!-- 经理专用 -->
+    <select id="searchClientDataByManager" resultType="com.wyzc.htgl.bo.ClientInfoBo">
+        SELECT
+        c_id cId,
+        c_name cName,
+        c_tel cTel,
+        c_counselor cCounselor,
+        c_leader cLeader,
+        c_part cPart,
+        c_decider cDecider,
+        c_address cAddress,
+        c_date cDate,
+        c_time cTime,
+        c_condition cCondition,
+        c_frequency cFrequency
+        FROM
+        wyzc_clientinfo
+        <where>
+            c_isonline is null or c_isonline = '否'
+            <if test="params.bo.keyWorld!=null and params.bo.keyWorld!=''">
+                and c_name like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_tel like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_counselor like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_leader like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_part like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_decider like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_address like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_date like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_condition like CONCAT('%','${params.bo.keyWorld}','%')
+                or c_frequency like CONCAT('%','${params.bo.keyWorld}','%')
+            </if>
+        </where>
+        GROUP BY c_id
+        <trim prefix="having" suffixOverrides="and">
+            <if test="params.bo.cCounselor!=null and params.bo.cCounselor!=''">
+                (c_counselor = #{params.bo.cCounselor} or
+                c_leader = #{params.bo.cCounselor}) and
+            </if>
+            <if test="params.bo.counselor!=null and params.bo.counselor!=''">
+                c_counselor like CONCAT('%','${params.bo.counselor}','%') and
+            </if>
+            <if test="params.bo.cPart!=null and params.bo.cPart!=''">
+                c_part = #{params.bo.cPart} and
+            </if>
+            <if test="params.bo.cAddress!=null and params.bo.cAddress!=''">
+                c_address like CONCAT('%','${params.bo.cAddress}','%') and
+            </if>
+            <if test="params.bo.startTime!=null and params.bo.startTime!=''">
+                c_date <![CDATA[>=]]> #{params.bo.startTime} and
+            </if>
+            <if test="params.bo.endTime!=null and params.bo.endTime!=''">
+                c_date <![CDATA[<=]]> #{params.bo.endTime} and
+            </if>
+        </trim>
+        <if test="params.bo.sort!=null and params.bo.sort!=''and params.bo.order!=null and params.bo.order!=''">
+            order by ${params.bo.sort} ${params.bo.order}
+        </if>
+
+    </select>
+
+    <!-- 查所有的主管 -->
+    <select id="searchAllGroupLeader" resultType="com.wyzc.htgl.bo.ClientInfoBo">
+        SELECT
+        user_name cCounselor
+        FROM
+        wyzc_user_info
+        WHERE
+        wd_id = 2
+        AND sign != '3'
+        AND wp_id NOT IN (
+        SELECT
+        wp_id
+        FROM
+        wyzc_part
+        WHERE
+        parent_id = '09'
+        )
+    </select>
+
+    <!-- 查询当前登陆用户所在部门的上级部门 -->
+    <select id="getUserLeaderPart" resultType="String">
+        SELECT
+        parent_id
+        FROM
+        wyzc_part
+        WHERE
+        wp_id in (
+        SELECT
+        wp_id
+        FROM
+        wyzc_user_info
+        WHERE
+        user_name = (
+        SELECT
+        USER_NAME
+        FROM
+        sys_user
+        WHERE
+        USER_ID = #{userId}
+        )
+        )
+    </select>
+
+
+    <!-- 根据编号查询客户资料 -->
+    <select id="searchModifyClientInfo" resultType="com.wyzc.htgl.bo.ClientInfoBo">
+        SELECT
+        c_id cId,
+        c_name cName,
+        c_tel cTel,
+        c_counselor cCounselor,
+        c_leader cLeader,
+        c_part cPart,
+        c_decider cDecider,
+        c_address cAddress,
+        c_date cDate,
+        c_time cTime,
+        c_condition cCondition,
+        c_frequency cFrequency
+
+        FROM
+        wyzc_clientinfo
+        WHERE
+        c_id = #{cId}
+    </select>
+
+    <!-- 提交修改客户信息 -->
+    <update id="modifyClientInfo">
+        UPDATE wyzc_clientinfo
+        SET c_name = #{cName},c_tel = #{cTel},c_counselor = #{cCounselor},c_leader = #{cLeader},
+        c_part = #{cPart},c_decider = #{cDecider},c_address = #{cAddress},
+        c_date = #{cDate},c_time = #{cTime},c_depart = #{cDepart} where c_id = #{cId}
+    </update>
+
+    <!-- 修改时间 -->
+    <insert id="insertModiftyTime">
+        insert into modify_clientinfo(m_id,m_time) values (#{cId},NOW())
+    </insert>
+
+    <!-- 删除客户信息 -->
+    <delete id="deleteClientInfo">
+        delete from wyzc_clientinfo where c_id = #{cId}
+    </delete>
+
+    <!-- 删除修改时间 -->
+    <delete id="deleteModifyClientInfo">
+        delete from modify_clientinfo where m_id = #{cId}
+    </delete>
+
+    <!-- 插叙当前谈单人所属部门 -->
+    <select id="searchDepartByDecider" resultType="String">
+        select wp_name from wyzc_part where wp_id = (select wp_id from wyzc_user_info where user_name = #{cDecider})
+    </select>
+
+
+</mapper>

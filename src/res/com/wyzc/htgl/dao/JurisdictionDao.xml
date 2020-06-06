@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyzc.htgl.dao.JurisdictionDao">
+
+    <!-- 查全部员工的权限信息 -->
+    <select id="loadAllData" resultType="com.wyzc.htgl.bo.JurisdictionBo">
+        SELECT
+        user_name staffName,
+        post_name postName,
+        authority_01 authority01,
+        authority_02 authority02,
+        authority_03 authority03,
+        authority_04 authority04,
+        authority_05 authority05,
+        authority_06 authority06,
+        authority_07 authority07,
+        authority_08 authority08,
+        authority_09 authority09,
+        authority_10 authority10,
+        authority_11 authority11,
+        authority_12 authority12,
+        authority_13 authority13,
+        authority_14 authority14,
+        authority_15 authority15
+        FROM
+        wyzc_user_info
+        WHERE
+        sign != '3'
+        <if test="wpId != '' and wpId != null">
+            and wp_id = #{wpId}
+        </if>
+    </select>
+
+    <!-- 获得该权限 -->
+    <update id="getJurisdictionr1">
+        update wyzc_user_info set authority_01 = #{code} where user_name = #{staffName}
+    </update>
+
+    <update id="getJurisdictionr2">
+        update wyzc_user_info set authority_02 = #{code} where user_name = #{staffName}
+    </update>
+
+    <update id="getJurisdictionr3">
+        update wyzc_user_info set authority_03 = #{code} where user_name = #{staffName}
+    </update>
+
+    <update id="getJurisdictionr4">
+        update wyzc_user_info set authority_04 = #{code} where user_name = #{staffName}
+    </update>
+
+    <update id="getJurisdictionr5">
+        update wyzc_user_info set authority_05 = #{code} where user_name = #{staffName}
+    </update>
+
+    <update id="getJurisdictionr6">
+        update wyzc_user_info set authority_06 = #{code} where user_name = #{staffName}
+    </update>
+
+    <update id="getJurisdictionr7">
+        update wyzc_user_info set authority_07 = #{code} where user_name = #{staffName}
+    </update>
+
+    <update id="getJurisdictionr8">
+        update wyzc_user_info set authority_08 = #{code} where user_name = #{staffName}
+    </update>
+
+    <update id="getJurisdictionr9">
+        update wyzc_user_info set authority_09 = #{code} where user_name = #{staffName}
+    </update>
+
+    <update id="getJurisdictionr10">
+        update wyzc_user_info set authority_10 = #{code} where user_name = #{staffName}
+    </update>
+
+    <update id="getJurisdictionr11">
+        update wyzc_user_info set authority_11 = #{code} where user_name = #{staffName}
+    </update>
+
+    <update id="getJurisdictionr12">
+        update wyzc_user_info set authority_12 = #{code} where user_name = #{staffName}
+    </update>
+
+    <update id="getJurisdictionr13">
+        update wyzc_user_info set authority_13 = #{code} where user_name = #{staffName}
+    </update>
+
+    <update id="getJurisdictionr14">
+        update wyzc_user_info set authority_14 = #{code} where user_name = #{staffName}
+    </update>
+
+    <update id="getJurisdictionr15">
+        update wyzc_user_info set authority_15 = #{code} where user_name = #{staffName}
+    </update>
+
+    <!-- 清空某个字段 -->
+    <delete id="deleteValue">
+        UPDATE wyzc_user_info
+        SET authority_01 = NULL,
+        authority_02 = NULL,
+        authority_03 = NULL,
+        authority_04 = NULL,
+        authority_05 = NULL,
+        authority_06 = NULL,
+        authority_07 = NULL,
+        authority_08 = NULL,
+        authority_09 = NULL,
+        authority_10 = NULL,
+        authority_11 = NULL,
+        authority_12 = NULL,
+        authority_13 = NULL,
+        authority_14 = NULL,
+        authority_15 = NULL
+        <where>
+            <if test="wpId != '' and wpId != null">
+                and wp_id = #{wpId}
+            </if>
+        </where>
+
+    </delete>
+
+    <!-- 获取总数据长度 -->
+    <select id="getDataSize" resultType="Integer">
+        select
+        count(*) from wyzc_user_info
+        where
+        sign != '3'
+        <if test="wpId != '' and wpId != null">
+            and wp_id = #{wpId}
+        </if>
+    </select>
+
+    <!-- 获取拥有各项权限的数据长度 -->
+    <select id="getJurisdictionr1Size" resultType="Integer">
+        select count(*) from wyzc_user_info where authority_01 = 1
+        <if test="wpId != '' and wpId != null">
+            and wp_id = #{wpId}
+        </if>
+    </select>
+
+    <select id="getJurisdictionr2Size" resultType="Integer">
+        select count(*) from wyzc_user_info where authority_02 = 1
+        <if test="wpId != '' and wpId != null">
+            and wp_id = #{wpId}
+        </if>
+    </select>
+
+    <select id="getJurisdictionr3Size" resultType="Integer">
+        select count(*) from wyzc_user_info where authority_03 = 1
+        <if test="wpId != '' and wpId != null">
+            and wp_id = #{wpId}
+        </if>
+    </select>
+
+    <select id="getJurisdictionr4Size" resultType="Integer">
+        select count(*) from wyzc_user_info where authority_04 = 1
+        <if test="wpId != '' and wpId != null">
+            and wp_id = #{wpId}
+        </if>
+    </select>
+
+    <select id="getJurisdictionr5Size" resultType="Integer">
+        select count(*) from wyzc_user_info where authority_05 = 1
+        <if test="wpId != '' and wpId != null">
+            and wp_id = #{wpId}
+        </if>
+    </select>
+
+    <select id="getJurisdictionr6Size" resultType="Integer">
+        select count(*) from wyzc_user_info where authority_06 = 1
+        <if test="wpId != '' and wpId != null">
+            and wp_id = #{wpId}
+        </if>
+    </select>
+
+    <select id="getJurisdictionr7Size" resultType="Integer">
+        select count(*) from wyzc_user_info where authority_07 = 1
+        <if test="wpId != '' and wpId != null">
+            and wp_id = #{wpId}
+        </if>
+    </select>
+
+    <select id="getJurisdictionr8Size" resultType="Integer">
+        select count(*) from wyzc_user_info where authority_08 = 1
+        <if test="wpId != '' and wpId != null">
+            and wp_id = #{wpId}
+        </if>
+    </select>
+
+    <select id="getJurisdictionr9Size" resultType="Integer">
+        select count(*) from wyzc_user_info where authority_09 = 1
+        <if test="wpId != '' and wpId != null">
+            and wp_id = #{wpId}
+        </if>
+    </select>
+
+    <select id="getJurisdictionr10Size" resultType="Integer">
+        select count(*) from wyzc_user_info where authority_10 = 1
+        <if test="wpId != '' and wpId != null">
+            and wp_id = #{wpId}
+        </if>
+    </select>
+
+    <select id="getJurisdictionr11Size" resultType="Integer">
+        select count(*) from wyzc_user_info where authority_11 = 1
+        <if test="wpId != '' and wpId != null">
+            and wp_id = #{wpId}
+        </if>
+    </select>
+
+    <select id="getJurisdictionr12Size" resultType="Integer">
+        select count(*) from wyzc_user_info where authority_12 = 1
+        <if test="wpId != '' and wpId != null">
+            and wp_id = #{wpId}
+        </if>
+    </select>
+
+    <select id="getJurisdictionr13Size" resultType="Integer">
+        select count(*) from wyzc_user_info where authority_13 = 1
+        <if test="wpId != '' and wpId != null">
+            and wp_id = #{wpId}
+        </if>
+    </select>
+
+    <select id="getJurisdictionr14Size" resultType="Integer">
+        select count(*) from wyzc_user_info where authority_14 = 1
+        <if test="wpId != '' and wpId != null">
+            and wp_id = #{wpId}
+        </if>
+    </select>
+
+    <select id="getJurisdictionr15Size" resultType="Integer">
+        select count(*) from wyzc_user_info where authority_15 = 1
+        <if test="wpId != '' and wpId != null">
+            and wp_id = #{wpId}
+        </if>
+    </select>
+
+
+</mapper>

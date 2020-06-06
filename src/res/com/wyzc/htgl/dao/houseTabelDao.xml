@@ -1,0 +1,524 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyzc.htgl.dao.houseTableDao">
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+
+
+    <!-- 展现和模糊查询 -->
+    <select id="showHouse" resultType="com.wyzc.htgl.bo.houseTableBo" flushCache="true">
+        select shi_land_type shiTudi,
+        shi_area shiArea,
+        shi_name shiName,
+        shi_house_number shiHouseNumber,
+        shi_space shiSpace,
+        shi_finish shiFinish,
+        shi_construction shiConstruction,
+        shi_start_price shiStartPrice,
+        shi_price shiPrice,
+        shi_guarantee_price shiGuaranteePrice,
+        shi_is_elevactor shiIsElevactor,
+        shi_add_price shiAddPrice,
+        shi_auction_date shiAuctionDate,
+        shi_bulid_date shiBulidDate,
+        shi_location shiLocation,
+        shi_url shiUrl,
+        shi_lc shiLc,
+        shi_code shiCode,
+        shi_upload_date shiUploadDate,
+        shi_end_date shiEndDate,
+        shi_recall_date shiRecallDate,
+        shi_sign shiSign,
+        shi_appendix shiAppendix
+        from show_house_info
+        <where>
+
+            <if test="params.bo.searchMo!=null and params.bo.searchMo!='' ">
+                (shi_area like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_name like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_house_number like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_space like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_finish like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_construction like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_start_price like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_price like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_guarantee_price like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_is_elevactor like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_add_price like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_auction_date like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_bulid_date like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_location like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_lc like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_land_type like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_url like CONCAT('%','${params.bo.searchMo}','%'))
+            </if>
+            AND shi_sign = '1'
+        </where>
+        group by shi_code
+        <trim prefix="having" suffixOverrides="and">
+            <if test="params.bo.shiArea !=null and params.bo.shiArea !=''">
+                shi_area like CONCAT('%','${params.bo.shiArea}','%') and
+            </if>
+            <if test="params.bo.shiFinish!=null and params.bo.shiFinish!=''">
+                shi_finish like CONCAT('%','${params.bo.shiFinish}','%') and
+            </if>
+            <if test="params.bo.shiIsElevactor!=null and params.bo.shiIsElevactor!=''">
+                shi_is_elevactor like CONCAT('%','${params.bo.shiIsElevactor}','%') and
+            </if>
+            <if test="params.bo.shiBulidDate!=null and params.bo.shiBulidDate!=''">
+                shi_bulid_date = ${params.bo.shiBulidDate} and
+            </if>
+            <if test="params.bo.shiSpace1!=null and params.bo.shiSpace1!='' ">
+                shi_space &gt;= ${params.bo.shiSpace1} and
+            </if>
+            <if test=" params.bo.shiSpace2!=null and params.bo.shiSpace2!=''">
+                shi_space &lt;=${params.bo.shiSpace2} and
+            </if>
+            <if test="params.bo.shiStartPrice1!=null and params.bo.shiStartPrice1!=''">
+                shi_start_price &gt;= ${params.bo.shiStartPrice1} and
+            </if>
+            <if test=" params.bo.shiStartPrice2!=null and params.bo.shiStartPrice2!=''">
+                shi_start_price &lt;=${params.bo.shiStartPrice2} and
+            </if>
+
+            <if test="params.bo.nowUploadDate!=null and params.bo.nowUploadDate!=''">
+                shi_upload_date = #{params.bo.nowUploadDate} and
+            </if>
+
+            <if test="params.bo.nowAuctionDate!=null and params.bo.nowAuctionDate!=''">
+                shi_auction_date = #{params.bo.nowAuctionDate} and
+            </if>
+
+            <if test="params.bo.nowEndDate!=null and params.bo.nowEndDate!=''">
+                shi_end_date = #{params.bo.nowEndDate} and
+            </if>
+
+        </trim>
+        <if test="params.bo.sort!=null and params.bo.sort!=''">
+            order by
+            (${params.bo.sort}+0)
+            ${params.bo.order}
+        </if>
+    </select>
+
+    <!-- 导出当前房源 -->
+    <select id="exportNow" resultType="com.wyzc.htgl.bo.houseTableBo">
+        select shi_land_type shiTudi,
+        shi_area shiArea,
+        shi_name shiName,
+        shi_house_number shiHouseNumber,
+        shi_space shiSpace,
+        shi_finish shiFinish,
+        shi_construction shiConstruction,
+        shi_start_price shiStartPrice,
+        shi_price shiPrice,
+        shi_guarantee_price shiGuaranteePrice,
+        shi_is_elevactor shiIsElevactor,
+        shi_add_price shiAddPrice,
+        shi_auction_date shiAuctionDate,
+        shi_bulid_date shiBulidDate,
+        shi_location shiLocation,
+        shi_url shiUrl,
+        shi_lc shiLc,
+        shi_code shiCode,
+        shi_upload_date shiUploadDate,
+        shi_end_date shiEndDate,
+        shi_recall_date shiRecallDate,
+        shi_sign shiSign,
+        shi_appendix shiAppendix
+        from show_house_info
+        <where>
+
+            <if test="searchMo!=null and searchMo!='' ">
+                (shi_area like CONCAT('%','${searchMo}','%')
+                or shi_name like CONCAT('%','${searchMo}','%')
+                or shi_house_number like CONCAT('%','${searchMo}','%')
+                or shi_space like CONCAT('%','${searchMo}','%')
+                or shi_finish like CONCAT('%','${searchMo}','%')
+                or shi_construction like CONCAT('%','${searchMo}','%')
+                or shi_start_price like CONCAT('%','${searchMo}','%')
+                or shi_price like CONCAT('%','${searchMo}','%')
+                or shi_guarantee_price like CONCAT('%','${searchMo}','%')
+                or shi_is_elevactor like CONCAT('%','${searchMo}','%')
+                or shi_add_price like CONCAT('%','${searchMo}','%')
+                or shi_auction_date like CONCAT('%','${searchMo}','%')
+                or shi_bulid_date like CONCAT('%','${searchMo}','%')
+                or shi_location like CONCAT('%','${searchMo}','%')
+                or shi_lc like CONCAT('%','${searchMo}','%')
+                or shi_land_type like CONCAT('%','${searchMo}','%')
+                or shi_url like CONCAT('%','${searchMo}','%'))
+            </if>
+            AND shi_sign = '1'
+        </where>
+        group by shi_code
+        <trim prefix="having" suffixOverrides="and">
+            <if test="shiArea !=null and shiArea !=''">
+                shi_area like CONCAT('%','${shiArea}','%') and
+            </if>
+            <if test="shiFinish!=null and shiFinish!=''">
+                shi_finish like CONCAT('%','${shiFinish}','%') and
+            </if>
+            <if test="shiIsElevactor!=null and shiIsElevactor!=''">
+                shi_is_elevactor like CONCAT('%','${shiIsElevactor}','%') and
+            </if>
+            <if test="shiBulidDate!=null and shiBulidDate!=''">
+                shi_bulid_date = ${shiBulidDate} and
+            </if>
+            <if test="shiSpace1!=null and shiSpace1!='' ">
+                shi_space &gt;= ${shiSpace1} and
+            </if>
+            <if test=" shiSpace2!=null and shiSpace2!=''">
+                shi_space &lt;=${shiSpace2} and
+            </if>
+            <if test="shiStartPrice1!=null and shiStartPrice1!=''">
+                shi_start_price &gt;= ${shiStartPrice1} and
+            </if>
+            <if test=" shiStartPrice2!=null and shiStartPrice2!=''">
+                shi_start_price &lt;=${shiStartPrice2} and
+            </if>
+
+            <if test="nowUploadDate!=null and nowUploadDate!=''">
+                shi_upload_date = #{nowUploadDate} and
+            </if>
+
+            <if test="nowAuctionDate!=null and nowAuctionDate!=''">
+                shi_auction_date = #{nowAuctionDate} and
+            </if>
+
+            <if test="nowEndDate!=null and nowEndDate!=''">
+                shi_end_date = #{nowEndDate} and
+            </if>
+
+        </trim>
+    </select>
+
+
+    <!-- 删除 -->
+    <delete id="deleteSearch">
+        delete from show_house_info_copy where user_id=#{userId}
+    </delete>
+
+    <!-- 删除 -->
+    <delete id="deleteExportHouse">
+        delete from export_house where user_id=#{userId}
+    </delete>
+
+    <!-- 导入删除之前的数据 -->
+    <delete id="deleteTodyXz">
+        delete from today_xz
+    </delete>
+
+    <!-- 查询当日新增 -->
+    <select id="searchTodyXz" resultType="com.wyzc.htgl.bo.houseTableBo">
+        select shi_land_type shiTudi,
+        shi_area shiArea,
+        shi_name shiName,
+        shi_house_number shiHouseNumber,
+        shi_space shiSpace,
+        shi_finish shiFinish,
+        shi_construction shiConstruction,
+        shi_start_price shiStartPrice,
+        shi_price shiPrice,
+        shi_guarantee_price shiGuaranteePrice,
+        shi_is_elevactor shiIsElevactor,
+        shi_add_price shiAddPrice,
+        shi_auction_date shiAuctionDate,
+        shi_bulid_date shiBulidDate,
+        shi_location shiLocation,
+        shi_Lc shiLc,
+        shi_code shiCode,
+        shi_url shiUrl
+        from today_xz
+        <where>
+            <if test="params.bo.searchMo!=null and params.bo.searchMo!='' ">
+                and shi_area like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_name like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_house_number like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_space like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_finish like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_start_price like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_price like CONCAT('%','${params.bo.searchMo}','%')
+                or shi_guarantee_price like CONCAT('%','${params.bo.searchMo}','%')
+            </if>
+        </where>
+        group by shi_code
+        order by
+        cast(shi_code as UNSIGNED INTEGER)
+        asc
+    </select>
+
+    <!-- 导入式删除之前的数据 -->
+    <delete id="deleteTodyKp">
+        delete from past_house_info_auction
+    </delete>
+
+    <!-- 查询当日开拍 -->
+    <select id="searchTodyKp" resultType="com.wyzc.htgl.bo.houseTableBo">
+        select shi_house_number shiHouseNumber,
+        shi_url shiUrl
+        from past_house_info_auction
+    </select>
+
+
+    <!-- 查询当日撤回 -->
+    <select id="searchTodyCh" resultType="com.wyzc.htgl.bo.houseTableBo">
+        select shi_house_number shiHouseNumber,
+        shi_url shiUrl
+        from past_house_info_recall
+    </select>
+
+    <!-- 导入删除之前撤回的数据 -->
+    <delete id="deleteTodyCh">
+        delete from past_house_info_recall
+    </delete>
+
+
+    <!-- 添加房源 -->
+    <insert id="addHouse">
+        insert into show_house_info(shi_area,shi_name,shi_house_number,
+        shi_space,shi_construction,shi_finish,shi_price,shi_start_price,
+        shi_guarantee_price,shi_is_elevactor,shi_add_price,
+        shi_auction_date,shi_bulid_date,shi_location,
+        shi_land_type,shi_url,shi_lc,shi_upload_date,shi_sign,shi_end_date)
+        values(
+        #{shiArea},#{shiName},#{shiHouseNumber},#{shiSpace},
+        #{shiConstruction},#{shiFinish},#{shiPrice},#{shiStartPrice},
+        #{shiGuaranteePrice},#{shiIsElevactor},#{shiAddPrice},
+        #{shiAuctionDate},#{shiBulidDate},#{shiLocation},
+        #{shiTudi},#{shiUrl},#{shiLc},#{shiUploadDate},#{shiSign},#{shiEndDate}
+        )
+    </insert>
+
+    <!-- 添加房源 -->
+    <insert id="addHouseCopy">
+        insert into show_house_info_copy(shi_area,shi_name,
+        shi_house_number,shi_space,shi_construction,shi_finish,
+        shi_price,shi_start_price,shi_guarantee_price,shi_is_elevactor,
+        shi_add_price,shi_auction_date,shi_bulid_date,shi_location,
+        shi_land_type,shi_url,shi_lc,shi_upload_date,shi_sign,shi_end_date,user_id)
+        values(
+        #{shiArea},#{shiName},#{shiHouseNumber},#{shiSpace},#{shiConstruction},
+        #{shiFinish},#{shiPrice},#{shiStartPrice},#{shiGuaranteePrice},
+        #{shiIsElevactor},#{shiAddPrice},#{shiAuctionDate},#{shiBulidDate},
+        #{shiLocation},#{shiTudi},#{shiUrl},#{shiLc},#{shiUploadDate},#{shiSign},#{shiEndDate},
+        #{userId}
+        )
+    </insert>
+
+
+    <!-- 添加房源 -->
+    <insert id="addExportHouse">
+        insert into
+        export_house(shi_area,shi_name,shi_house_number,shi_space,shi_construction,shi_finish,shi_price,shi_start_price,shi_guarantee_price,shi_is_elevactor,shi_add_price,shi_auction_date,shi_bulid_date,shi_location,shi_land_type,shi_url,shi_lc,user_id)
+        values(
+        #{shiArea},#{shiName},#{shiHouseNumber},#{shiSpace},#{shiConstruction},#{shiFinish},#{shiPrice},#{shiStartPrice},#{shiGuaranteePrice},#{shiIsElevactor},#{shiAddPrice},#{shiAuctionDate},#{shiBulidDate},#{shiLocation},#{shiTudi},#{shiUrl},#{shiLc},#{userId}
+        )
+    </insert>
+
+    <!-- 添加房源 -->
+    <insert id="addExportHouseCopy">
+        insert into
+        export_house(shi_area,shi_name,shi_house_number,shi_space,shi_construction,shi_finish,shi_price,shi_start_price,shi_guarantee_price,shi_is_elevactor,shi_add_price,shi_auction_date,shi_bulid_date,shi_location,shi_land_type,shi_url,shi_lc,user_id)
+        values(
+        #{shiArea},#{shiName},#{shiHouseNumber},#{shiSpace},#{shiConstruction},#{shiFinish},#{shiPrice},#{shiStartPrice},#{shiGuaranteePrice},#{shiIsElevactor},#{shiAddPrice},#{shiAuctionDate},#{shiBulidDate},#{shiLocation},#{shiTudi},#{shiUrl},#{shiLc},#{userId}
+        )
+    </insert>
+
+
+    <!-- 当日新增 -->
+    <insert id="toDayXz">
+        insert into
+        today_xz(shi_area,shi_name,shi_house_number,shi_space,shi_construction,shi_finish,shi_price,shi_start_price,shi_guarantee_price,shi_is_elevactor,shi_add_price,shi_auction_date,shi_bulid_date,shi_location,shi_land_type,shi_url,shi_lc)
+        values(
+        #{shiArea},#{shiName},#{shiHouseNumber},#{shiSpace},#{shiConstruction},#{shiFinish},#{shiPrice},#{shiStartPrice},#{shiGuaranteePrice},#{shiIsElevactor},#{shiAddPrice},#{shiAuctionDate},#{shiBulidDate},#{shiLocation},#{shiTudi},#{shiUrl},#{shiLc}
+        )
+    </insert>
+
+    <!-- 当日开拍 -->
+    <insert id="toDayKp">
+        insert into past_house_info_auction(shi_house_number,shi_url)
+        values(
+        #{shiHouseNumber},#{shiUrl}
+        )
+    </insert>
+
+    <!-- 当日撤回 -->
+    <insert id="toDayCh">
+        insert into past_house_info_recall(shi_house_number,shi_url)
+        values(
+        #{shiHouseNumber},#{shiUrl}
+        )
+    </insert>
+
+    <!-- 查询详情 -->
+    <select id="showFyXq" resultType="com.wyzc.htgl.bo.houseTableBo">
+        select shi_land_type shiTudi,
+        shi_area shiArea,
+        shi_name shiName,
+        shi_house_number shiHouseNumber,
+        shi_space shiSpace,
+        shi_finish shiFinish,
+        shi_construction shiConstruction,
+        shi_start_price shiStartPrice,
+        shi_price shiPrice,
+        shi_guarantee_price shiGuaranteePrice,
+        shi_is_elevactor shiIsElevactor,
+        shi_add_price shiAddPrice,
+        shi_auction_date shiAuctionDate,
+        shi_bulid_date shiBulidDate,
+        shi_location shiLocation,
+        shi_url shiUrl,
+        shi_lc shiLc,
+        shi_code shiCode,
+        shi_end_date shiEndDate,
+        shi_upload_date shiUploadDate,
+        shi_recall_date shiRecallDate,
+        shi_appendix shiAppendix
+        from show_house_info
+        where shi_url=#{shiUrl}
+    </select>
+
+
+    <!-- 修改房源信息 -->
+    <update id="modifyHouse" parameterType="com.wyzc.htgl.bo.houseTableBo">
+        update show_house_info set
+        shi_land_type=#{shiTudi},
+        shi_area=#{shiArea},
+        shi_name=#{shiName},
+        shi_house_number=#{shiHouseNumber},
+        shi_space=#{shiSpace},
+        shi_finish=#{shiFinish},
+        shi_construction=#{shiConstruction},
+        shi_start_price=#{shiStartPrice},
+        shi_price=#{shiPrice},
+        shi_guarantee_price=#{shiGuaranteePrice},
+        shi_is_elevactor=#{shiIsElevactor},
+        shi_add_price=#{shiAddPrice},
+        shi_auction_date=#{shiAuctionDate},
+        shi_bulid_date=#{shiBulidDate},
+        shi_location=#{shiLocation},
+        shi_url=#{shiUrl},
+        shi_lc=#{shiLc},
+        shi_end_date = #{shiEndDate},
+        shi_appendix=#{shiAppendix}
+        where shi_code = #{shiCode}
+    </update>
+
+    <!-- 删除房源信息 -->
+    <delete id="deleteHouse">
+        delete from show_house_info where shi_code = #{shiCode}
+    </delete>
+
+    <!-- 查询所有房源并导出 -->
+    <select id="exportHouse" resultType="com.wyzc.htgl.bo.houseTableBo">
+        select shi_land_type shiTudi,
+        shi_area shiArea,
+        shi_name shiName,
+        shi_house_number shiHouseNumber,
+        shi_space shiSpace,
+        shi_finish shiFinish,
+        shi_construction shiConstruction,
+        shi_start_price shiStartPrice,
+        shi_price shiPrice,
+        shi_guarantee_price shiGuaranteePrice,
+        shi_is_elevactor shiIsElevactor,
+        shi_add_price shiAddPrice,
+        shi_auction_date shiAuctionDate,
+        shi_bulid_date shiBulidDate,
+        shi_location shiLocation,
+        shi_url shiUrl,
+        shi_lc shiLc,
+        shi_code shiCode
+        from show_house_info
+    </select>
+
+
+    <!-- 查询房源并导出 -->
+    <select id="exportHouseDq" resultType="com.wyzc.htgl.bo.houseTableBo">
+        select shi_land_type shiTudi,
+        shi_area shiArea,
+        shi_name shiName,
+        shi_house_number shiHouseNumber,
+        shi_space shiSpace,
+        shi_finish shiFinish,
+        shi_construction shiConstruction,
+        shi_start_price shiStartPrice,
+        shi_price shiPrice,
+        shi_guarantee_price shiGuaranteePrice,
+        shi_is_elevactor shiIsElevactor,
+        shi_add_price shiAddPrice,
+        shi_auction_date shiAuctionDate,
+        shi_bulid_date shiBulidDate,
+        shi_location shiLocation,
+        shi_url shiUrl,
+        shi_lc shiLc,
+        shi_code shiCode
+        from show_house_info
+    </select>
+
+
+    <!-- 添加过期房源 -->
+    <insert id="addPastHouse">
+        insert into past_house_info(shi_house_number,shi_url)
+        values(
+        #{shiHouseNumber},#{shiUrl}
+        )
+    </insert>
+
+    <!-- 查询过期房源表中的数据 -->
+    <select id="searchPastHouse" resultType="com.wyzc.htgl.bo.houseTableBo">
+        select shi_url shiUrl from past_house_info
+    </select>
+
+
+    <!-- 删除过期表中的数据 -->
+    <delete id="deletePastHouse">
+        delete from past_house_info
+    </delete>
+
+    <!-- 权限查询 -->
+    <select id="searchId" parameterType="com.wyzc.htgl.bo.WyzcUserBo" resultType="String">
+        select b.wp_id wpId,a.USER_NAME userName from wyzc_user_info b
+        left join sys_user a on a.user_id = b.user_tel
+        where a.user_id=#{userId}
+    </select>
+
+
+    <!-- 查询房源表中的数据 -->
+    <select id="searchFromShowHouseInfo" resultType="com.wyzc.htgl.bo.houseTableBo">
+        select shi_land_type shiTudi,
+        shi_area shiArea,
+        shi_name shiName,
+        shi_house_number shiHouseNumber,
+        shi_space shiSpace,
+        shi_finish shiFinish,
+        shi_construction shiConstruction,
+        shi_start_price shiStartPrice,
+        shi_price shiPrice,
+        shi_guarantee_price shiGuaranteePrice,
+        shi_is_elevactor shiIsElevactor,
+        shi_add_price shiAddPrice,
+        shi_auction_date shiAuctionDate,
+        shi_bulid_date shiBulidDate,
+        shi_location shiLocation,
+        shi_url shiUrl,
+        shi_lc shiLc,
+        shi_code shiCode,
+        shi_upload_date shiUploadDate,
+        shi_end_date shiEndDate,
+        shi_recall_date shiRecallDate,
+        shi_sign shiSign,
+        shi_appendix shiAppendix
+        from show_house_info_copy
+    </select>
+
+    <!-- 添加撤回时间 -->
+    <update id="addRecallDateToShi" parameterType="com.wyzc.htgl.bo.houseTableBo">
+        update show_house_info set
+        shi_recall_date = #{shiRecallDate},
+        shi_sign = #{shiSign}
+        where shi_url = #{shiUrl}
+    </update>
+
+
+</mapper>

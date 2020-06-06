@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+	<title>项目管理</title>
+	<link rel="stylesheet" type="text/css" href="../../css/common/main.css"/>
+	<link rel="stylesheet" type="text/css" href="../../css/themes/default/easyui.css">
+	<link rel="stylesheet" type="text/css" href="../../css/themes/icon.css">
+	<script type="text/javascript" src="../../js/jquery.min.js"></script>
+	<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+	<script type="text/javascript" src="../../js/common/My97DatePicker/WdatePicker.js"></script>
+	<script type="text/javascript" src="../../js/common.js"></script>
+	<script type="text/javascript" src="js/projectManagement.js"></script>
+ </head>
+  
+  <body>
+    	<form name="searchForm" id="searchForm">
+    		<!-- 查询表头部 -->
+    		<table class='btbHead'>
+    			<tr>
+    				<td style="width:25%;">
+    					<img src="../../images/common/title.gif" align="absmiddle">数据列表
+    				</td>
+    				<td style="text-align:right;">
+  						<a href="#" id="queryBtn" class="easyui-linkbutton" onclick="addRootMenu()" iconCls="icon-add">增加第一级</a>
+  						<a href="#" id="queryBtn" class="easyui-linkbutton" onclick="addNextMenu()" iconCls="icon-add">增加下级</a>
+  						<a href="#" id="queryBtn" class="easyui-linkbutton" onclick="modifyMenu()" iconCls="icon-edit">&nbsp;修&nbsp;&nbsp;改&nbsp;</a>
+  					</td>
+    			</tr>
+    		</table>
+    		<!-- 查询条件 -->
+    		<table class="btbForm">
+    			<tr>
+    				<td style="text-align: right;">
+    					<input id="showNoUsedMenu" type="checkbox" style="vertical-align: middle;" onchange="showNoUsed()">
+    					<label for="showNoUsedMenu">显示无效的菜单</label>
+    					&nbsp;&nbsp;
+    					<a href="javascript:doRefresh()" class="easyui-linkbutton" iconCls="icon-reload" plain="true"></a>
+    				</td>
+    			</tr>
+    		</table>
+    	</form>
+    	<div style="margin:5px 0;"></div>
+    	
+    	<table id="menuTreeGrid" class="easyui-treegrid" style="width:100%;">
+		<thead>
+			<tr>
+				<th data-options="field:'projectname',halign:'center',align:'left'" width="20%">项目名称</th>
+				<th data-options="field:'projectid',halign:'center',align:'left'" width="12%">项目编号</th>
+				<th data-options="field:'projectintro',halign:'center',align:'center'" width="40%">项目简介</th>
+				<th data-options="field:'projectstate',halign:'center',align:'center'" width="8%" formatter="isSysManageFormatter">项目状态</th>
+				<th data-options="field:'isUsed',halign:'center',align:'center'" width="20%" formatter="isUsedFormatter">操作</th>
+			</tr>
+		</thead>
+	</table>
+	
+	
+	
+	<!-- 增加第一级弹窗 -->
+	<div id="addRootMenu" class="easyui-dialog" data-options="closed:true,width:'390',height:'330',title:'增加第一级菜单',iconCls:'icon-add',buttons:'#sc_add'">
+		<form id="addRootMenuForm" method="post">
+			<table style="width: 98%;border-collapse: separate;border-spacing:10px;">
+				<tr>
+					<td style="width: 90px;text-align: right;">项目编号
+						<span id="addRootMenuForm_pMenuId" style="display: none;"></span>
+					</td>
+					<td>
+
+					<input id="pnum" name="projectid" class="easyui-validatebox" data-options="required:true" style="width:230px"/> 
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 90px;text-align: right;">项目名称</td>
+					<td>
+					<input id="pname" name="projectname" class="easyui-validatebox" data-options="required:true" style="width:230px"/> 
+					</td>
+				</tr>
+				<tr>
+					<td style="padding-left:40px" colspan="2">
+						<input type="checkbox" id="projectstate_yes" name="projectstate" style="vertical-align: middle;margin-left: 10%" value="01" checked="checked" onclick="yes()"/>
+						<label for="addRootMenuForm_isSpecFunc">有效</label>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" id="projectstate_no" name="projectstate" style="vertical-align: middle;margin-left: 30%" value="00" onclick="no()"/>
+						<label for="addRootMenuForm_isSysManage">无效</label>
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 90px;text-align: right;">项目简介</td> 
+					<td><input class="easyui-textbox" id="soreNum" name="projectintro" style="width:230px;"/></td>
+				</tr>
+				<tr>
+					<td style="width: 90px;text-align: right;">项目描述</td>
+					<td><input class="easyui-textbox" id="soreNum" name="projectdesc" style="width:230px;height: 80px" data-options="multiline:true"/></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	
+	<!-- 增加下级弹窗 -->
+	<div id="addNextMenu" class="easyui-dialog" data-options="closed:true,width:'390',height:'330',title:'增加下级菜单',iconCls:'icon-add',buttons:'#sc_add1'">
+		<form id="addNextMenuForm">
+			<input type="hidden" name="pMenuId">
+			<table style="width: 98%;border-collapse: separate;border-spacing:10px;">
+				<tr>
+					<td style="width: 90px;text-align: right;">项目编号
+					</td>
+					<td>
+					<span id="upProjectid"></span>
+					<input id="nextPnum" name="projectid" class="easyui-validatebox" data-options="required:true" style="width:180px;"/> 
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 90px;text-align: right;">项目名称</td>
+					<td>
+					<input id="nextPname" name="projectname" class="easyui-validatebox" data-options="required:true" style="width:230px"/> 
+					</td>
+				</tr>
+				<tr>
+					<td style="padding-left:40px" colspan="2">
+						<input type="checkbox" id="projectstate_yes2" name="projectstate" style="vertical-align: middle;margin-left: 10%" value="01" checked="checked" onclick="yes2()"/>
+						<label for="addRootMenuForm_isSpecFunc">有效</label>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" id="projectstate_no2" name="projectstate" style="vertical-align: middle;margin-left: 30%" value="00" onclick="no2()"/>
+						<label for="addRootMenuForm_isSysManage">无效</label>
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 90px;text-align: right;">项目简介</td>
+					<td><input class="easyui-textbox" id="mintro" name="projectintro" style="width:230px;"/></td>
+				</tr>
+				<tr>
+					<td style="width: 90px;text-align: right;">项目描述</td>
+					<td><input class="easyui-textbox" id="mdesc" name="projectdesc" style="width:230px;height: 80px" data-options="multiline:true"/></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	
+	<!-- 修改菜单 -->
+	<div id="modifyMenu" class="easyui-dialog" data-options="closed:true,width:'390',height:'330',title:'修改菜单',iconCls:'icon-edit',buttons:'#sc_modif'">
+		<form id="modifyMenuForm">
+			<table style="width: 98%;border-collapse: separate;border-spacing:10px;">
+				<tr>
+					<td style="width: 90px;text-align: right;">项目编号</td>
+					<td><span id="projectid"></span></td>
+				</tr>
+				<tr>
+					<td style="width: 90px;text-align: right;">项目名称</td>
+					<td>
+					<input id="mPname" name="projectname" class="easyui-validatebox" data-options="required:true" style="width:230px"/> 
+					</td>
+				</tr>
+				<tr>
+					<td style="padding-left:40px" colspan="2">
+						<input type="checkbox" id="projectstate_yes1" name="projectstate" style="vertical-align: middle;margin-left: 10%" value="01" checked="checked" onclick="yes1()"/>
+						<label for="addRootMenuForm_isSpecFunc">有效</label>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="checkbox" id="projectstate_no1" name="projectstate" style="vertical-align: middle;margin-left: 30%" value="00" onclick="no1()"/>
+						<label for="addRootMenuForm_isSysManage">无效</label>
+					</td>
+				</tr>
+				<tr>
+					<td style="width: 90px;text-align: right;">项目简介</td>
+					<td><input class="easyui-textbox" id="mintro" name="projectintro" style="width:230px;"/></td>
+				</tr>
+				<tr>
+					<td style="width: 90px;text-align: right;">项目描述</td>
+					<td><input class="easyui-textbox" id="mdesc" name="projectdesc" style="width:230px;height: 80px" data-options="multiline:true"/></td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	
+	<!-- 详情 -->
+	<div id="showpanel" class="easyui-dialog" title="项目信息表"     
+        style="padding:10px;width:auto;height:auto;background:#fafafa;"   
+        data-options="iconCls:'icon-save',closed:true"> 
+      
+   	 <table id="showOneTable" style="margin-left: 5%;">
+  		<tr>
+   	 		<td class="mainStyle" style="width: 70px;text-align: right;height: 30px;">项目编号&nbsp;&nbsp;&nbsp;</td>
+   	 		<td style="width: 250px"><span name="projectid"></span></td>
+   	 		
+   	 	</tr>
+   	 	<tr>
+   	 		<td class="mainStyle" style="height: 30px;text-align: right;">项目名称&nbsp;&nbsp;&nbsp;</td>
+   	 		<td ><span name="projectname"></span></td>
+   	 		
+   	 	</tr>
+   	 	<tr>
+   	 		<td class="mainStyle" style="height: 30px;text-align: right;">项目简介&nbsp;&nbsp;&nbsp;</td>
+   	 		<td ><span name="projectintro"></span></td>
+   	 	</tr>
+   	 		<tr>
+   	 		<td class="mainStyle" style="height: 30px;text-align: right;">当前状态&nbsp;&nbsp;&nbsp;</td>
+   	 		<td ><span name="projectstate"></span></td>
+   	 	</tr>
+   	 	<tr>
+   	 		<td class="mainStyle" style="height: 30px;text-align: right;">上级项目&nbsp;&nbsp;&nbsp;</td>
+   	 		<td ><span name="pprojectid"></span></td>
+   	 	</tr>
+   	 	<tr>
+   	 		<td class="mainStyle" style="height: 30px;text-align: right;">创建人&nbsp;&nbsp;&nbsp;</td>
+   	 		<td ><span name="createby"></span></td>
+   	 		
+   	 	</tr>
+   	 	<tr>
+   	 		<td class="mainStyle" style="height: 30px;text-align: right;">创建时间&nbsp;&nbsp;&nbsp;</td>
+   	 		<td ><span name="createtime"></span></td>
+   	 	</tr>
+   	 	<tr>
+   	 		<td class="mainStyle" style="height: 30px;text-align: right;">修改人&nbsp;&nbsp;&nbsp;</td>
+   	 		<td ><span name="modifyby"></span></td>
+   	 	</tr>
+   	 	<tr>
+   	 		<td class="mainStyle" style="height: 30px;text-align: right;" >修改时间&nbsp;&nbsp;&nbsp;</td>
+   	 		<td><span name="modifytime"></span></td>
+   	 	</tr>
+   	 	<tr>
+   	 		<td style="height: 80px;text-align: right;vertical-align: top;">项目描述&nbsp;&nbsp;&nbsp;</td>
+   	 		<td ><span name="projectdesc"></span></td>
+   	 	</tr>
+   	 </table>  
+</div>
+<!-- 详情结束 -->
+	
+	<!-- 新增dialog对应按钮 -->
+	<div id="sc_add" style="text-align:right;">
+		<a id="save_button" class="easyui-linkbutton" onclick="addProject()"
+		 data-options="iconCls:'icon-save'">保存</a>
+		<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="$('#addRootMenu').dialog('close');">关闭</a>
+	</div>
+	
+	<!-- 新增下级dialog对应按钮 -->
+	<div id="sc_add1" style="text-align:right;">
+		<a id="save_button" class="easyui-linkbutton" onclick="addNextProject()"
+		 data-options="iconCls:'icon-save'">保存</a>
+		<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="$('#addNextMenu').dialog('close');">关闭</a>
+	</div>
+	
+	<!-- 修改dialog对应按钮 -->
+	<div id="sc_modif" style="text-align:right;">
+		<a id="save_button" class="easyui-linkbutton" onclick="modifyProject()"
+		 data-options="iconCls:'icon-save'">保存</a>
+		<a class="easyui-linkbutton" data-options="iconCls:'icon-cancel'" onclick="$('#modifyMenu').dialog('close');">关闭</a>
+	</div>
+	
+</body>
+</html>

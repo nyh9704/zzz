@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyzc.htgl.dao.DueDiligenceDisposeDao">
+
+    <!-- 展示数据 -->
+    <select id="showDueDiligenceDisposeData" resultType="com.wyzc.htgl.bo.DueDiligenceDisposeBo">
+        SELECT
+        user_name userName,
+        user_Id userId,
+        user_choose_house userChooseHouse,
+        user_post userPost,
+        user_cancel userCancel,
+        user_post_date userPostDate,
+        user_ps userPs,
+        user_end_Date userEndDate,
+        user_post_file userPostFile
+        FROM
+        wyzc_user_jd
+        <where>
+            <if test="params.bo.pendingOrder!=null and params.bo.pendingOrder!=''">
+                user_post = #{params.bo.pendingOrder}
+            </if>
+            <if test="params.bo.underwayOrder!=null and params.bo.underwayOrder!=''">
+                user_post = #{params.bo.underwayOrder}
+            </if>
+            <if test="params.bo.rejectOrder!=null and params.bo.rejectOrder!=''">
+                user_post = #{params.bo.rejectOrder}
+            </if>
+            <if test="params.bo.accomplishOrder!=null and params.bo.accomplishOrder!=''">
+                user_post = #{params.bo.accomplishOrder}
+            </if>
+            <if test="params.bo.cancelOrder!=null and params.bo.cancelOrder!=''">
+                user_cancel = #{params.bo.cancelOrder}
+            </if>
+            <if test="params.bo.applyCancelOrder!=null and params.bo.applyCancelOrder!=''">
+                user_cancel = #{params.bo.applyCancelOrder}
+            </if>
+        </where>
+    </select>
+
+    <!-- 修改数据状态 -->
+    <update id="amendUserPost">
+        update wyzc_user_jd set user_post = #{userPost} where user_id = #{userId}
+    </update>
+
+    <!-- 修改数据状态为已完成 -->
+    <update id="amendUserPostEnd">
+        update wyzc_user_jd set user_post = #{userPost},user_end_date = now() where user_id = #{userId}
+    </update>
+
+    <!-- 改变用户是否申请取消 -->
+    <update id="amendUserCancel">
+        update wyzc_user_jd set user_cancel = #{userPost} where user_id = #{userId}
+    </update>
+
+    <!-- 添加备注 -->
+    <update id="addRemark">
+        update wyzc_user_jd set user_ps = #{userPs} where user_id = #{userId}
+    </update>
+
+    <!-- 添加驳回原因 -->
+    <update id="addRejectRemark">
+        update wyzc_user_jd
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userCancel != null and  userCancel != ''">
+                user_cancel = #{userCancel},
+            </if>
+        </trim>
+        ,user_ps = #{userPs},
+        user_post = #{userPost}
+        where user_id = #{userId}
+    </update>
+
+    <!-- 查询所选择房屋的链接 -->
+    <select id="searchHouseUrlByChooseHouse" resultType="String">
+        select shi_url from show_house_info where shi_house_number = (select user_choose_house from wyzc_user_jd where
+        user_id = #{userId})
+    </select>
+
+
+</mapper>

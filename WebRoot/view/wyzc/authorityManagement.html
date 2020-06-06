@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link rel="stylesheet" type="text/css" href="../../css/themes/default/easyui.css" />
+<link rel="stylesheet" type="text/css" href="../../css/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/common/main.css" />
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/common/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="js/authorityManagement.js"></script>
+</head>
+<style>
+	td{
+		width:40px;
+		text-align: center;
+	}
+</style>
+<body>
+	
+	<ul id="treeAuth" class="easyui-tree"></ul>
+			
+	
+	<div id="authority_div" class="easyui-dialog" style="height:200px;width:650px;" 
+	data-options="buttons:'#authority_btn',closed:true,modal:true">
+		<form action="post" id="authority_form">
+			<input type="hidden" id="cId" name="userId"> 
+			<table id="authority_tab" >
+				<tr>
+					<td>
+						1
+					</td>
+					<td>
+						2
+					</td>
+					<td>
+						3
+					</td>
+					<td>
+						4
+					</td>
+					<td>
+						5
+					</td>
+					<td>
+						6
+					</td>
+					<td>
+						7
+					</td>
+					<td>
+						8
+					</td>
+					<td>
+						9
+					</td>
+					<td>
+						10
+					</td>
+					<td>
+						11
+					</td>
+					<td>
+						12
+					</td>
+					<td>
+						13
+					</td>
+					<td>
+						14
+					</td>
+					<td>
+						15
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<input type="checkbox" name = ""/>1
+					</td>
+					<td>
+						<input type="checkbox" name = ""/>2
+					</td>
+					<td>
+						<input type="checkbox" name = ""/>3
+					</td>
+					<td>
+						<input type="checkbox" name = ""/>4
+					</td>
+					<td>
+						<input type="checkbox" name = ""/>5
+					</td>
+					<td>
+						<input type="checkbox" name = ""/>6
+					</td>
+					<td>
+						<input type="checkbox" name = ""/>7
+					</td>
+					<td>
+						<input type="checkbox" name = ""/>8
+					</td>
+					<td>
+						<input type="checkbox" name = ""/>9
+					</td>
+					<td>
+						<input type="checkbox" name = ""/>10
+					</td>
+					<td>
+						<input type="checkbox" name = ""/>11
+					</td>
+					<td>
+						<input type="checkbox" name = ""/>12
+					</td>
+					<td>
+						<input type="checkbox" name = ""/>13
+					</td>
+					<td>
+						<input type="checkbox" name = ""/>14
+					</td>
+					<td>
+						<input type="checkbox" name = ""/>15
+					</td>
+				</tr>
+			</table>
+		</form>		
+		<div id="authority_btn">
+			<a id="submitAuthorityBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'">提交</a>
+			<a id="closeAuthorityeBtn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no'">关闭</a>    
+		</div>
+	</div>
+	
+	
+	
+</body>
+</html>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wyzc.htgl.dao.WyzcUserDao">
+    <!-- 注册 -->
+    <insert id="registerUser" parameterType="com.wyzc.htgl.bo.WyzcUserBo">
+        insert into sys_user(USER_ID,USER_NAME,PASSWORD,IS_USED,IDENTITY_CARD,wp_id,wp_id_child,wd_id,IS_ADMIN,IS_LOCK)
+        values(#{userId},#{userName},#{userPwd},1,#{identityCard},#{wpId},#{wpIdChild},#{wdId},'N',0)
+    </insert>
+
+    <!-- 注册添加权限 -->
+    <insert id="registerUserQx" parameterType="com.wyzc.htgl.bo.WyzcUserBo">
+        insert into sys_role_member(USER_ID,ROLE_ID)
+        values(#{userId},#{userId})
+    </insert>
+
+
+    <!-- 查询员工信息表 -->
+    <select id="queryUserInfo" resultType="com.wyzc.htgl.po.WyzcUserInfoPo">
+        select user_tel userIdInfo,user_id_card userIdEntityInfo,user_name userNameInfo,sign sign from wyzc_user_info
+    </select>
+
+    <!-- 根据用户输入的信息在表中查询 -->
+    <select id="searchUserInfoByTel" resultType="com.wyzc.htgl.bo.WyzcUserBo">
+        select
+        user_tel userIdInfo,
+        user_id_card userIdEntityInfo,
+        user_name userNameInfo,
+        sign sign
+        from wyzc_user_info
+        where user_tel = #{userId}
+    </select>
+
+    <!-- 查询上级部门 -->
+    <select id="searchParentPart" resultType="com.wyzc.htgl.bo.WyzcDepartmentBo">
+        select wp_id wpId,wp_name wpName from wyzc_part where parent_id = '0'
+    </select>
+
+    <!-- 查询下级部门 -->
+    <select id="searchChildPart" resultType="com.wyzc.htgl.bo.WyzcDepartmentBo">
+        select wp_id wpId,wp_name wpName from wyzc_part where parent_id = #{parentId}
+    </select>
+
+    <!-- 添加角色 -->
+    <insert id="addSysRole">
+        insert into sys_role(ROLE_ID,ROLE_NAME,IS_USED) values(#{userId},#{userName},1)
+    </insert>
+
+</mapper>

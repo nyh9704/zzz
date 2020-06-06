@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>登录</title>
+	<!-- <meta name="viewport" content="width=divice-width,initial-scale=1.0,minimum-scale=1.0,maximum=1.0,user-scalable=no" /> -->
+	<meta http-equiv=X-UA-Compatible content=IE=8/>
+	<link rel="stylesheet" href="login/css/bootstrap.css"type="text/css"/>
+	<link rel="stylesheet" href="login/css/login.css" type="text/css" />
+	<link rel="stylesheet" type="text/css" href="css/common/main.css" />
+	<script type="text/javascript" src="login/js/jquery.js"></script>
+	<script type="text/javascript" src="login/js/Particleground.js"></script>
+	<script type="text/javascript" src="js/jquery.easyui.min.js"></script>
+	<script src='js/common/Cookie.js' type="text/javascript"></script>	
+	<script src='js/frame/sc/Enter.js' type='text/javascript'></script>
+	<script>
+		$(document).ready(function() {
+			 //粒子背景特效
+			 $('body').particleground({
+			dotColor: 'rgba(42,119,168,0.4)',
+			lineColor: 'rgba(37,103,144,0.7)'
+			 });
+		});
+	</script>
+	
+	<style type="text/css">
+ 	  .sp{
+			color: black;
+			text-align: right;
+			display: inline-block;
+			width: 79px;
+		}
+		
+		 #register_div{
+			height: 320px; 
+			width: 460px; 
+			font-family: '楷体'; 
+			display: none; 
+			margin-left:55%;
+			margin-top:-25%;
+			border-radius: 5%;
+			background-color:#F0ECD6;
+		} 
+		
+		h2{
+			font-size: 25px;
+			font-weight: bolder;
+		}
+		
+		#register_btn{
+			position:absolute;
+			margin-top: 15px;
+			margin-left: 100px;
+		}
+		  
+		#save{
+			width:40px;
+			height:30px;
+			display:inline-block;
+			border-radius:15%;
+			margin-right: 100px;
+			text-align: center;
+		}
+		
+		#colse{
+			width:40px;
+			height:30px;
+			
+			display:inline-block;
+			border-radius:15%;
+			margin-right: 80px;
+			text-align: center;
+		}
+		
+		
+		#iframe_page{
+			width:100%;
+			height:100%;
+			display:none;
+			/* float: right;
+			margin-top: -380px;
+			margin-right: 130px; */
+		}
+		
+		
+</style>
+</head>
+<body>
+	<!-- <iframe  id="iframe_page" parent.close() src="sss.html" frameborder="no" border="0"></iframe>  -->
+	<div class="wrap" id="wrap" >
+		<div class="register-wrap" id="register-wrap">
+			<div class="pic" id="pic">
+				<img src="login/images/zhuce_400x300.png" alt="该链接已失效" />
+			</div>
+			<div class="register" id="register">
+				<div class="register-top" id="reg-top">
+					<h2 class="normal" id="normal">登录</h2>
+					<a id="qrcode" href="#"></a>
+
+				</div>
+
+				<!--普通登录-->
+				<div class="register-con" id="rc" >
+					<form action="#">
+						<ul>
+							<li id="rc-inner-num"><i></i> <span>请输入用户名</span></li>
+							<li id="rc-inner-virity"><i></i> <span>请输入密码</span></li>
+							<li id="rc-innerError"
+								style="width: 300px; height: 32px; padding: 0 6px; color: #ff1877; border: 1px solid #ffd797; display: none;">
+								<i
+								style="display: inline-block; float: left; width: 20px; height: 20px; margin: 6px 10px; border: none; background: url(login/images/bz_16x16.png) no-repeat 0 0;"></i>
+								<span
+								style="color: #ff1877; display: inline-block; float: left; line-height: 26px;">您输入的用户名或密码不正确</span>
+							</li>
+							<li class="form-group"><input type="text" id="userId"
+								name="userId" class="form-control" placeholder="登录用户名" /> <span
+								class="fa fa-check success"
+								style="display: none; color: green; position: relative; left: -25px; top: 5px;"></span>
+
+							</li>
+							<li class="form-group"><input type="password"
+								name="password" id="password" class="form-control"
+								placeholder="密码" /></li>
+							<li class="read"><input id="rememberLoginInfo"
+								type="checkbox" class="ck" name="rememberLoginInfo" /> <b>记住密码</b>
+							</li>
+							<li><input value="立即登录" type="button" class="submit"
+								id="login-btn"
+								style="border-radius: 5px; background-color: deepskyblue; border: none; color: white; text-align: center">
+							</li>
+						</ul>
+					</form>
+					<!-- <a href="#"
+						onclick="hiddenLogin()">如没有账户，点击这里注册</a> -->
+						<a href="/training/view/wyzc/register.html" >如没有账户，点击这里注册</a>
+				</div>
+				<!--手机无密码登录-->
+				<div class="login-con" id="lc">
+					<form action="#">
+						<ul>
+							<li id="inner-num"><i></i> <span>请输入手机号码</span></li>
+							<li id="inner-virity"><i></i> <span>请输入验证码</span></li>
+							<li class="lg-num  form-group"><input type="text"
+								name="phone-num" class="form-control" placeholder="手机号码" /> <span
+								class="fa fa-check success"
+								style="display: none; color: green; position: relative; left: -25px; top: 5px;"></span>
+							</li>
+							<li class="password form-group"><input type="password"
+								name="password" id="pass" class="form-control"
+								placeholder="动态密码" /></li>
+							<li>
+								<button class="getcode" id="getcode" style="border-radius: 5px;">获取手机动态密码</button>
+							</li>
+							<li class="read"><input type="checkbox" class="ck"
+								name="check" value="1" checked="checked" /> <b>2周内自动登录</b> <a
+								href="#">忘记密码？</a></li>
+
+							<li>
+								<button class="submit" type="submit" id="login-btn1"
+									style="border-radius: 5px;">登录</button>
+							</li>
+							<li><a href="#" class="zhuce">新用户注册</a></li>
+
+						</ul>
+					</form>
+				</div>
+				<!-- 扫码登录 -->
+				<div class="saoma" id="sm">
+					<div class="screen-tu" id="screen"></div>
+					<div class="saoyisao"></div>
+					<div class="qr-code">
+						<img src="login/images/ereima_150x150.png" alt="">
+					</div>
+					<div class="link">
+						<a href="#">点击下载APPFRAME</a>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<div class="footer">
+		<div class="footer-wrap">
+			<div class="footer-bottom">©Copyright 2020 重庆悦木森家具制造有限公司</div>
+		</div>
+	</div>
+
+	
+		
+	
+	
+
+
+
+
+
+	<!-- 注册页面 -->
+	<!--  <div id="register_div" style="display: none" >
+		<h2 align="center">悦木森员工账号注册</h2><br>
+		<form method="post" id="register_form">
+			<table>
+				<tr>
+					<td style="width: 80px;" class="fn"><span class="sp">账号</span>
+					</td>
+					<td><input type="text" style="width: 230px;height: 30px" name="userId"
+						id="registerUserId"/>
+						<span id="userIdReg"></span>
+					</td>
+				</tr>
+				<tr>
+					<td height="5"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td style="width: 80px;" class="fn"><span class="sp">密码</span>
+					</td>
+					<td><input style="width: 230px;height: 30px" type="password"
+						name="userPwd" id="userPwd" />
+						<span id="userPwdReg"></span>
+					
+					</td>
+				</tr>
+				<tr>
+					<td height="5"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td style="width: 80px;" class="fn"><span class="sp">身份证</span>
+					</td>
+					<td><input style="width: 230px;height: 30px" type="text"
+						name="identityCard" id="identityCard"/>
+						<span id="identityCardReg"></span>
+					</td>
+				</tr>
+				<tr>
+					<td height="5"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td style="width: 80px;" class="fn"><span class="sp">姓名</span>
+					</td>
+					<td><input style="width: 230px;height: 30px" type="text" id="userName"
+						name="userName"/>
+						<span id="userNameReg"></span>
+					</td>
+				</tr>
+				<tr>
+					<td height="5"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td style="width: 80px;" class="fn"><span class="sp">所属部门</span>
+					</td>
+					<td>
+						<select style="width: 120px;height: 30px" name="wpId" id="wpId">
+						</select>
+						<select name="wpIdChild" id="wpIdChild" style="width: 100px;height: 30px"></select>
+					</td>
+				</tr>
+				<tr>
+					<td height="5"></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td style="width: 80px;" class="fn"><span class="sp">职务</span>
+					</td>
+					<td>
+						<select style="width: 230px;height: 30px" name="wdId" id="wdId">
+								
+						</select>
+					</td>
+				</tr>
+			</table>
+		</form>
+		<div id="register_btn" align="center">
+			<input id="save" type="button" value="提交 " />
+			<input id="colse" type="button" value="取消" onclick="closeWindow()" />
+		</div>
+	</div> -->
+</body>
+</html>

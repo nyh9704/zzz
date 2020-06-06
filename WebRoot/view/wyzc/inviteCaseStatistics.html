@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>邀约情况统计</title>
+<link rel="stylesheet" type="text/css" href="../../css/themes/default/easyui.css" />
+<link rel="stylesheet" type="text/css" href="../../css/themes/icon.css">
+<link rel="stylesheet" type="text/css" href="../../css/common/main.css" />
+<script type="text/javascript" src="../../js/jquery.min.js"></script>
+<script type="text/javascript" src="../../js/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="../../js/common/My97DatePicker/WdatePicker.js"></script>
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="js/inviteCaseStatistics.js"></script>
+<script src="../../js/easyui-lang-zh_CN.js"></script>
+</head>
+<body>
+		<table class="btbHead">
+		<tr>
+			<td style='width: 25%;'>
+				<img src='../../images/common/title.gif' align='absmiddle'/>邀约情况统计
+			</td>
+			<td style="text-align: right;">
+				<a id="searchFree" class="easyui-linkbutton" iconCls="icon-search">&nbsp;查&nbsp;&nbsp;询&nbsp;</a>
+				<a href="javascript:todayVisit()" class="easyui-linkbutton" iconCls="icon-search">今日到访</a>
+				<a href="javascript:yestodayVisit()" class="easyui-linkbutton" iconCls="icon-search">昨日到访</a>
+				<a href="javascript:threeDaysVisit()" class="easyui-linkbutton" iconCls="icon-search">三日内到访</a>
+				<a href="javascript:oneWeekVisit()" class="easyui-linkbutton" iconCls="icon-search">一周日内到访</a>
+				<a href="javascript:oneMonthVisit()" class="easyui-linkbutton" iconCls="icon-search">一月内到访</a>
+				 <a href="javascript:resetData()"
+						 class="easyui-linkbutton" iconCls="icon-search">&nbsp;重&nbsp;&nbsp;置&nbsp;</a>
+			</td>
+		</tr>
+	</table>
+	<form id="serchForm">
+		<table class="btbForm">
+			<tr>
+				<td>
+					<input name="keyWorld" class="easyui-searchbox" data-options="prompt:'请输入想要查询的信息',searcher:searchKeyWorld" style="width:150px;" />
+					<input name="counselor" class="easyui-searchbox" data-options="prompt:'顾问名字查询',searcher:searchKeyWorld" style="width:100px;" />					
+					<span id="game">
+						<span class="sa">组长</span><input id="selcCounselor" name="cCounselor" />
+					</span>
+					
+					日期<input name="startTime" data-options="editable:false" class="easyui-datebox"/>~<input data-options="editable:false" name="endTime" class="easyui-datebox"/>					
+				</td>
+			</tr>
+		</table>
+	</form>
+		
+	<div style="margin:5px;"></div>
+	
+	
+<!-- 数据展现 -->
+
+	<table id="tt" data-options="pagination:true,singleSelect:true">
+		
+	</table>
+</body>
+</html>
